@@ -64,16 +64,13 @@ class UserController implements IController {
 
         // sendmail example
         await GMailer.sendMail({
-            to: 't3pmal@gmail.com',
+            to: userInfo.email,
             subject: 'Test send mail',
             html: '<h1>Hello World!</h1>',
         });
 
         // test error handler.
-        const users = await UserModel.create({
-            name: 'John Doe',
-            email: 'test@example.com',
-        });
+        const users = await UserModel.create(userInfo);
 
         return res.status(200).json(users);
     }

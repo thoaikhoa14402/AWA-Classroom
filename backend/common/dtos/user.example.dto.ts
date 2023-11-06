@@ -10,6 +10,14 @@ class UserDTO {
 	@IsString({ message: "Password must be a string" })
 	public password!: string;
 
+	@IsNotEmpty({ message: "Lastname is required" })
+	@IsString({ message: "Lastname must be a string" })
+	public lastname!: string;
+
+	@IsNotEmpty({ message: "Firstname is required" })
+	@IsString({ message: "Firstname must be a string" })
+	public firstname!: string;
+
 	constructor(obj: IUser) {
 		Object.assign(this, obj);
 	}

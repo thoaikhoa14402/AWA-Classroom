@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema<IUser>(
         lastname: { type: String, required: true },
         password: { type: String, required: true },
         email: { type: String, required: true },
-        passwordChangedAt: { type: Number, required: true },
+        passwordChangedAt: { type: Number },
     },
     {
         toJSON: {

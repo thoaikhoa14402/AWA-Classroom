@@ -19,7 +19,7 @@ class ConnectEvent implements IEvent {
             email: '123',
         };
 
-        io.socket_list.push(socket);
+        io.socket_list = [...io.socket_list, socket];
     }
 }
 

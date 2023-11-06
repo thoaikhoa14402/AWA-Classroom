@@ -21,6 +21,7 @@ class Redis {
             await this.client.connect();
         }
         catch (error: any) {
+            this.client = null;
             throw error;
         }
     }
