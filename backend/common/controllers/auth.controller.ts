@@ -48,7 +48,7 @@ class AuthController implements IController {
             const accessToken = await JsonWebToken.createToken({_id: newUser._id.toString()}, {expiresIn: process.env.JWT_ACCESS_EXPIRES as string,})
         
         res.cookie('jwt', accessToken, {
-            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expiration time in milliseconds
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Cookie expiration time in milliseconds
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
