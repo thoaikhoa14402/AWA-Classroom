@@ -31,8 +31,6 @@ class AuthController implements IController {
     /// > REGISTER
     private register = async (req: Request, res: Response, next: NextFunction) => {
         const userRegisterInfo = req.body as RegisterUserDTO
-        console.log('User Register Info: ', userRegisterInfo);
-
         const foundedUser = await UserModel.findOne({ username: userRegisterInfo.username });
 
         if (foundedUser)
@@ -45,10 +43,10 @@ class AuthController implements IController {
             passwordConfirm: req.body.passwordConfirm
         })
 
-            const accessToken = await JsonWebToken.createToken({_id: newUser._id.toString()}, {expiresIn: process.env.JWT_ACCESS_EXPIRES as string,})
+        const accessToken = await JsonWebToken.createToken({_id: newUser._id.toString()}, {expiresIn: process.env.JWT_ACCESS_EXPIRES as string,})
         
         res.cookie('jwt', accessToken, {
-            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Cookie expiration time in milliseconds
+            expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
