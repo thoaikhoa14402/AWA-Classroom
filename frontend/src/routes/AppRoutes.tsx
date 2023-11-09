@@ -5,7 +5,7 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route element={<BaseLayout />}>
-                <Route path="/" element={<></>} />
+                <Route path="/" element={<>Test body content</>} />
             </Route>
         </Routes>
     );
