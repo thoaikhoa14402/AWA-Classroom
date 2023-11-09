@@ -26,7 +26,10 @@ module.exports = {
       inset: {
         'mbsize': '7.3rem auto auto auto',
         'desksize': '4.1rem auto auto auto'
-      } 
+      },
+      outlineColor: {
+        'primary': '#00A551'
+      }
     },
   },
   plugins: [],

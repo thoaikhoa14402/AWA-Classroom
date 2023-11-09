@@ -71,9 +71,9 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                         : '' 
                     }
                 </button>
-                <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-100">
+                <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
                     { props.open && items.map((el, _) => {
-                        return <button key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-200 w-full">
+                        return <button key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
                             <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full ${el.color}`}>{el.title[0]}</span>
                             {(el.title.length > 22) ? `${el.title.substring(0, 22)}...` : el.title}
                         </button>
