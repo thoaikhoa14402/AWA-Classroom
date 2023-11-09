@@ -14,8 +14,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             <div
                 className={ 
                     "max-w-screen-2xl w-screen flex flex-col sm:flex-row justify-between items-center py-3 gap-3 lg:gap-0"
-                }
-            >
+                }>
                 <div className="flex items-center gap-3 whitespace-nowrap">
                     <button type="button" title="Menu" onClick={props.toggleSidebar} className="rounded-full px-3 py-3 flex justify-center items-center hover:bg-slate-100 transition-all duration-300"><FontAwesomeIcon icon={faBars} width={16} color="grey" /></button>
                     {/* <img src="rocket.png" alt="Logo" className="w-8 h-8 mr-2" /> */}
@@ -23,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                         AWA Classroom
                     </a>
                 </div>
-                <form className="w-1/2 bg-transparent flex justify-center items-center px-0.5 shadow-sm shadow-slate-200 overflow-hidden rounded-full " action='/' method='GET'>
+                <form className="w-1/2 bg-transparent flex justify-center items-center px-0.5 shadow-sm shadow-slate-200 overflow-hidden rounded-full" action='/' method='GET'>
                     <input required type="search" className="w-full px-3.5 py-2.5 text-sm outline-none" placeholder="Tìm kiếm lớp học, bài tập, ..." />
                     <button type="submit" className={`${classes['submit-btn']} bg-primary flex items-center p-3 border-none outline-none rounded-full font-bold`} title="Tìm kiếm">
                         <FontAwesomeIcon icon={faSearch} color="white" size="sm" />

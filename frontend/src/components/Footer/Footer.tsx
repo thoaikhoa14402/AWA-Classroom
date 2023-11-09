@@ -1,7 +1,8 @@
 import React from "react";
-import classes from "./Footer.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopyright } from "@fortawesome/free-regular-svg-icons";
+
+import classes from "./Footer.module.css";
 
 const Footer: React.FC = () => {
     return (

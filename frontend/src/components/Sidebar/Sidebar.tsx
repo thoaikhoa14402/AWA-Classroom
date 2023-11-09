@@ -6,7 +6,7 @@ import { ReactComponent as AcademyCap } from "~/assets/svg/academy-cap.svg";
 import { ReactComponent as ScheduleIcon } from "~/assets/svg/schedule.svg";
 import { ReactComponent as SettingIcon } from "~/assets/svg/setting.svg";
 
-import './Sidebar.css';
+import classes from './Sidebar.module.css';
 
 interface SidebarProps {
     open: boolean;
@@ -62,36 +62,40 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 { props.open ? <div className="mt-0.5 text-ellipsis">Màn hình chính</div> : '' }
             </NavLink>
             <div className="relative flex flex-col gap-2">
-                <button
-                    type="button"
+                <NavLink
+                    to='/classes'
                     className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                     <AcademyCap className="w-7 h-7" />{" "}
                     { props.open 
                         ? <div className="mt-0.5 text-ellipsis">Danh sách lớp học</div>
                         : '' 
                     }
-                </button>
+                </NavLink>
                 <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
                     { props.open && items.map((el, _) => {
-                        return <button key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
+                        return <NavLink 
+                                style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
+                                to={`/class/${_ + 1}`} key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
                             <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full ${el.color}`}>{el.title[0]}</span>
                             {(el.title.length > 22) ? `${el.title.substring(0, 22)}...` : el.title}
-                        </button>
+                        </NavLink>
                     }) }
                 </div>
             </div>
-            <button
-                type="button"
+            <NavLink
+                style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
+                to='/schedule'
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                 <ScheduleIcon className="w-7 h-7" />{" "}
                 { props.open ? <div className="mt-0.5">Lịch</div> : '' }
-            </button>
-            <button
+            </NavLink>
+            <NavLink
+                to='/'
                 type="button"
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                 <SettingIcon className="w-7 h-7" />{" "}
                 { props.open ? <div className="mt-0.5">Cài đặt</div> : '' }
-            </button>
+            </NavLink>
         </aside>
     );
 };
