@@ -4,6 +4,7 @@ import IController from "@common/interfaces/controller";
 import catchAsync from "@common/utils/catch.error";
 import DTOValidation from "@common/middlewares/validation.middleware";
 import RegisterUserDTO from "@common/dtos/register-user.dto"
+import LoginUserDTO from "@common/dtos/login-user.dto";
 import UserModel, { IUser } from "@common/models/user.model";
 import AppError from "@common/services/errors/app.error";
 import passport from "passport";
@@ -21,7 +22,7 @@ class AuthController implements IController {
     router: Router = Router();
 
     constructor() {
-        this.router.post('/login', this.login)
+        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false), catchAsync(this.login))
         this.router.post('/register', DTOValidation.validate<RegisterUserDTO>(RegisterUserDTO, true), catchAsync(this.register))
         
         // authentication with Google OAuth 2.0
@@ -43,7 +44,27 @@ class AuthController implements IController {
     }
     
     /// > LOGIN
-    private login = (req: Request, res: Response, next: NextFunction) => {
+    private login = async (req: Request, res: Response, next: NextFunction) => {
+        const {username, password} = req.body
+        const user = await UserModel.findOne({ username: username }).select('+password');
+
+        if (!user || !(await user.correctPassword(password, user.password)) || !user.active) {
+            return next(new AppError('Tài khoản hoặc mật khẩu không chính xác', 401));
+        }
+
+        
+        const accessToken = await JsonWebToken.createToken({_id: user.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+        res.cookie('jwt', accessToken, {
+            expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
+            httpOnly: true, // Make the cookie accessible only through HTTP
+            secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
+        });
+
+        return res.status(200).json({
+            message: "Login successfully",
+            user: user,
+            accessToken: accessToken
+        })
     }
 
     /// > REGISTER
@@ -52,7 +73,7 @@ class AuthController implements IController {
         const foundedUser = await UserModel.findOne({ username: userRegisterInfo.username });
 
         if (foundedUser)
-            return next(new AppError('This username has already been registered', 400));
+            return next(new AppError('Tài khoản đã tồn tại', 400));
 
         const newUser = await UserModel.create({
             username: req.body.username,

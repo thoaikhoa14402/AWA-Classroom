@@ -1,4 +1,5 @@
 import mongoose, { StringExpressionOperatorReturningBoolean } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 export interface IUser {
@@ -15,10 +16,15 @@ export interface IUser {
     password: string;
     email?: string;
     phoneNumber?: string;
-
+    active?: boolean;
+}
+export interface IUserMethods {
+    correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
 }
 
-const UserSchema = new mongoose.Schema<IUser>(
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
     {
         avatar: { type: String },
         phoneNumber: {type: String},
@@ -33,6 +39,10 @@ const UserSchema = new mongoose.Schema<IUser>(
             select: false, // never show up password field in the output if select == false
         },
         email: { type: String},
+        active: {
+            type: Boolean,
+            default: true
+        },
         passwordChangedAt: { type: Number },
     },
     {
@@ -64,7 +74,11 @@ UserSchema.pre('save', function (next) {
     next();
 });
 
+UserSchema.methods.correctPassword = async function (candidatePassword: string, userPassword: string) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
 
-const UserModel = mongoose.model<IUser>('User', UserSchema);
+
+const UserModel = mongoose.model<IUser, UserModel>('User', UserSchema);
 
 export default UserModel;
