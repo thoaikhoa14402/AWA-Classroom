@@ -1,13 +1,12 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+
 import { ReactComponent as HomeIcon } from "~/assets/svg/home.svg";
 import { ReactComponent as AcademyCap } from "~/assets/svg/academy-cap.svg";
 import { ReactComponent as ScheduleIcon } from "~/assets/svg/schedule.svg";
 import { ReactComponent as SettingIcon } from "~/assets/svg/setting.svg";
-import React from "react";
 
 import './Sidebar.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, NavLinkProps } from "react-router-dom";
 
 interface SidebarProps {
     open: boolean;
@@ -17,37 +16,37 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
     
     const items = [{
         title: 'Cơ trở trí tuệ nhân tạo',
-        color: 'bluex'
+        color: 'bg-bluex'
     }, {
         title: 'Nhập môn lập trình OOP',
-        color: 'redx'
+        color: 'bg-redx'
     }, {
         title: 'Kỹ thuật lập trình',
-        color: 'pinkx'
+        color: 'bg-pinkx'
     }, {
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     },{
         title: 'Lập trình ứng dụng web nâng cao',
-        color: 'purplex'
+        color: 'bg-purplex'
     }]
 
     return (
@@ -75,7 +74,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-100">
                     { props.open && items.map((el, _) => {
                         return <button key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-200 w-full">
-                            <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full bg-${el.color}`}>{el.title[0]}</span>
+                            <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full ${el.color}`}>{el.title[0]}</span>
                             {(el.title.length > 22) ? `${el.title.substring(0, 22)}...` : el.title}
                         </button>
                     }) }
