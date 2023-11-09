@@ -22,18 +22,18 @@ class AuthController implements IController {
     router: Router = Router();
 
     constructor() {
-        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false), catchAsync(this.login))
+        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login))
         this.router.post('/register', DTOValidation.validate<RegisterUserDTO>(RegisterUserDTO, true), catchAsync(this.register))
         
         // authentication with Google OAuth 2.0
-        this.router.get('/google', passport.authenticate('google', {
+        this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
             scope: ['profile', 'email']
         }))
         // google callback URL
         this.router.get('/google/cb', passport.authenticate('google', {session: false}), this.googleCallbackHandler) 
        
         // authentication with Facebook
-        this.router.get('/facebook', passport.authenticate('facebook', {
+        this.router.get('/facebook', this.isAuthenticated, passport.authenticate('facebook', {
             scope: ['public_profile', 'email']
         }))
         // facebook callback URL
@@ -98,7 +98,6 @@ class AuthController implements IController {
     }
 
     private googleCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {
-        console.log('this req.user: ', req.user);
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
@@ -109,7 +108,6 @@ class AuthController implements IController {
     }
 
     private facebookCallbackHandler = async (req: Request, res: Response, next: NextFunction) => { 
-        console.log('this req.user', req.user);
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
@@ -126,6 +124,24 @@ class AuthController implements IController {
             next();
         })(req, res, next);
     }
+
+    /// > CHECK AUTH
+    private isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+        passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
+            const origin = req.get('origin'); 
+            // res.redirect only works with request from browser (<a href = ></a>, ...), and it does not contain 'origin' field
+            // res.redirect and can not be worked with Axios because Axios is HTTP client not browser, and can not redirect by itself.
+            // When using Axios, it will automatically add 'origin' field into request headers
+            if (user._id) {
+                if (origin) { // from HTTP client 
+                    return res.status(200).json({ message: "You have been authenticated" })
+                }
+                return res.redirect('http://localhost:3000')
+            }
+            next();
+        })(req, res, next);
+    }
+
 
     /// > EXAMPLE PRIVATE LOGIC HANDLER (used for testing purposes)
     private examplePrivateLogicHandler = (req: Request, res: Response, next: NextFunction) => {
