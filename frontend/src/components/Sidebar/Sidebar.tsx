@@ -90,7 +90,8 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 { props.open ? <div className="mt-0.5">Lịch</div> : '' }
             </NavLink>
             <NavLink
-                to='/'
+                style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
+                to='/settings'
                 type="button"
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                 <SettingIcon className="w-7 h-7" />{" "}
