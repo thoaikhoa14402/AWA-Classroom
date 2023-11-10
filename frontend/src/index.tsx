@@ -12,6 +12,11 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 import { store } from "~/store";
+import { ConfigProvider } from "antd";
+import {StyleProvider} from '@ant-design/cssinjs';
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,7 +24,24 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-        <App />
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Montserrat",
+          colorPrimary: '#00A551',
+          fontSize: 16
+        },
+        components: {
+          Button: {
+            colorPrimary: '#00A551',
+          }
+        }
+      }}
+    >
+    {/* <StyleProvider hashPriority= "high"> */}
+      <App />
+    {/* </StyleProvider> */}
+  </ConfigProvider>
     </Provider>
   </BrowserRouter>
 );

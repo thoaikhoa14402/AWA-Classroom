@@ -47,12 +47,13 @@ class AuthController implements IController {
     private login = async (req: Request, res: Response, next: NextFunction) => {
         const {username, password} = req.body
         const user = await UserModel.findOne({ username: username }).select('+password');
-
-        if (!user || !(await user.correctPassword(password, user.password)) || !user.active) {
+        
+        if (!user || !(await user.correctPassword(password, user.password!)) || !user.active) {
             return next(new AppError('Tài khoản hoặc mật khẩu không chính xác', 401));
         }
+        let clonedUser = JSON.parse(JSON.stringify(user));
+        delete clonedUser.password;
 
-        
         const accessToken = await JsonWebToken.createToken({_id: user.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
@@ -62,7 +63,7 @@ class AuthController implements IController {
 
         return res.status(200).json({
             message: "Login successfully",
-            user: user,
+            user: clonedUser,
             accessToken: accessToken
         })
     }
@@ -81,6 +82,8 @@ class AuthController implements IController {
             password: req.body.password,
             passwordConfirm: req.body.passwordConfirm
         })
+        let clonedUser = JSON.parse(JSON.stringify(newUser));
+        delete clonedUser.password;
 
         const accessToken = await JsonWebToken.createToken({_id: newUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         
@@ -92,7 +95,7 @@ class AuthController implements IController {
 
         return res.status(200).json({
             message: "Register successfully",
-            user: newUser,
+            user: clonedUser,
             accessToken: accessToken
         })
     }

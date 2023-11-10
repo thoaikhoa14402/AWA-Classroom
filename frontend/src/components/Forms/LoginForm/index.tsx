@@ -1,108 +1,170 @@
-import React from "react";
-import { Form, Input, Button, Checkbox, message } from "antd";
-import { LoginOutlined } from "@ant-design/icons";
-// import SocialNetworks from "./SocialNetworks";
-import { Typography } from "antd";
-// // import get from "lodash/get";
-// import {
-//   actionSignIn,
-//   actionSignInSuccess,
-//   actionSignInError,
-// } from "./actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-// import api from "../../api";
+import React, { useState } from "react";
+import { Button, Checkbox, Form, Input,Typography, Divider, Flex, Segmented, Space, Row, message } from 'antd';
+import {StyleProvider} from '@ant-design/cssinjs';
+import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
+import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
+import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
+import { NavLink } from "react-router-dom";
+import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import useAppDispatch from "~/hooks/useAppDispatch";
+import useAppSelector from "~/hooks/useAppSelector";
+import eLearningImg from '~/assets/images/e-learning.jpg'
+import styles from "./LoginForm.module.css"
+import axios from "axios";
 
-const { Title } = Typography;
+const {Title} = Typography;
 
-export default function SignIn() {
+const LoginForm: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const userProfile = useAppSelector((state) => state.user.profile as UserProfile);
+  console.log('user Profile', userProfile);
+
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-//   const { auth } = useSelector((state) => state);
+  const [messageApi, contextHolder] = message.useMessage();
 
-
-//   const onFinishFailed = (errorInfo) => {
-//     console.log("Failed:", errorInfo);
-//   };
-
-  return (
-    <>
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+  const onFinish = async (values: any) => {
+    const key = 'updatable';
+    try {
+        messageApi.open({
+          key,
+          type: 'loading',
+          content: 'Đang xử lý!',
+        });
+        const response = await axios.post('http://localhost:5000/v1/auth/login', values, {
+          withCredentials: true,
+        });
+        // Kiểm tra response từ API
+        if (response.status === 200) {
+          message.destroy(key)
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: 'success',
+              content: 'Đăng nhập thành công!',
+            });
+          }, 1500)
+          dispatch(setUserProfile(response.data.user as UserProfile))
+          form.resetFields();
+        }
+      } catch (err: any) {
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: 'error',
+            content: 'Đăng nhập thất bại!',
+          });
+          form.setFields([
+            {
+              name: 'password',
+              errors: [err.response.data.message],
+            },
+            {
+              name: 'username',
+              errors: [err.response.data.message],
+            },
+          ]); 
+        }, 1500)
+        
+        // console.error(err);
+      }
+  };
+  
+  return <Flex>
+    {contextHolder}
+    <div className = 'w-1/2'>
+      <img src = {eLearningImg} className = "w-full h-full"/>
+    </div>
+    <div className = "w-1/2 flex justify-center items-center h-screen">
       <Form
-        name="signin"
-        form={form}
-        initialValues={{
-          remember: false,
-        }}
-        // onFinish={}
-        // onFinishFailed={onFinishFailed}
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
         autoComplete="off"
+        className = {styles["login-form"]}
+        form = {form}
       >
-        <Title level={2} className="text-center">
-          Sign in
-        </Title>
-        {/* <SocialNetworks /> */}
-
-        <div className="option-text">or use your account</div>
-
+        <Form.Item className = "text-center">
+          <Title level={1} style = {{color: "#00A551"}}>Đăng nhập</Title>
+        </Form.Item>
         <Form.Item
-          name="email"
-          hasFeedback
-          label="Email address"
+          label="Tài khoản"
+          name="username"
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
-          rules={[
-            {
-              required: true,
-              message: "Please input your email.",
-            },
-            {
-              type: "email",
-              message: "Your email is invalid.",
-            },
-          ]}
+          rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
         >
-          <Input placeholder="Email" size="large" />
+          <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
         </Form.Item>
 
         <Form.Item
+          label="Mật khẩu"
           name="password"
-          hasFeedback
-          label="Password"
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
           rules={[
-            {
-              required: true,
-              message: "Please input your password.",
-            },
-            { min: 6, message: "Password must be minimum 6 characters." },
-          ]}
+          { 
+            required: true, message: 'Mật khẩu không được bỏ trống!'
+          },
+          {
+            min: 6,
+            message: 'Mật khẩu phải tối thiểu 8 kí tự',
+          }]}
         >
-          <Input.Password placeholder="Password" size="large" />
+          <Input.Password className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
         </Form.Item>
 
+        <Form.Item
+          name="remember"
+          valuePropName="checked"
+        >
+        <Flex className = "mt-3" justify = "space-between">
+        <Checkbox >Ghi nhớ đăng nhập</Checkbox>
+        <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}}>
+          Quên mật khẩu ?
+        </span>
+        </Flex>
+        </Form.Item>
         <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="#">
-            Forgot password?
-          </a>
+        <StyleProvider hashPriority= "high">
+          <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
+              Đăng nhập
+          </Button>
+        </StyleProvider>
         </Form.Item>
+        <Divider style = {{borderColor: "black", fontSize: "2rem"}}>
+          Phương thức khác
+        </Divider>
 
-        <Button
-        //   loading={auth.loading}
-          type="primary"
-          htmlType="submit"
-          shape="round"
-          icon={<LoginOutlined />}
-          size="large"
-        >
-          Sign In
-        </Button>
+        <Flex gap = "3rem" align = "center" justify="center">
+          <NavLink to = "http://localhost:5000/v1/auth/google">
+            <GoogleIcon/>
+          </NavLink>
+
+          <NavLink to = "http://localhost:5000/v1/auth/facebook">
+            <FacebookIcon/>
+          </NavLink>
+
+          <NavLink to = "http://localhost:5000/v1/auth/github">
+            <GithubIcon/>
+          </NavLink>
+        </Flex>
+
+       <Flex className = "mt-10" justify = "center" gap = "small">
+        <span className={styles[""]}>
+          Chưa đăng ký?
+        </span>
+        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}}>
+          Đăng kí tài khoản
+        </span>
+       </Flex>
       </Form>
-    </>
-  );
+  </div>
+  </Flex>
+  
 }
+
+export default LoginForm;
