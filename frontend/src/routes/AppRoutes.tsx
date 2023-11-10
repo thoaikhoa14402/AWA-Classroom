@@ -4,6 +4,7 @@ import Classes from "~/pages/Classes";
 import HomePage from "~/pages/Home";
 import Profile from "~/pages/Profile";
 import SearchPage from "~/pages/Search";
+import LoginPage from "~/pages/LoginPage/LoginPage";
 
 const AppRoutes = () => {
     return (
@@ -18,6 +19,7 @@ const AppRoutes = () => {
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/profile" element={<Profile />} />
             </Route>
+            <Route path = '/login' element = {<LoginPage/>}></Route>
         </Routes>
     );
 };

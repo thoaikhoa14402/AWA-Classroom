@@ -16,7 +16,9 @@ export interface IUser {
     password: string;
     email?: string;
     phoneNumber?: string;
+    address?: string;
     active?: boolean;
+    role?: string;
 }
 export interface IUserMethods {
     correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
@@ -34,6 +36,8 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         githubID: {type: String},
         firstname: { type: String },
         lastname: { type: String},
+        role: {type: String},
+        address: {type: String},
         password: { 
             type: String,
             select: false, // never show up password field in the output if select == false
