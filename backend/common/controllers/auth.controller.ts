@@ -62,7 +62,7 @@ class AuthController implements IController {
         });
 
         return res.status(200).json({
-            message: "Login successfully",
+            message: "Đăng nhập thành công!",
             user: clonedUser,
             accessToken: accessToken
         })
@@ -94,7 +94,7 @@ class AuthController implements IController {
           });
 
         return res.status(200).json({
-            message: "Register successfully",
+            message: "Đăng ký thành công!",
             user: clonedUser,
             accessToken: accessToken
         })
@@ -137,7 +137,7 @@ class AuthController implements IController {
             // When using Axios, it will automatically add 'origin' field into request headers
             if (user._id) {
                 if (origin) { // from HTTP client 
-                    return res.status(200).json({ message: "You have been authenticated" })
+                    return res.status(200).json({ message: "Tài khoản đã được xác thực!" })
                 }
                 return res.redirect('http://localhost:3000')
             }
