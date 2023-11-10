@@ -5,7 +5,7 @@ import './index.css';
 
 import App from './App';
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Form } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -38,10 +38,10 @@ root.render(
         }
       }}
     >
-    {/* <StyleProvider hashPriority= "high"> */}
-      <App />
-    {/* </StyleProvider> */}
-  </ConfigProvider>
+      <StyleProvider hashPriority= "high">
+        <App />
+      </StyleProvider>
+    </ConfigProvider>
     </Provider>
   </BrowserRouter>
 );

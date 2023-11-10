@@ -3,9 +3,6 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
-  // corePlugins: {
-  //   preflight: false
-  // },
   theme: {
     extend: {
       backgroundColor: {
@@ -27,8 +24,8 @@ module.exports = {
         'primary': '#00A551'
       },
       inset: {
-        'mbsize': '7.3rem auto auto auto',
-        'desksize': '4.1rem auto auto auto'
+        'mbsize': '11.95rem auto auto auto',
+        'desksize': '4.3rem auto auto auto'
       },
       outlineColor: {
         'primary': '#00A551'

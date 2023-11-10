@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Checkbox, Form, Input,Typography, Divider, Flex, Segmented, Space, Row, message } from 'antd';
-import {StyleProvider} from '@ant-design/cssinjs';
 import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
 import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
 import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
@@ -75,7 +74,7 @@ const LoginForm: React.FC = () => {
   return <Flex>
     {contextHolder}
     <div className = 'w-1/2'>
-      <img src = {eLearningImg} className = "w-full h-full"/>
+      <img src = {eLearningImg} className = "w-full h-full" alt="learning-bg" />
     </div>
     <div className = "w-1/2 flex justify-center items-center h-screen">
       <Form
@@ -129,11 +128,9 @@ const LoginForm: React.FC = () => {
         </Flex>
         </Form.Item>
         <Form.Item>
-        <StyleProvider hashPriority= "high">
           <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
               Đăng nhập
           </Button>
-        </StyleProvider>
         </Form.Item>
         <Divider style = {{borderColor: "black", fontSize: "2rem"}}>
           Phương thức khác
