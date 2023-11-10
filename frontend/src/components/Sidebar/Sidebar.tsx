@@ -63,6 +63,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
             </NavLink>
             <div className="relative flex flex-col gap-2">
                 <NavLink
+                    style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
                     to='/classes'
                     className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                     <AcademyCap className="w-7 h-7" />{" "}
@@ -74,8 +75,8 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
                     { props.open && items.map((el, _) => {
                         return <NavLink 
-                                style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
-                                to={`/class/${_ + 1}`} key={_} title={el.title} className="flex gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
+                                style={({ isActive }) => (isActive ? {backgroundColor: 'white', color: '#00A331', borderLeft: '4px solid #00A551', fontWeight: '500' } : {})}
+                                to={`/classes/${_ + 1}`} key={_} title={el.title} className="flex border-l-4 border-l-transparent gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
                             <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full ${el.color}`}>{el.title[0]}</span>
                             {(el.title.length > 22) ? `${el.title.substring(0, 22)}...` : el.title}
                         </NavLink>
