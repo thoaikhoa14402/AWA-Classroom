@@ -65,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
     // TEMP REMOVE AFTER
 
-    const isLogin = true;
+    const isLogin = false;
     const profile = {
         username: 'Minh Nguyen',
         avatar: '',
