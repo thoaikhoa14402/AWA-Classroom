@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
                         <Flex align="center" vertical>
                             <Avatar size={124} icon={<UserOutlined />} className="mb-5" />
                             <Button icon={<UploadOutlined />} className="!py-2 !text-center !h-auto">
-                                Upload
+                                Chọn ảnh
                             </Button>
                         </Flex>
                     </Upload>
