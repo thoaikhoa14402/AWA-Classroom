@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import BaseLayout from "~/layouts/BaseLayout";
+import LoginPage from "~/pages/LoginPage/LoginPage";
 
 const AppRoutes = () => {
     return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
                 <Route path="/schedule" element={<>Schedule</>} />
                 <Route path="/settings" element={<>Settings</>} />
             </Route>
+            <Route path = '/login' element = {<LoginPage/>}></Route>
         </Routes>
     );
 };

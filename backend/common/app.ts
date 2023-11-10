@@ -85,10 +85,9 @@ class Application {
 
     private setup() {
         console.log(chalk.yellow('Setting up server...'));
-
+        this.app.use(credentials);
         this.app.use(cors(CorsCustomOptions));
         this.app.use(cloudinary.config(this.cloudinaryConnection));
-        this.app.use(credentials);
 
         this.app.use(express.json({ limit: '50mb' }));
         this.app.use(express.urlencoded({ extended: true }));

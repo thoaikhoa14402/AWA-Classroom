@@ -11,20 +11,8 @@ function App() {
     window.scrollTo(0, 0);
   }, [location]);
 
-  const login = () => {
-    window.open('http://localhost:5000/v1/auth/google', '_self');
-  }
-
   return (
-    <>
-    <div className="App">
-      <a href="http://localhost:5000/v1/auth/google" style = {{color: "black"}}>Login with Google</a>
-    </div>
-
-    <div className="App">
-      <a href="http://localhost:5000/v1/auth/facebook" style = {{color: "black"}}>Login with Facebook</a>
-    </div>
-    </>
+    <AppRoutes/>
   );
 
   // Handle events from socket connection
