@@ -10,7 +10,7 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route element={<BaseLayout />}>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/classes">
                     <Route path=":class_id?" element={<Classes />} />    
                 </Route>

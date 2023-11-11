@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, Input,Typography, Divider, Flex, Segmented, Spa
 import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
 import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
 import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import useAppSelector from "~/hooks/useAppSelector";
@@ -15,8 +15,7 @@ const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const userProfile = useAppSelector((state) => state.user.profile as UserProfile);
-  console.log('user Profile', userProfile);
+  const navigate = useNavigate();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -36,7 +35,7 @@ const LoginForm: React.FC = () => {
           withCredentials: true,
         });
         // Kiểm tra response từ API
-        if (response.status === 200) {
+        if (response.status === 200) { // Nếu xác thực thành công
           message.destroy(key)
           setTimeout(() => {
             messageApi.open({
@@ -46,7 +45,9 @@ const LoginForm: React.FC = () => {
             });
           }, 1500)
           dispatch(setUserProfile(response.data.user as UserProfile))
-          form.resetFields();
+          setTimeout(() => {
+            navigate('/home')
+          }, 2000)
         }
       } catch (err: any) {
         setTimeout(() => {
@@ -66,8 +67,6 @@ const LoginForm: React.FC = () => {
             },
           ]); 
         }, 1500)
-        
-        // console.error(err);
       }
   };
   
@@ -86,9 +85,9 @@ const LoginForm: React.FC = () => {
         className = {styles["login-form"]}
         form = {form}
       >
-        <Form.Item className = "text-center">
-          <Title level={1} style = {{color: "#00A551"}}>Đăng nhập</Title>
-        </Form.Item>
+        {/* <Form.Item className = "text-center" style={{backgroundColor: "brown"}}> */}
+          <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Đăng nhập</Title>
+        {/* </Form.Item> */}
         <Form.Item
           label="Tài khoản"
           name="username"
@@ -113,7 +112,7 @@ const LoginForm: React.FC = () => {
             message: 'Mật khẩu phải tối thiểu 8 kí tự',
           }]}
         >
-          <Input.Password className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
+          <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
         </Form.Item>
 
         <Form.Item
@@ -132,7 +131,7 @@ const LoginForm: React.FC = () => {
               Đăng nhập
           </Button>
         </Form.Item>
-        <Divider style = {{borderColor: "black", fontSize: "2rem"}}>
+        <Divider style = {{borderColor: "black"}}>
           Phương thức khác
         </Divider>
 
@@ -150,7 +149,7 @@ const LoginForm: React.FC = () => {
           </NavLink>
         </Flex>
 
-       <Flex className = "mt-10" justify = "center" gap = "small">
+       <Flex className = "mt-6" justify = "center" gap = "small">
         <span className={styles[""]}>
           Chưa đăng ký?
         </span>

@@ -139,7 +139,7 @@ class AuthController implements IController {
                 if (origin) { // from HTTP client 
                     return res.status(200).json({ message: "Tài khoản đã được xác thực!" })
                 }
-                return res.redirect('http://localhost:3000')
+                return res.redirect('http://localhost:3000/home')
             }
             next();
         })(req, res, next);
