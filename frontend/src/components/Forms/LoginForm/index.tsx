@@ -71,7 +71,7 @@ const LoginForm: React.FC = () => {
       }
   };
   
-  return <Flex>
+  return <Flex className={styles['main']}>
     {contextHolder}
     <div className = 'w-1/2'>
       <img src = {eLearningImg} className = "w-full h-full" alt="learning-bg" />

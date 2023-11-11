@@ -1,5 +1,6 @@
 .login-form {
   /* background-color: yellow; */
+  scale: .625;
   width: 50rem !important;
   padding: 4rem 6rem 4rem !important;
   border-radius: 12px !important;
