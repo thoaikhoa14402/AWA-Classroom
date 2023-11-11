@@ -1,15 +1,14 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, Segmented, Space, Row, message } from 'antd';
+import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
 import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
 import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
 import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
-import useAppSelector from "~/hooks/useAppSelector";
-import eLearningImg from '~/assets/images/e-learning.jpg'
 import styles from "./LoginForm.module.css"
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const {Title} = Typography;
 
@@ -70,97 +69,89 @@ const LoginForm: React.FC = () => {
       }
   };
   
-  return <Flex className={styles['main']}>
+  return <React.Fragment>
     {contextHolder}
-    <div className = 'w-1/2'>
-      <img src = {eLearningImg} className = "w-full h-full" alt="learning-bg" />
-    </div>
-    <div className = "w-1/2 flex justify-center items-center h-screen">
-      <Form
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-        className = {styles["login-form"]}
-        form = {form}
+    <Form
+      name="basic"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+      className = {styles["login-form"]}
+      form = {form}
+    >
+      <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Đăng nhập</Title>
+      <Form.Item
+        label="Tài khoản"
+        name="username"
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
       >
-        {/* <Form.Item className = "text-center" style={{backgroundColor: "brown"}}> */}
-          <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Đăng nhập</Title>
-        {/* </Form.Item> */}
-        <Form.Item
-          label="Tài khoản"
-          name="username"
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
-        >
-          <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
-        </Form.Item>
+        <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
+      </Form.Item>
+      <Form.Item
+        label="Mật khẩu"
+        name="password"
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        rules={[
+        { 
+          required: true, message: 'Mật khẩu không được bỏ trống!'
+        },
+        {
+          min: 8,
+          message: 'Mật khẩu phải tối thiểu 8 kí tự',
+        }]}
+      >
+        <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
+      </Form.Item>
+      <Form.Item
+        name="remember"
+        valuePropName="checked"
+      >
+      <Flex className = "mt-3" justify = "space-between">
+      <Checkbox >Ghi nhớ đăng nhập</Checkbox>
+      <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}}>
+        Quên mật khẩu ?
+      </span>
+      </Flex>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
+            Đăng nhập
+        </Button>
+      </Form.Item>
+      
+      <Divider style = {{borderColor: "black"}}>
+        Phương thức khác
+      </Divider>
 
-        <Form.Item
-          label="Mật khẩu"
-          name="password"
-          labelCol={{ span: 24 }}
-          wrapperCol={{ span: 24 }}
-          rules={[
-          { 
-            required: true, message: 'Mật khẩu không được bỏ trống!'
-          },
-          {
-            min: 6,
-            message: 'Mật khẩu phải tối thiểu 8 kí tự',
-          }]}
-        >
-          <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
-        </Form.Item>
+      <Flex gap = "3rem" align = "center" justify="center">
+        <NavLink to = "http://localhost:5000/v1/auth/google">
+          <GoogleIcon/>
+        </NavLink>
 
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-        >
-        <Flex className = "mt-3" justify = "space-between">
-        <Checkbox >Ghi nhớ đăng nhập</Checkbox>
-        <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}}>
-          Quên mật khẩu ?
-        </span>
-        </Flex>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
-              Đăng nhập
-          </Button>
-        </Form.Item>
-        <Divider style = {{borderColor: "black"}}>
-          Phương thức khác
-        </Divider>
+        <NavLink to = "http://localhost:5000/v1/auth/facebook">
+          <FacebookIcon/>
+        </NavLink>
 
-        <Flex gap = "3rem" align = "center" justify="center">
-          <NavLink to = "http://localhost:5000/v1/auth/google">
-            <GoogleIcon/>
-          </NavLink>
+        <NavLink to = "http://localhost:5000/v1/auth/github">
+          <GithubIcon/>
+        </NavLink>
+      </Flex>
 
-          <NavLink to = "http://localhost:5000/v1/auth/facebook">
-            <FacebookIcon/>
-          </NavLink>
-
-          <NavLink to = "http://localhost:5000/v1/auth/github">
-            <GithubIcon/>
-          </NavLink>
-        </Flex>
-
-       <Flex className = "mt-6" justify = "center" gap = "small">
+      <Flex className = "!mt-6" justify = "center" gap = "small">
         <span className={styles[""]}>
           Chưa đăng ký?
         </span>
-        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}}>
+        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/register')}>
           Đăng kí tài khoản
         </span>
-       </Flex>
-      </Form>
-  </div>
-  </Flex>
-  
+      </Flex>
+
+    </Form>
+  </React.Fragment>
 }
 
 export default LoginForm;

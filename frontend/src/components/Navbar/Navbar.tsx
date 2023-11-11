@@ -113,8 +113,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     </Dropdown>
                     : 
                     <div className="flex gap-2 whitespace-nowrap">
-                        <NavLink to='/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Đăng Ký</NavLink>
-                        <NavLink to='/login' className="flex items-center gap-1.5 px-5 py-2.5 outline-none border-2 font-semibold border-primary rounded-full text-white text-sm bg-primary hover:shadow-lg hover:border-transparent disabled:bg-gray-400/80 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-300 hover:bg-hover">
+                        <NavLink to='/auth/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Đăng Ký</NavLink>
+                        <NavLink to='/auth/login' className="flex items-center gap-1.5 px-5 py-2.5 outline-none border-2 font-semibold border-primary rounded-full text-white text-sm bg-primary hover:shadow-lg hover:border-transparent disabled:bg-gray-400/80 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-300 hover:bg-hover">
                             Đăng Nhập <FontAwesomeIcon icon={faArrowRight} /> 
                         </NavLink>
                     </div> 
