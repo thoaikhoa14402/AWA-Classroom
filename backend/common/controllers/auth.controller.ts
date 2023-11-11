@@ -22,9 +22,9 @@ class AuthController implements IController {
     router: Router = Router();
 
     constructor() {
-        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login))
+        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login)) // if cookie and jwt are not set, handle login request
+        this.router.get('/is-login', this.isAuthenticated, this.responseUnauthorizedMessage); // if cookie and jwt are expired, return unauthorized message to client
         this.router.post('/register', DTOValidation.validate<RegisterUserDTO>(RegisterUserDTO, true), catchAsync(this.register))
-        
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
             scope: ['profile', 'email']
@@ -126,6 +126,13 @@ class AuthController implements IController {
             if (info instanceof Error) return next(info);
             next();
         })(req, res, next);
+    }
+
+    /// >  RESPONSE ACCESS TOKEN STATUS
+    private responseUnauthorizedMessage = (req: Request, res: Response, next: NextFunction) => {
+        return res.status(401).json({
+            message: "Tài khoản chưa được xác thực!"
+        })
     }
 
     /// > CHECK AUTH

@@ -7,19 +7,23 @@ import Profile from "~/pages/Profile";
 import SearchPage from "~/pages/Search";
 import LoginPage from "~/pages/Login";
 import RegisterPage from "~/pages/Register";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route element={<BaseLayout />}>
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/classes">
-                    <Route path=":class_id?" element={<Classes />} />    
+             {/* Protected routes */}
+             <Route element = {<ProtectedRoute/>}>
+                <Route element={<BaseLayout />}>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/classes">
+                        <Route path=":class_id?" element={<Classes />} />    
+                    </Route>
+                    <Route path="/schedule" element={<>Schedule</>} />
+                    <Route path="/settings" element={<>Settings</>} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/profile" element={<Profile />} />
                 </Route>
-                <Route path="/schedule" element={<>Schedule</>} />
-                <Route path="/settings" element={<>Settings</>} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/profile" element={<Profile />} />
             </Route>
             {/* Authentication routes */}
             <Route path = "/auth" element = {<AuthLayout/>}>
@@ -27,6 +31,7 @@ const AppRoutes = () => {
                 <Route path = "login" element = {<LoginPage/>}/>
                 <Route path = "register" element = {<RegisterPage/>}/>
             </Route>
+           
         </Routes>
     );
 };

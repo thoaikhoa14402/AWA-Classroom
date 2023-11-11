@@ -32,6 +32,7 @@ const RegisterForm: React.FC = () => {
         // Kiểm tra response từ API
         if (response.status === 200) { // Nếu xác thực thành công
           message.destroy(key)
+
           setTimeout(() => {
             messageApi.open({
               key,
@@ -39,10 +40,14 @@ const RegisterForm: React.FC = () => {
               content: 'Đăng ký thành công!',
             });
           }, 1500)
+
           dispatch(setUserProfile(response.data.user as UserProfile))
           setTimeout(() => {
             navigate('/home')
           }, 2000)
+
+          // set user's profile to local storage
+          localStorage.setItem('user', JSON.stringify(response.data.user as UserProfile));
         }
       } catch (err: any) {
         setTimeout(() => {

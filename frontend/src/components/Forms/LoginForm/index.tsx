@@ -8,8 +8,7 @@ import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./LoginForm.module.css"
 import axios from "axios";
-import Cookies from 'js-cookie';
-
+import useAuth from "~/hooks/useAuth";
 const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
@@ -18,7 +17,16 @@ const LoginForm: React.FC = () => {
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-
+  const isAuthenticated = useAuth();
+  // if user was authenticate but the cookie is expired
+  if (!isAuthenticated && localStorage.getItem('user')) {
+    localStorage.removeItem('user');
+    messageApi.open({
+      type: 'error',
+      content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
+    })
+  } 
+ 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
@@ -36,6 +44,7 @@ const LoginForm: React.FC = () => {
         // Kiểm tra response từ API
         if (response.status === 200) { // Nếu xác thực thành công
           message.destroy(key)
+        
           setTimeout(() => {
             messageApi.open({
               key,
@@ -43,10 +52,14 @@ const LoginForm: React.FC = () => {
               content: 'Đăng nhập thành công!',
             });
           }, 1500)
+
           dispatch(setUserProfile(response.data.user as UserProfile))
           setTimeout(() => {
             navigate('/home')
           }, 2000)
+
+         // set user's profile to local storage
+         localStorage.setItem('user', JSON.stringify(response.data.user as UserProfile));
         }
       } catch (err: any) {
         setTimeout(() => {
@@ -81,6 +94,7 @@ const LoginForm: React.FC = () => {
       form = {form}
     >
       <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Đăng nhập</Title>
+     
       <Form.Item
         label="Tài khoản"
         name="username"
@@ -90,6 +104,7 @@ const LoginForm: React.FC = () => {
       >
         <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
       </Form.Item>
+     
       <Form.Item
         label="Mật khẩu"
         name="password"
@@ -106,6 +121,7 @@ const LoginForm: React.FC = () => {
       >
         <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
       </Form.Item>
+     
       <Form.Item
         name="remember"
         valuePropName="checked"
@@ -117,6 +133,7 @@ const LoginForm: React.FC = () => {
       </span>
       </Flex>
       </Form.Item>
+     
       <Form.Item>
         <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
             Đăng nhập
