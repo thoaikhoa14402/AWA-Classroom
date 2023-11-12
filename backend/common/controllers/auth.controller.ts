@@ -30,14 +30,21 @@ class AuthController implements IController {
             scope: ['profile', 'email']
         }))
         // google callback URL
-        this.router.get('/google/cb', passport.authenticate('google', {session: false}), this.googleCallbackHandler) 
+        this.router.get('/google/cb', passport.authenticate('google', {session: false}), this.socialOAuthCallbackHandler) 
        
         // authentication with Facebook
         this.router.get('/facebook', this.isAuthenticated, passport.authenticate('facebook', {
             scope: ['public_profile', 'email']
         }))
         // facebook callback URL
-        this.router.get('/facebook/cb', passport.authenticate('facebook', {session: false}), this.facebookCallbackHandler) 
+        this.router.get('/facebook/cb', passport.authenticate('facebook', {session: false}), this.socialOAuthCallbackHandler) 
+
+        // authentication with Github
+        this.router.get('/github', this.isAuthenticated, passport.authenticate('github', {
+            scope: ['public_profile', 'email']
+        }))
+        // facebook callback URL
+        this.router.get('/github/cb', passport.authenticate('github', {session: false}), this.socialOAuthCallbackHandler) 
        
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
@@ -100,7 +107,7 @@ class AuthController implements IController {
         })
     }
 
-    private googleCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {
+    private socialOAuthCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
@@ -110,16 +117,6 @@ class AuthController implements IController {
         res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
     }
 
-    private facebookCallbackHandler = async (req: Request, res: Response, next: NextFunction) => { 
-        const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
-        res.cookie('jwt', accessToken, {
-            expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
-            httpOnly: true, // Make the cookie accessible only through HTTP
-            secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
-          });
-        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
-    }
- 
     /// > PROTECT
     public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
