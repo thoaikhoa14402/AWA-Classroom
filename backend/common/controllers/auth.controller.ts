@@ -48,6 +48,9 @@ class AuthController implements IController {
        
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
+        
+        //logout route
+        this.router.get('/logout', this.protect, this.logout);   
     }
     
     /// > LOGIN
@@ -144,7 +147,7 @@ class AuthController implements IController {
                 if (origin) { // from HTTP client 
                     return res.status(200).json({ message: "Tài khoản đã được xác thực!" })
                 }
-                return res.redirect('http://localhost:3000/home')
+                return res.redirect(`${process.env.CLIENT_HOST}/home`)
             }
             next();
         })(req, res, next);
@@ -158,6 +161,12 @@ class AuthController implements IController {
             message: "Passed through protect middleware successfully",
             // YOUR DATA 
         })
+    }
+
+    /// > LOGOUT
+    private logout = (req: Request, res: Response, next: NextFunction) => { 
+        res.clearCookie('jwt');
+        res.status(302).redirect(`${process.env.CLIENT_HOST}/auth/login`);
     }
 }
 

@@ -13,6 +13,8 @@ import useRandomColor from "~/hooks/useRandomColor";
 
 import classes from './Navbar.module.css';
 import authStorage from "~/utils/auth.storage";
+import { clearUserProfile } from "~/store/reducers/userSlice";
+import useAppDispatch from "~/hooks/useAppDispatch";
 
 interface NavbarProps {
     toggleSidebar: (option?: string | boolean) => void
@@ -20,6 +22,8 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = (props) => {
     const isLogin = authStorage.isLogin();
+
+    const dispatch = useAppDispatch();
 
     const color = useRandomColor();
     const profile = useAppSelector(state => state.user.profile)!;
@@ -65,9 +69,13 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             label: 'Đăng xuất',
             icon: <LogoutOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
-            onClick: () => {}
+            onClick: () => {
+                dispatch(clearUserProfile());
+                window.location.replace(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/logout`);
+                // window.open(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/logout`, '_self');
+            }
         }
-    ], [navigate, props]);
+    ], [navigate, props, dispatch]);
 
     const menus = useCallback((_:ReactNode) => (
         <Menu className="!shadow-md border border-slate-100 !w-full !rounded-md" items={items} />
