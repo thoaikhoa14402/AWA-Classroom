@@ -34,7 +34,6 @@ const userProfile = {
 }
 
 const Profile: React.FC = () => {
-
     const [messageApi, contextHolder] = message.useMessage();
 
     const [form] = Form.useForm();
