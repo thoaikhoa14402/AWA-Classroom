@@ -76,7 +76,7 @@ const Profile: React.FC = () => {
         const formData = new FormData();
         formData.append("avatar", file);
         
-        axios.put("http://localhost:5000/v1/user/upload", formData, {
+        axios.put(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/upload`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             },
@@ -97,7 +97,7 @@ const Profile: React.FC = () => {
     };
 
     const onFinish = (values: any) => {
-        axios.patch('http://localhost:5000/v1/user/profile', values, {
+        axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/profile`, values, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -148,7 +148,7 @@ const Profile: React.FC = () => {
                 onFinish={onFinish}>
                 <Flex justify="center">
                     <Form.Item className="!text-center !mb-5">
-                        <ImgCrop rotationSlider modalTitle="Crop Avatar">
+                        <ImgCrop rotationSlider modalTitle="Chỉnh sửa Avatar">
                             <Upload
                                 name="avatar" 
                                 customRequest={handleUploadFile}
