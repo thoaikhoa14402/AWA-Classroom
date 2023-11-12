@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             label: 'Cá nhân',
             icon: <UserOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
-            onClick: () => { navigate('/profile'); props.toggleSidebar(false); }
+            onClick: () => { navigate('/user/profile'); props.toggleSidebar(false); }
         },
         {
             key: 'reset-password',

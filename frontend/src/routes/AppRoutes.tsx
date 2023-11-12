@@ -22,7 +22,7 @@ const AppRoutes = () => {
                     <Route path="/schedule" element={<>Schedule</>} />
                     <Route path="/settings" element={<>Settings</>} />
                     <Route path="/search" element={<SearchPage />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/user/profile" element={<Profile />} />
                 </Route>
             </Route>
             {/* Authentication routes */}
