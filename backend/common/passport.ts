@@ -15,12 +15,14 @@ const cookieExtractor = (req: Request): string | null => {
 
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-    secretOrKey: process.env.JWT_SECRET as string
+    secretOrKey: process.env.JWT_SECRET as string,
+    passReqToCallback: true
 }
 
-const jwtStrategy = new JwtStrategy(jwtOptions, (jwt_payload, done) => {
+const jwtStrategy = new JwtStrategy(jwtOptions, (req: any, jwt_payload: any, done: any) => {
     UserModel.findOne({_id: jwt_payload._id}).then((user) => {
         if (user) {
+            req.user = user;
             return done(null, user)
         } else {
             return done(null, false)

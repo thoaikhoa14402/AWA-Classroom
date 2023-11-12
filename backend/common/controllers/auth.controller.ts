@@ -121,7 +121,7 @@ class AuthController implements IController {
     }
  
     /// > PROTECT
-    private protect = (req: Request, res: Response, next: NextFunction) => {
+    public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
             if (info instanceof Error) return next(info);
             next();

@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 import { validate, ValidationError } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import AppError from '@common/services/errors/app.error';
 
 class DTOValidation {
@@ -19,13 +19,19 @@ class DTOValidation {
         return (request: Request, response: Response, next: NextFunction) => {
             const instance = plainToInstance(dto, request.body);
 
-            validate(instance, { skipMissingProperties }).then((errors: ValidationError[]) => {
+            validate(instance, { 
+                skipMissingProperties, 
+                whitelist: true,
+            }).then((errors: ValidationError[]) => {
                 if (errors.length > 0) {
                     const message = errors
                         .map((error: ValidationError) => Object.values(error.constraints as any))
                         .join(',').replace(/,/g, '. ');
                     return next(new AppError(message, 400));
                 }
+
+                request.body = instance;
+
                 return next();
             });
         };
