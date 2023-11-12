@@ -1,15 +1,12 @@
 .login-form {
-  /* background-color: yellow; */
-  scale: .625;
-  width: 50rem !important;
-  padding: 4rem 6rem 4rem !important;
+  width: 40rem !important;
+  padding: 2rem 3rem 1rem !important;
   border-radius: 12px !important;
   border: 1px solid #dee2e6 !important;
-  /* box-shadow: 0px 2px 6px 6px rgba(0, 0, 0, 0.1); */
 }
 
 .input-style {
-  height: 4rem !important;
+  height: 3rem !important;
 }
 
 .btn-style {
