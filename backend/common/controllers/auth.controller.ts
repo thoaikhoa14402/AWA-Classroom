@@ -22,9 +22,9 @@ class AuthController implements IController {
     router: Router = Router();
 
     constructor() {
-        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login))
+        this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login)) // if cookie and jwt are not set, handle login request
+        this.router.get('/is-login', this.isAuthenticated, this.responseUnauthorizedMessage); // if cookie and jwt are expired, return unauthorized message to client
         this.router.post('/register', DTOValidation.validate<RegisterUserDTO>(RegisterUserDTO, true), catchAsync(this.register))
-        
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
             scope: ['profile', 'email']
@@ -41,6 +41,16 @@ class AuthController implements IController {
        
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
+
+        // get user testing route (remove later after testing)
+        this.router.get('/user/:id', this.protect, catchAsync(async (req, res, next) => {
+            const userId = req.params.id;
+            const user = await UserModel.findById(userId);
+            return res.status(200).json({
+                message: "success",
+                user: user,
+            })
+        }))
     }
     
     /// > LOGIN
@@ -107,7 +117,7 @@ class AuthController implements IController {
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
-        res.redirect('http://localhost:3000')
+        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
     }
 
     private facebookCallbackHandler = async (req: Request, res: Response, next: NextFunction) => { 
@@ -117,7 +127,7 @@ class AuthController implements IController {
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
-        res.redirect('http://localhost:3000')
+        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
     }
  
     /// > PROTECT
@@ -126,6 +136,13 @@ class AuthController implements IController {
             if (info instanceof Error) return next(info);
             next();
         })(req, res, next);
+    }
+
+    /// >  RESPONSE ACCESS TOKEN STATUS
+    private responseUnauthorizedMessage = (req: Request, res: Response, next: NextFunction) => {
+        return res.status(401).json({
+            message: "Tài khoản chưa được xác thực!"
+        })
     }
 
     /// > CHECK AUTH
@@ -139,7 +156,7 @@ class AuthController implements IController {
                 if (origin) { // from HTTP client 
                     return res.status(200).json({ message: "Tài khoản đã được xác thực!" })
                 }
-                return res.redirect('http://localhost:3000')
+                return res.redirect('http://localhost:3000/home')
             }
             next();
         })(req, res, next);
