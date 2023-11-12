@@ -44,7 +44,7 @@ const RegisterForm: React.FC = () => {
 
           dispatch(setUserProfile(response.data.user as UserProfile))
           setTimeout(() => {
-            navigate('/home')
+            navigate('/home', {replace: true})
           }, 2000)
 
           // set user's profile to local storage
@@ -164,7 +164,7 @@ const RegisterForm: React.FC = () => {
         <span>
           Đã có tài khoản?
         </span>
-        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/login')}>
+        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/login', {replace: true})}>
           Đăng nhập
         </span>
       </Flex>

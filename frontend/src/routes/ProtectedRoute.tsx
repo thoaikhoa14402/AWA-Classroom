@@ -12,19 +12,19 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
 
     if (!searchParams.get('u_id') && !auth) { // Trường hợp từ Home -> Login page (không cần authentication) (đăng nhập = tài khoản không phải sociak OAuth)
         if (!isFetching && isAuthenticated)
-            return <Navigate to="/home" />
+            return <Navigate to="/home" replace />
         
         if (isFetching)
             return null;
     }
     
     if (auth && !authStorage.getUserProfile()) {
-        return <Navigate to = "/auth/login" />;
+        return <Navigate to = "/auth/login" replace />;
     }
 
     if (auth && authStorage.getUserProfile()) {
         if (!isFetching && !isAuthenticated) {
-            return <Navigate to = "/auth/login" />;
+            return <Navigate to = "/auth/login" replace />;
         }
         
         if (isFetching)

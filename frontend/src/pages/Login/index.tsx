@@ -41,7 +41,7 @@ const LoginPage: React.FC = () => {
 
                     dispatch(setUserProfile(response.data.user as UserProfile))
                     setTimeout(() => {
-                        navigate('/home')
+                        navigate('/home', {replace: true})
                     }, 2000)
 
                     // set user's profile to local storage
