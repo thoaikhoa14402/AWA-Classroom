@@ -39,6 +39,7 @@ const googleStrategy = new GoogleStrategy({
      clientSecret: process.env.CLIENT_SECRET_GOOGLE as string,
      callbackURL: "/v1/auth/google/cb",
     }, async (accessToken: string, refreshToken: string, profile: any, done) => {
+        console.log('gg - profile: ', profile);
     // Check if user already exists in our database
     let user = await UserModel.findOne({googleID: profile.id})
     if (!user) {
@@ -59,15 +60,16 @@ const facebookStrategy = new FacebookStrategy({
     clientID: process.env.CLIENT_ID_FACEBOOK as string,
     clientSecret: process.env.CLIENT_SECRET_FACEBOOK as string,
     callbackURL: "/v1/auth/facebook/cb",
-    profileFields: ['id', 'emails', 'name', 'photos']
+    profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos']
 }, async (accessToken: string, refreshToken: string, profile: any, done) => {
+    console.log('profile: ', profile);
     let user = await UserModel.findOne({facebookID: profile.id})
     if (!user) {
         user = await UserModel.create({
-            facebookID: profile.id,
+            facebookID: profile.id,          
             username: profile.displayName,
             password : '',
-            avatar: profile.photos[0].value,
+            avatar: "https://graph.facebook.com/" + profile.id + "/picture" + "?width=200&height=200",
             facebookId: profile.id,
             lastname: profile.name.familyName,
             firstname: profile.name.givenName,
