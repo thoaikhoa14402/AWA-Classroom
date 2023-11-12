@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
     const [searchParams, _] = useSearchParams();
     const { isAuthenticated, isFetching } = useAuth(); // check if the user is authenticated or not (based on cookie)
 
-    if (!searchParams.get('u_id') && !auth) { // Trường hợp từ Home -> Login page (không cần authentication) (đăng nhập = tài khoản không phải sociak OAuth)
+    if (!searchParams.get('u_id') && !auth) { // Trường hợp từ Home -> Login page (đăng nhập = tài khoản thường không phải Social OAuth)
         if (!isFetching && isAuthenticated)
             return <Navigate to="/home" />
         

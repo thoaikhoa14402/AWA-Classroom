@@ -39,7 +39,6 @@ const googleStrategy = new GoogleStrategy({
      clientSecret: process.env.CLIENT_SECRET_GOOGLE as string,
      callbackURL: "/v1/auth/google/cb",
     }, async (accessToken: string, refreshToken: string, profile: any, done) => {
-        console.log('gg - profile: ', profile);
     // Check if user already exists in our database
     let user = await UserModel.findOne({googleID: profile.id})
     if (!user) {
