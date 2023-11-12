@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
                 type: 'loading',
                 content: 'Đang xử lý!',
             });
-            axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/user/${u_id}`, {
+            axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/${u_id}`, {
             withCredentials: true,
             }).then((response) => {
                 if (response.status === 200) {

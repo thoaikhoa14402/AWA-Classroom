@@ -30,6 +30,8 @@ class UserController implements IController {
         
         const multercloud = new MulterCloudinaryUploader(['jpg', 'jpeg', 'png'], 1 * 1024 * 1024);
         this.router.put('/upload', AuthController.protect, multercloud.single('avatar'), multercloud.uploadCloud('avatars'), catchAsync(this.uploadAvatar));
+
+        this.router.get('/:id', AuthController.protect, catchAsync(this.getProfileById));
     }
     
     /// > GET PROFILE
@@ -63,6 +65,17 @@ class UserController implements IController {
             status: 'success',
             data: req.cloudinaryResult
         });
+    }
+
+    private getProfileById = async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.id;
+        
+        const user = await UserModel.findById(userId);
+
+        return res.status(200).json({
+            message: "success",
+            user: user,
+        })
     }
 }
 
