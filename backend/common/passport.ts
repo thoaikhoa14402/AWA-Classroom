@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as GithubStrategy } from 'passport-github';
 import { NextFunction, Request, Response } from 'express';
 import UserModel from './models/user.model';
 
@@ -19,7 +20,7 @@ const jwtOptions = {
     passReqToCallback: true
 }
 
-const jwtStrategy = new JwtStrategy(jwtOptions, (req: any, jwt_payload: any, done: any) => {
+const jwtStrategy = new JwtStrategy(jwtOptions, (req: Request, jwt_payload: any, done: any) => {
     UserModel.findOne({_id: jwt_payload._id}).then((user) => {
         if (user) {
             req.user = user;
@@ -76,8 +77,30 @@ const facebookStrategy = new FacebookStrategy({
     done(null, user)
 })
 
+const githubStrategy = new GithubStrategy({
+    clientID: process.env.CLIENT_ID_GITHUB as string,
+    clientSecret: process.env.CLIENT_SECRET_GITHUB as string,
+    callbackURL: "/v1/auth/github/cb",
+}, async (accessToken: string, refreshToken: string, profile: any, done) => {
+    // Check if user already exists in our database
+    let user = await UserModel.findOne({githubID: profile.id})
+    if (!user) {
+        user = await UserModel.create({
+            githubID: profile.id,
+            username: profile.username,
+            password : '',
+            email: profile.emails[0].value,
+            firstname: profile.displayName,
+            avatar: profile.photos[0].value,
+        })
+    }
+    done(null, user);
+})
+
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
 passport.use(facebookStrategy);
+passport.use(githubStrategy);
+
 
 export default passport;
