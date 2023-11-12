@@ -41,6 +41,16 @@ class AuthController implements IController {
        
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
+
+        // get user testing route (remove later after testing)
+        this.router.get('/user/:id', this.protect, catchAsync(async (req, res, next) => {
+            const userId = req.params.id;
+            const user = await UserModel.findById(userId);
+            return res.status(200).json({
+                message: "success",
+                user: user,
+            })
+        }))
     }
     
     /// > LOGIN
@@ -107,7 +117,7 @@ class AuthController implements IController {
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
-        res.redirect('http://localhost:3000')
+        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
     }
 
     private facebookCallbackHandler = async (req: Request, res: Response, next: NextFunction) => { 
@@ -117,7 +127,7 @@ class AuthController implements IController {
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
-        res.redirect('http://localhost:3000')
+        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
     }
  
     /// > PROTECT

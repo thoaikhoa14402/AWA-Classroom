@@ -38,7 +38,7 @@ const LoginForm: React.FC = () => {
           type: 'loading',
           content: 'Đang xử lý!',
         });
-        const response = await axios.post('http://localhost:5000/v1/auth/login', values, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/login`, values, {
           withCredentials: true,
         });
         // Kiểm tra response từ API
@@ -145,15 +145,15 @@ const LoginForm: React.FC = () => {
       </Divider>
 
       <Flex gap = "3rem" align = "center" justify="center">
-        <NavLink to = "http://localhost:5000/v1/auth/google">
+        <NavLink to = {`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/google`}>
           <GoogleIcon/>
         </NavLink>
 
-        <NavLink to = "http://localhost:5000/v1/auth/facebook">
+        <NavLink to = {`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/facebook`}>
           <FacebookIcon/>
         </NavLink>
 
-        <NavLink to = "http://localhost:5000/v1/auth/github">
+        <NavLink to ={`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/github`}>
           <GithubIcon/>
         </NavLink>
       </Flex>

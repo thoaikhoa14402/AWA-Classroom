@@ -26,7 +26,7 @@ const RegisterForm: React.FC = () => {
           type: 'loading',
           content: 'Đang xử lý!',
         });
-        const response = await axios.post('http://localhost:5000/v1/auth/register', values, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/register`, values, {
           withCredentials: true,
         });
         // Kiểm tra response từ API

@@ -6,7 +6,7 @@ import { error } from 'console';
 export default function useAuth() {
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     useEffect(() => {
-        axios.get('http://localhost:5000/v1/auth/is-login', {
+        axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/is-login`, {
             withCredentials: true,
         }).then((response) => {
             if (response.status === 200) {
