@@ -7,6 +7,7 @@ import Footer from "~/components/Footer/Footer";
 import "./BaseLayout.module.css";
 
 const BaseLayout: React.FC = () => {
+
     const [sidebar, setSidebar] = useState<boolean>(true);
 
     const toggleSidebar = (option: string | boolean = 'toggle') => setSidebar((prev) => (option === 'toggle') ? !prev : option as boolean);

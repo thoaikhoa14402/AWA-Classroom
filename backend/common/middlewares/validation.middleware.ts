@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 import { validate, ValidationError } from 'class-validator';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import AppError from '@common/services/errors/app.error';
 
 class DTOValidation {
