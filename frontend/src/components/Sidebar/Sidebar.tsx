@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = (props) => {
-    
+
     const items = [{
         title: 'Cơ trở trí tuệ nhân tạo',
         color: 'bg-bluex'

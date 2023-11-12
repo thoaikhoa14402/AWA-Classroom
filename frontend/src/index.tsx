@@ -5,7 +5,7 @@ import './index.css';
 
 import App from './App';
 
-import { BrowserRouter, Form } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -24,24 +24,23 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-    <ConfigProvider
-      theme={{
-        token: {
-          fontFamily: "Montserrat",
-          colorPrimary: '#00A551',
-          fontSize: 16
-        },
-        components: {
-          Button: {
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily: "Montserrat",
             colorPrimary: '#00A551',
+            fontSize: 16
+          },
+          components: {
+            Button: {
+              colorPrimary: '#00A551',
+            }
           }
-        }
-      }}
-    >
-      <StyleProvider hashPriority= "high">
-        <App />
-      </StyleProvider>
-    </ConfigProvider>
+        }}>
+          <StyleProvider hashPriority= "high">
+            <App />
+          </StyleProvider>
+      </ConfigProvider>
     </Provider>
   </BrowserRouter>
 );

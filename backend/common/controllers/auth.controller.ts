@@ -41,16 +41,6 @@ class AuthController implements IController {
        
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
-
-        // get user testing route (remove later after testing)
-        this.router.get('/user/:id', this.protect, catchAsync(async (req, res, next) => {
-            const userId = req.params.id;
-            const user = await UserModel.findById(userId);
-            return res.status(200).json({
-                message: "success",
-                user: user,
-            })
-        }))
     }
     
     /// > LOGIN
@@ -131,7 +121,7 @@ class AuthController implements IController {
     }
  
     /// > PROTECT
-    private protect = (req: Request, res: Response, next: NextFunction) => {
+    public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
             if (info instanceof Error) return next(info);
             next();
