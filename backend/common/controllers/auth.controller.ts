@@ -107,6 +107,7 @@ class AuthController implements IController {
         })
     }
 
+    /// > LOGIN BY SOCIAL OAUTH
     private socialOAuthCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
@@ -114,7 +115,7 @@ class AuthController implements IController {
             httpOnly: true, // Make the cookie accessible only through HTTP
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // Ensure that the cookie is secure in a production environment
           });
-        res.redirect(`http://localhost:3000/auth/login/?u_id=${req.user?.id}`)
+        res.redirect(`${process.env.CLIENT_HOST}/auth/login/?u_id=${req.user?.id}`)
     }
 
     /// > PROTECT
