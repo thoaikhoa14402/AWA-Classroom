@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
             <NavLink
                 style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
                 className={`flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80`}
-                to='/'>
+                to='/home'>
                 <HomeIcon className="w-7 h-7" />{" "}
                 { props.open ? <div className="mt-0.5 text-ellipsis">Màn hình chính</div> : '' }
             </NavLink>
