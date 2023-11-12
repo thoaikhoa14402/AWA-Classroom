@@ -5,6 +5,7 @@ import {message} from 'antd'
 import LoginForm from "~/components/Forms/LoginForm";
 import axios from "axios";
 import useAppDispatch from "~/hooks/useAppDispatch";
+import authStorage from "~/utils/auth.storage";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -28,23 +29,23 @@ const LoginPage: React.FC = () => {
             withCredentials: true,
             }).then((response) => {
                 if (response.status === 200) {
-                message.destroy(key)
-        
-                setTimeout(() => {
-                    messageApi.open({
-                    key,
-                    type: 'success',
-                    content: 'Đăng nhập thành công!',
-                    });
-                }, 1500)
+                    message.destroy(key)
+            
+                    setTimeout(() => {
+                        messageApi.open({
+                        key,
+                        type: 'success',
+                        content: 'Đăng nhập thành công!',
+                        });
+                    }, 1500)
 
-                dispatch(setUserProfile(response.data.user as UserProfile))
-                setTimeout(() => {
-                    navigate('/home')
-                }, 2000)
+                    dispatch(setUserProfile(response.data.user as UserProfile))
+                    setTimeout(() => {
+                        navigate('/home')
+                    }, 2000)
 
-                // set user's profile to local storage
-                localStorage.setItem('user', JSON.stringify(response.data.user as UserProfile));
+                    // set user's profile to local storage
+                    // authStorage.login(response.data.user);
                 }
             }).catch((err) => {
                 console.log('error: ', err);

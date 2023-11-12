@@ -44,7 +44,7 @@ const googleStrategy = new GoogleStrategy({
     if (!user) {
         user = await UserModel.create({
             googleID: profile.id,
-            username: '',
+            username: profile.displayName,
             password : '',
             email: profile.emails[0].value,
             lastname: profile.name.familyName,
@@ -65,7 +65,7 @@ const facebookStrategy = new FacebookStrategy({
     if (!user) {
         user = await UserModel.create({
             facebookID: profile.id,
-            username: '',
+            username: profile.displayName,
             password : '',
             avatar: profile.photos[0].value,
             facebookId: profile.id,

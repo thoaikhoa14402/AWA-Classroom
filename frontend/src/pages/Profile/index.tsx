@@ -13,6 +13,9 @@ import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload";
 import ImgCrop from 'antd-img-crop';
 import validate from "~/utils/validateImages";
 import axios from "axios";
+import useAppSelector from "~/hooks/useAppSelector";
+import useAppDispatch from "~/hooks/useAppDispatch";
+import { setUserProfile } from "~/store/reducers/userSlice";
 
 const getBase64 = (file: RcFile): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -23,17 +26,11 @@ const getBase64 = (file: RcFile): Promise<string> =>
         reader.onerror = (error) => reject(error);
     });
 
-const userProfile = {
-    username: '20127043',
-    firstname: 'Khoa',
-    lastname: 'Nguyễn Thoại Đăng',
-    email: 'nguyenthoaidangkhoa@gmail.com',
-    role: 'Học viên',
-    avatar: '',
-    phoneNumber: ''
-}
-
 const Profile: React.FC = () => {
+    const userProfile = useAppSelector(state => state.user.profile)!;
+
+    const dispatch = useAppDispatch();
+
     const [messageApi, contextHolder] = message.useMessage();
 
     const [form] = Form.useForm();
@@ -41,7 +38,7 @@ const Profile: React.FC = () => {
     const [change, setChange] = useState<boolean>(false);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState<string>(userProfile.avatar);
+    const [imageUrl, setImageUrl] = useState<string>(userProfile.avatar ?? '');
 
     const beforeUpload = (file: RcFile) => {
         const error = validate(file);
@@ -86,7 +83,10 @@ const Profile: React.FC = () => {
         .then((response) => {
             messageApi.success(`Upload ảnh đại diện thành công`);
             
-            userProfile.avatar = response.data.data.secure_url || response.data.data.url;
+            dispatch(setUserProfile({
+                ...userProfile,
+                avatar: response.data.data.secure_url || response.data.data.url
+            }));
 
             onSuccess(userProfile.avatar);
         })
@@ -106,7 +106,7 @@ const Profile: React.FC = () => {
         .then(res => {
             const updatedProfile = res.data.data;
             
-            Object.assign(userProfile, updatedProfile);
+            dispatch(setUserProfile(updatedProfile));
 
             messageApi.success('Cập nhật thông tin thành công');
             
@@ -142,7 +142,7 @@ const Profile: React.FC = () => {
                 form={form}
                 name="user-profile"
                 onChange={handleFormChange}
-                className="!mx-auto !w-full !text-center lg:!w-1/2 !px-0 !border !border-transparent sm:!px-10 lg:!px-12 md:!px-32 2xl:!px-10 sm:!border-gray-200 !pt-9 !pb-4 !rounded-lg"
+                className="!mx-auto !w-full !text-center lg:!w-profile !px-0 !border !border-transparent sm:!px-10 lg:!px-12 md:!px-32 2xl:!px-10 sm:!border-gray-200 !pt-9 !pb-4 !rounded-lg"
                 layout="vertical"
                 initialValues={userProfile}
                 onFinish={onFinish}>
@@ -156,11 +156,11 @@ const Profile: React.FC = () => {
                                 onChange={handleChange}
                                 disabled={isLoading} 
                                 beforeUpload={beforeUpload}>
-                                <div className="!flex !overflow-hidden !justify-center !items-center !rounded-full !w-44 !h-44 bg-gray-50 !border-2 !border-gray-200 !cursor-pointer border-dashed hover:!border-primary transition-all duration-150 ease">
+                                <div className="!flex !overflow-hidden !justify-center !items-center !rounded-full !w-32 !h-32 bg-gray-50 !border-2 !border-gray-200 !cursor-pointer border-dashed hover:!border-primary transition-all duration-150 ease">
                                     { isLoading 
                                         ? <LoadingOutlined style={{ fontSize: "4rem" }} className="text-primary" /> 
                                         : (imageUrl) 
-                                            ? <img alt="avatar" src={imageUrl} /> 
+                                            ? <img className="w-full rounded-full" alt="avatar" src={imageUrl} /> 
                                             : <CameraOutlined style={{ fontSize: "2.5rem" }} className="text-gray-500" /> 
                                     }
                                 </div>
@@ -169,7 +169,7 @@ const Profile: React.FC = () => {
                     </Form.Item>
                 </Flex>
 
-                <div className="!mb-8 !flex !w-full !justify-center !items-center !gap-2">
+                <div className="!mb-8 !flex !flex-col !w-full !justify-center !items-center !gap-2">
                     <b className="!text-xl">{ userProfile.username }</b>
                     <small className="!text-sm !text-gray-600">({userProfile.role})</small>
                 </div>

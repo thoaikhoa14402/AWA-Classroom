@@ -1,16 +1,37 @@
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useSearchParams } from "react-router-dom";
 import useAuth from "~/hooks/useAuth"
+import authStorage from "~/utils/auth.storage";
 
+interface ProtectProps {
+    auth?: boolean;
+}
   
-const  ProtectedRoute = () => {
-    const isAuthenticated = useAuth(); // check if the user is authenticated or not (based on cookie)
-    if (!isAuthenticated && localStorage.getItem('user')) { // if the user was authenticated, but the cookie is expired
+const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) => {
+    const [searchParams, _] = useSearchParams();
+    const { isAuthenticated, isFetching } = useAuth(); // check if the user is authenticated or not (based on cookie)
+
+    if (!searchParams.get('u_id') && !auth) { 
+        if (!isFetching && isAuthenticated)
+            return <Navigate to="/home" />
+        
+        if (isFetching)
+            return null;
+    }
+    
+    if (auth && !authStorage.getUserProfile()) {
         return <Navigate to = "/auth/login" />;
     }
-    return <Outlet/>;
-}
 
+    if (auth && authStorage.getUserProfile()) {
+        if (!isFetching && !isAuthenticated) {
+            return <Navigate to = "/auth/login" />;
+        }
+        
+        if (isFetching)
+            return null;
+    }
+
+    return <Outlet />;
+}
 
 export default ProtectedRoute;
