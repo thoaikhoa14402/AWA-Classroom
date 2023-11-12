@@ -1,10 +1,13 @@
 import {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { error } from 'console';
+import { useLocation } from 'react-router-dom';
 
 export default function useAuth() {
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
+
+    const location = useLocation();
+    
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/is-login`, {
             withCredentials: true,
@@ -15,7 +18,10 @@ export default function useAuth() {
         }).catch((err) => {
             console.log('error: ', err)
             setIsAuthenticated(false);
+        }).finally(() => {
+            setIsFetching(false);
         });
-    }, [])
-   return isAuthenticated;
+    }, [isAuthenticated, location]);
+   
+    return { isAuthenticated, isFetching };
 }

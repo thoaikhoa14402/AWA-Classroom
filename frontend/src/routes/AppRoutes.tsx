@@ -13,7 +13,7 @@ const AppRoutes = () => {
     return (
         <Routes>
              {/* Protected routes */}
-             <Route element = {<ProtectedRoute/>}>
+             <Route element={<ProtectedRoute auth />}>
                 <Route element={<BaseLayout />}>
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/classes">
@@ -26,12 +26,13 @@ const AppRoutes = () => {
                 </Route>
             </Route>
             {/* Authentication routes */}
-            <Route path = "/auth" element = {<AuthLayout/>}>
-                <Route index element = {<LoginPage/>}/>
-                <Route path = "login" element = {<LoginPage/>}/>
-                <Route path = "register" element = {<RegisterPage/>}/>
+            <Route element={<ProtectedRoute />}>
+                <Route path = "/auth" element = {<AuthLayout/>}>
+                    <Route index element = {<LoginPage/>}/>
+                    <Route path = "login" element = {<LoginPage/>}/>
+                    <Route path = "register" element = {<RegisterPage/>}/>
+                </Route>
             </Route>
-           
         </Routes>
     );
 };

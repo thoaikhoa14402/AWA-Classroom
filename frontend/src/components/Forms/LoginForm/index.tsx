@@ -9,6 +9,7 @@ import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./LoginForm.module.css"
 import axios from "axios";
 import useAuth from "~/hooks/useAuth";
+import authStorage from "~/utils/auth.storage";
 const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
@@ -17,14 +18,15 @@ const LoginForm: React.FC = () => {
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const isAuthenticated = useAuth();
+  const { isAuthenticated, isFetching } = useAuth();
+
   // if user was authenticate but the cookie is expired
-  if (!isAuthenticated && localStorage.getItem('user')) {
-    localStorage.removeItem('user');
+  if (!isFetching && authStorage.isLogin() && !isAuthenticated) {
+    authStorage.logout();
     messageApi.open({
       type: 'error',
       content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
-    })
+    });
   } 
  
   const onFinishFailed = (errorInfo: any) => {
@@ -59,7 +61,7 @@ const LoginForm: React.FC = () => {
           }, 2000)
 
          // set user's profile to local storage
-         localStorage.setItem('user', JSON.stringify(response.data.user as UserProfile));
+        //  authStorage.login(response.data.user);
         }
       } catch (err: any) {
         setTimeout(() => {

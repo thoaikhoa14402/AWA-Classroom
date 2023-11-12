@@ -29,6 +29,9 @@ module.exports = {
       },
       outlineColor: {
         'primary': '#00A551'
+      },
+      width: {
+        'profile': '45rem'
       }
     },
   },

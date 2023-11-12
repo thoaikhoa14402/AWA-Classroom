@@ -1,19 +1,29 @@
 import React, { FormEvent, ReactNode, useCallback, useMemo, useRef } from "react";
+import { NavLink, createSearchParams, useNavigate } from "react-router-dom";
+
 import {  faArrowRight, faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { Menu, Dropdown, MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined, KeyOutlined } from "@ant-design/icons";
 
-import classes from './Navbar.module.css';
-import { NavLink, createSearchParams, useNavigate } from "react-router-dom";
+import useAppSelector from "~/hooks/useAppSelector";
+import useAuth from "~/hooks/useAuth";
 import useRandomColor from "~/hooks/useRandomColor";
+
+import classes from './Navbar.module.css';
+import authStorage from "~/utils/auth.storage";
 
 interface NavbarProps {
     toggleSidebar: (option?: string | boolean) => void
 };
 
 const Navbar: React.FC<NavbarProps> = (props) => {
-    
+    const isLogin = authStorage.isLogin();
+
+    const color = useRandomColor();
+    const profile = useAppSelector(state => state.user.profile)!;
+
     const navigate = useNavigate();
     const searchRef = useRef<HTMLInputElement>(null);
 
@@ -63,19 +73,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         <Menu className="!shadow-md border border-slate-100 !w-full !rounded-md" items={items} />
     ), [items]);
 
-    // TEMP REMOVE AFTER
-
-    const isLogin = false;
-    const profile = {
-        username: 'Minh Nguyen',
-        avatar: '',
-        role: 'Học sinh'
-    };
-
-    const color = useRandomColor();
-
-    // END
-
     return (
         <nav className="bg-white w-screen flex justify-center shadow-sm px-4 sticky top-0 z-10">
             <div
@@ -104,10 +101,10 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                                 <span className="font-medium text-right">{profile.username}</span>
                                 <small>{profile.role}</small>
                             </span>
-                            <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white" style={{
+                            <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
                                 backgroundColor: color,
                             }}>
-                                { profile.avatar ? profile.avatar : profile.username[0] }
+                                { profile.avatar ? <img className="w-full" src={profile.avatar} alt="avatar" /> : profile.username[0] }
                             </span>
                         </button> 
                     </Dropdown>

@@ -5,6 +5,7 @@ import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./RegisterForm.module.css"
 import axios from "axios";
+import authStorage from "~/utils/auth.storage";
 
 const {Title} = Typography;
 
@@ -47,7 +48,7 @@ const RegisterForm: React.FC = () => {
           }, 2000)
 
           // set user's profile to local storage
-          localStorage.setItem('user', JSON.stringify(response.data.user as UserProfile));
+          // authStorage.login(response.data.user);
         }
       } catch (err: any) {
         setTimeout(() => {
