@@ -66,7 +66,7 @@
 	<div class="content">
 		<h1 align="center">CODEBASE</h1>
 		<hr />
-		<h2>STRUCTURE</h2>
+		<h2>BACKEND FOLDER STRUCTURE</h2>
 		<ul class="folder-list">
 			<li>
 				<div class="folder">

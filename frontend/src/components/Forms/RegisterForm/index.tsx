@@ -44,11 +44,8 @@ const RegisterForm: React.FC = () => {
 
           dispatch(setUserProfile(response.data.user as UserProfile))
           setTimeout(() => {
-            navigate('/home', {replace: true})
+            window.location.replace('/home');
           }, 2000)
-
-          // set user's profile to local storage
-          // authStorage.login(response.data.user);
         }
       } catch (err: any) {
         setTimeout(() => {

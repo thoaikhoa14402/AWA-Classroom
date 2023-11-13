@@ -153,6 +153,11 @@ class AuthController implements IController {
         })(req, res, next);
     }
 
+    /// > LOGOUT
+    private logout = (req: Request, res: Response, next: NextFunction) => { 
+        res.clearCookie('jwt');
+        res.status(302).redirect(`${process.env.CLIENT_HOST}/auth/login`);
+    }
 
     /// > EXAMPLE PRIVATE LOGIC HANDLER (used for testing purposes)
     private examplePrivateLogicHandler = (req: Request, res: Response, next: NextFunction) => {
@@ -161,12 +166,6 @@ class AuthController implements IController {
             message: "Passed through protect middleware successfully",
             // YOUR DATA 
         })
-    }
-
-    /// > LOGOUT
-    private logout = (req: Request, res: Response, next: NextFunction) => { 
-        res.clearCookie('jwt');
-        res.status(302).redirect(`${process.env.CLIENT_HOST}/auth/login`);
     }
 }
 
