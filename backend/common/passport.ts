@@ -60,7 +60,6 @@ const facebookStrategy = new FacebookStrategy({
     callbackURL: "/v1/auth/facebook/cb",
     profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos']
 }, async (accessToken: string, refreshToken: string, profile: any, done) => {
-    console.log('profile: ', profile);
     let user = await UserModel.findOne({facebookID: profile.id})
     if (!user) {
         user = await UserModel.create({
