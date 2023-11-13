@@ -67,7 +67,8 @@ class AuthController implements IController {
         const accessToken = await JsonWebToken.createToken({_id: user.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
-            domain: process.env.CLIENT_HOST?.replace('https', ''),
+            domain: process.env.CLIENT_HOST?.replace('https://', ''),
+            sameSite: 'none',
             // httpOnly: true, // Make the cookie accessible only through HTTP
             secure: true, // Ensure that the cookie is secure in a production environment
         });
@@ -100,7 +101,8 @@ class AuthController implements IController {
         
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
-            domain: process.env.CLIENT_HOST?.replace('https', ''),
+            domain: process.env.CLIENT_HOST?.replace('https://', ''),
+            sameSite: 'none',
             // httpOnly: true, // Make the cookie accessible only through HTTP
             secure: true, // Ensure that the cookie is secure in a production environment
           });
@@ -117,7 +119,8 @@ class AuthController implements IController {
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         res.cookie('jwt', accessToken, {
             expires: new Date(Date.now() + Number(process.env.JWT_ACCESS_EXPIRES)), // Cookie expiration time in milliseconds
-            domain: process.env.CLIENT_HOST?.replace('https', ''),
+            domain: process.env.CLIENT_HOST?.replace('https://', ''),
+            sameSite: 'none',
             // httpOnly: true, // Make the cookie accessible only through HTTP
             secure: true, // Ensure that the cookie is secure in a production environment
           });
