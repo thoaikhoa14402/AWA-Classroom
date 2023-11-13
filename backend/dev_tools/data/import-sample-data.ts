@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import mongoose from 'mongoose';
-import UserModel from '@common/models/user.model';
+import UserModel from '../../common/models/user.model';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
