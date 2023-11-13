@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import BaseLayout from "~/layouts/BaseLayout";
 import AuthLayout from "~/layouts/AuthLayout";
 import Classes from "~/pages/Classes";
@@ -8,11 +8,13 @@ import SearchPage from "~/pages/Search";
 import LoginPage from "~/pages/Login";
 import RegisterPage from "~/pages/Register";
 import ProtectedRoute from "./ProtectedRoute";
+import LandingPage from "~/pages/Landing";
 
 const AppRoutes = () => {
     return (
         <Routes>
              {/* Protected routes */}
+             <Route path="/" element={<LandingPage />} />
              <Route element={<ProtectedRoute auth />}>
                 <Route element={<BaseLayout />}>
                     <Route path="/home" element={<HomePage />} />
@@ -33,6 +35,7 @@ const AppRoutes = () => {
                     <Route path = "register" element = {<RegisterPage/>}/>
                 </Route>
             </Route>
+            <Route path="*" element={<Navigate to="/" />}  />
         </Routes>
     );
 };

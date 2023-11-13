@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
     const [change, setChange] = useState<boolean>(false);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState<string>(userProfile.avatar ?? '');
+    const [imageUrl, setImageUrl] = useState<string>(userProfile?.avatar ?? '');
 
     const beforeUpload = (file: RcFile) => {
         const error = validate(file);
@@ -170,8 +170,8 @@ const Profile: React.FC = () => {
                 </Flex>
 
                 <div className="!mb-8 !flex !flex-col !w-full !justify-center !items-center !gap-2">
-                    <b className="!text-xl">{ userProfile.username }</b>
-                    <small className="!text-sm !text-gray-600">({userProfile.role})</small>
+                    <b className="!text-xl">{ userProfile?.username }</b>
+                    <small className="!text-sm !text-gray-600">({userProfile?.role})</small>
                 </div>
 
                 <Flex gap={"1.2rem"} className="mb-4">

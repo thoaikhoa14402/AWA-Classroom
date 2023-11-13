@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopyright } from "@fortawesome/free-regular-svg-icons";
 
 import classes from "./Footer.module.css";
+import { NavLink } from "react-router-dom";
 
 const Footer: React.FC = () => {
     return (
@@ -23,47 +24,47 @@ const Footer: React.FC = () => {
                 <div className="flex flex-col w-1/5 gap-5">
                     <b className="text-md font-semibold">Student</b>
                     <div className="flex flex-col gap-2 text-sm">
-                        <a
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/"
+                            to="/"
                         >
                             Home
-                        </a>
-                        <a
+                        </NavLink>
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/register"
+                            to="/register"
                         >
                             Sign In
-                        </a>
-                        <a
+                        </NavLink>
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/login"
+                            to="/login"
                         >
                             Sign Up
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
                 <div className="flex flex-col w-1/5 gap-5">
                     <b className="text-md font-semibold">Teacher</b>
                     <div className="flex flex-col gap-2 text-sm">
-                        <a
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/"
+                            to="/"
                         >
                             Home
-                        </a>
-                        <a
+                        </NavLink>
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/register"
+                            to="/register"
                         >
                             Sign In
-                        </a>
-                        <a
+                        </NavLink>
+                        <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            href="/login"
+                            to="/login"
                         >
                             Sign Up
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
             </footer>
