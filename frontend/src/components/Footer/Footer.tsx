@@ -26,9 +26,15 @@ const Footer: React.FC = () => {
                     <div className="flex flex-col gap-2 text-sm">
                         <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            to="/"
+                            to="/home"
                         >
                             Home
+                        </NavLink>
+                        <NavLink
+                            className="hover:text-hover transition-all duration-75"
+                            to="/"
+                        >
+                            Landing page
                         </NavLink>
                         <NavLink
                             className="hover:text-hover transition-all duration-75"
@@ -49,9 +55,15 @@ const Footer: React.FC = () => {
                     <div className="flex flex-col gap-2 text-sm">
                         <NavLink
                             className="hover:text-hover transition-all duration-75"
-                            to="/"
+                            to="/home"
                         >
                             Home
+                        </NavLink>
+                        <NavLink
+                            className="hover:text-hover transition-all duration-75"
+                            to="/"
+                        >
+                            Landing page
                         </NavLink>
                         <NavLink
                             className="hover:text-hover transition-all duration-75"
