@@ -1,4 +1,4 @@
-import { IUser } from '@common/models/user.model';
+import { IUser } from '../common/models/user.model';
 import { UploadApiResponse } from 'cloudinary';
 
 declare global {
