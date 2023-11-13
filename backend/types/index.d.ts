@@ -1,11 +1,11 @@
-import { IUser } from '@common/models/user.example.model';
+import { IUser } from '@common/models/user.model';
 import { UploadApiResponse } from 'cloudinary';
 
 declare global {
     namespace Express {
         export interface Request {
 			//example
-            user: IUser;
+            user?: IUser;
             cloudinaryResult: UploadApiResponse;
         }
     }

@@ -1,0 +1,113 @@
+[{
+  "_id": {
+    "$oid": "654bc71d06ffd7b8a2e198f3"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIBagvIwwja4V3QgY0w8mFluKtSTNCd0Dt0HnkXF26hQw=s96-c",
+  "username": "Khoa Nguyễn",
+  "googleID": "110100497839821162958",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "password": "",
+  "email": "nguyenthoaidangkhoa14402@gmail.com",
+  "__v": 0,
+  "role": "Học viên"
+},
+{
+  "_id": {
+    "$oid": "65508b509ed10e214b3c0c74"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLwwZ19Z6mjmqg1d8DGknJ25YXjlM3Joyn9nVe4AWeH1Fo=s96-c",
+  "username": "Nguyễn Khoa",
+  "googleID": "116110045275404248753",
+  "firstname": "Nguyễn",
+  "lastname": "Khoa",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "__v": 0,
+  "role": "Học viên"
+},
+{
+  "_id": {
+    "$oid": "6550fafe566f9575e5e27c3a"
+  },
+  "avatar": "https://avatars.githubusercontent.com/u/81000230?v=4",
+  "username": "thoaikhoa14402",
+  "githubID": "81000230",
+  "firstname": "Khoa Nguyen",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "__v": 0,
+  "role": "Học viên"
+},
+{
+  "_id": {
+    "$oid": "6550fd47566f9575e5e27c7f"
+  },
+  "username": "20127043",
+  "password": "11111111",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "__v": 0,
+  "role": "Học viên"
+},
+{
+  "_id": {
+    "$oid": "6551001236e186c53e0c9dc1"
+  },
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1699876551/avatars/vrkdgv7zf0ti512ecsel.png",
+  "username": "Đức Minh Nguyễn",
+  "googleID": "116122794118034760849",
+  "firstname": "Minh",
+  "lastname": "Nguyễn Đức",
+  "role": "Học viên",
+  "password": "",
+  "email": "ducminh68kg.mn@gmail.com",
+  "active": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65511519349bceb2b3bf8ca0"
+  },
+  "avatar": "https://graph.facebook.com/3577952569128133/picture?width=200&height=200",
+  "username": "Thoại Khoa",
+  "facebookID": "3577952569128133",
+  "firstname": "Khoa",
+  "lastname": "Thoại",
+  "role": "Học viên",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655116a09b4b54d165e72324"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIXIeeSxmbTn_dtA7PAdlTH1dqtNF-ho-mfzGjlTUKF=s96-c",
+  "username": "Khoa Nguyen",
+  "googleID": "104732869754946821601",
+  "firstname": "Khoa",
+  "lastname": "Nguyen",
+  "role": "Học viên",
+  "password": "",
+  "email": "thoaikhoa14402@gmail.com",
+  "active": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6552167a9648eca1a2e0162a"
+  },
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1699878585/avatars/hkngontmctj3czgush10.png",
+  "username": "NG-MinG",
+  "githubID": "90041846",
+  "firstname": "Sukiro",
+  "role": "Học viên",
+  "password": "",
+  "email": "wgmin.it@outlook.com",
+  "active": true,
+  "__v": 0
+}]

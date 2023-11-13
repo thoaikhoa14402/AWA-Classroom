@@ -3,10 +3,9 @@ import { CastError, DuplicateFieldsError, ValidationError } from '@common/servic
 import { JWTError, JWTExpiredError } from '@common/services/errors/jwt.error';
 import { Request, Response, NextFunction } from 'express';
 
-const ErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
-
+const ErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {  
     let factory = new ErrorFactory(error);
-
+    
     if (error.name === 'CastError') factory = new CastError(error);
     else if (error.code === 11000) factory = new DuplicateFieldsError(error);
     else if (error.name === 'ValidationError') factory = new ValidationError(error);

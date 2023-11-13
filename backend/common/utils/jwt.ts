@@ -9,7 +9,7 @@ export class JsonWebToken implements IJWT {
     private readonly secret: string;
 
     constructor(secret?: string) {
-        this.secret = secret ?? (process.env.JWT_SECRET as string) ?? 'CFF-EXAMPLE-Secret-152421';
+        this.secret = secret ?? (process.env.JWT_SECRET as string) ?? 'AWA-EXAMPLE-Secret-152421';
     }
 
     public async createToken(payload: string | object | Buffer, options: jwt.SignOptions): Promise<any> {
