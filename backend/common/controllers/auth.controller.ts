@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
-import JsonWebToken from "@common/utils/jwt";
-import IController from "@common/interfaces/controller";
-import catchAsync from "@common/utils/catch.error";
-import DTOValidation from "@common/middlewares/validation.middleware";
-import RegisterUserDTO from "@common/dtos/register-user.dto"
-import LoginUserDTO from "@common/dtos/login-user.dto";
-import UserModel, { IUser } from "@common/models/user.model";
-import AppError from "@common/services/errors/app.error";
+import JsonWebToken from "../utils/jwt";
+import IController from "../interfaces/controller";
+import catchAsync from "../utils/catch.error";
+import DTOValidation from "../middlewares/validation.middleware";
+import RegisterUserDTO from "../dtos/register-user.dto"
+import LoginUserDTO from "../dtos/login-user.dto";
+import UserModel, { IUser } from "../models/user.model";
+import AppError from "../services/errors/app.error";
 import passport from "passport";
 
 /*

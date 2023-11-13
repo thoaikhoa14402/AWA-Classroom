@@ -1,5 +1,5 @@
 import redis from "@common/redis";
-import AppError from "@common/services/errors/app.error";
+import AppError from "../services/errors/app.error";
 import { NextFunction, Response, Request } from "express";
 
 const cacheMiddleware = (keyGetter: (request: Request) => string) => {

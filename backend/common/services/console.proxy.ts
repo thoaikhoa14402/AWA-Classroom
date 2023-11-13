@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import Logger from '@common/utils/logger';
+import Logger from '../utils/logger';
 
 class ConsoleProxyHandler implements ProxyHandler<Console> {
     private originalConsole: Console;

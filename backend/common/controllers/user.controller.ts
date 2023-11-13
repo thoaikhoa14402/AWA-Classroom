@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
-import IController from "@common/interfaces/controller";
-import catchAsync from "@common/utils/catch.error";
+import IController from "../interfaces/controller";
+import catchAsync from "../utils/catch.error";
 import { AuthController } from ".";
-import cacheMiddleware from "@common/middlewares/cache.middleware";
-import MulterCloudinaryUploader from "@common/multer";
-import UpdateProfileDTO from "@common/dtos/update-profile.dto";
-import DTOValidation from "@common/middlewares/validation.middleware";
-import UserModel from "@common/models/user.model";
+import cacheMiddleware from "../middlewares/cache.middleware";
+import MulterCloudinaryUploader from "../multer";
+import UpdateProfileDTO from "../dtos/update-profile.dto";
+import DTOValidation from "../middlewares/validation.middleware";
+import UserModel from "../models/user.model";
 
 /*
  USER CONTROLLER 

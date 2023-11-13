@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, MinLength, MaxLength, IsEmail} from "class-validator";
-import { IUser } from "@common/models/user.model"
+import { IUser } from "../models/user.model"
 import { Match } from "../utils/match.decorator";
 
 class RegisterUserDTO {

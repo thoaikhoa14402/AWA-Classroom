@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import allowedOrigins from '@common/constants/whitelist.origins';
+import allowedOrigins from '../constants/whitelist.origins';
 
 const credentials = (req: Request, res: Response, next: NextFunction) => {
     const origin = req.headers.origin;

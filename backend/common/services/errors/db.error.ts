@@ -1,5 +1,5 @@
-import ErrorFactory from '@common/services/error.factory';
-import AppError from '@common/services/errors/app.error';
+import ErrorFactory from '../../services/error.factory';
+import AppError from '../../services/errors/app.error';
 
 export class CastError extends ErrorFactory {
     public createError() {

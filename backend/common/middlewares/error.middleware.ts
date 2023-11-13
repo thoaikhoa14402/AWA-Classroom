@@ -1,6 +1,6 @@
-import ErrorFactory from '@common/services/error.factory';
-import { CastError, DuplicateFieldsError, ValidationError } from '@common/services/errors/db.error';
-import { JWTError, JWTExpiredError } from '@common/services/errors/jwt.error';
+import ErrorFactory from '../services/error.factory';
+import { CastError, DuplicateFieldsError, ValidationError } from '../services/errors/db.error';
+import { JWTError, JWTExpiredError } from '../services/errors/jwt.error';
 import { Request, Response, NextFunction } from 'express';
 
 const ErrorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {  

@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty } from "class-validator";
-import { IUser } from "@common/models/user.example.model";
+import { IUser } from "../models/user.example.model";
 
 class UserDTO {	
 	@IsNotEmpty({ message: "Email is required" })

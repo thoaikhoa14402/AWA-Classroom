@@ -1,6 +1,6 @@
 import { Server, ServerOptions } from 'socket.io';
 import http from 'http';
-import CorsCustomOptions from '@common/configs/cors.config';
+import CorsCustomOptions from 'common/configs/cors.config';
 
 class SocketIO {
     private static instance?: SocketIO;

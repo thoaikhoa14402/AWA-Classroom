@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import { NextFunction, Request, Response, Router } from 'express';
-import IController from '@common/interfaces/controller';
-import UserModel from '@common/models/user.example.model';
-import catchAsync from '@common/utils/catch.error';
-import DTOValidation from '@common/middlewares/validation.middleware';
-import UserDTO from '@common/dtos/user.example.dto';
-import Jwt, { JsonWebToken } from '@common/utils/jwt';
-import GMailer from '@common/services/mailer.builder';
-import cacheMiddleware from '@common/middlewares/cache.middleware';
-import redis from '@common/redis';
-import MulterCloudinaryUploader from '@common/multer';
+import IController from '../interfaces/controller';
+import UserModel from '../models/user.example.model';
+import catchAsync from '../utils/catch.error';
+import DTOValidation from '../middlewares/validation.middleware';
+import UserDTO from '../dtos/user.example.dto';
+import Jwt, { JsonWebToken } from '../utils/jwt';
+import GMailer from '../services/mailer.builder';
+import cacheMiddleware from '../middlewares/cache.middleware';
+import redis from '../redis';
+import MulterCloudinaryUploader from '../multer';
 
 class UserController implements IController {
     readonly path: string = '/user';

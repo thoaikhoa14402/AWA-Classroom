@@ -1,5 +1,5 @@
-import IError from '@common/interfaces/error';
-import AppError from '@common/services/errors/app.error';
+import IError from '../interfaces/error';
+import AppError from '../services/errors/app.error';
 
 class ErrorFactory implements IError {
     protected error: any;

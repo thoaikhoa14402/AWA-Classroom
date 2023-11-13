@@ -1,6 +1,6 @@
 import { CorsOptions } from "cors";
-import allowedOrigins from "@common/constants/whitelist.origins";
-import AppError from "@common/services/errors/app.error";
+import allowedOrigins from "../constants/whitelist.origins";
+import AppError from "../services/errors/app.error";
 
 const CorsCustomOptions = {
     origin: (origin: string, callback: any) => {

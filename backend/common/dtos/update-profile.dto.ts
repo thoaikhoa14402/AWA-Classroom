@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsEmail, IsOptional } from "class-validator";
-import { IsPhoneNumber } from "@common/utils/validators/phone";
-import { IUser } from "@common/models/user.model";
+import { IsPhoneNumber } from "../utils/validators/phone";
+import { IUser } from "../models/user.model";
 
 class UpdateProfileDTO {	
 	@IsString({ message: "Tên phải là chuỗi" })

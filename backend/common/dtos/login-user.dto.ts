@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { IUser } from "@common/models/user.model"
+import { IUser } from "../models/user.model"
 
 export class LoginUserDTO {
     @IsString({message: "Tài khoản không hợp lệ"})

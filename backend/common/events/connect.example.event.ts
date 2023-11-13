@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Server, Socket } from "socket.io";
-import IEvent from "@common/interfaces/event";
+import IEvent from "../interfaces/event";
 
 class ConnectEvent implements IEvent {
     public readonly event: string = 'connecting';

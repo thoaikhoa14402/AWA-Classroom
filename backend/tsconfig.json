@@ -13,11 +13,6 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"esModuleInterop": true,
-		"baseUrl": ".",
-		"paths": {
-			"@common/*": ["common/*"],
-			"@packages/*": ["packages/*"]
-		}
 	},
 	"include": ["**/*.ts", "**/*.d.ts"],
 	"exclude": ["node_modules"],

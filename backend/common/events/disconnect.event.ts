@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import IEvent from "@common/interfaces/event";
+import IEvent from "../interfaces/event";
 
 class DisconnectEvent implements IEvent {
     public readonly event: string = 'disconnect';
