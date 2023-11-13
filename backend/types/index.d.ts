@@ -3,6 +3,7 @@ import { UploadApiResponse } from 'cloudinary';
 
 declare global {
     namespace Express {
+        export interface User extends IUser {}
         export interface Request {
 			//example
             user?: IUser;
