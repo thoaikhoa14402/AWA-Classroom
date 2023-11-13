@@ -1,6 +1,6 @@
-import Application from 'common/app';
-import * as allController from 'common/controllers';
-import * as allEvent from 'common/events';
+import Application from './common/app';
+import * as allController from './common/controllers';
+import * as allEvent from './common/events';
 
 process.on('uncaughtException', (err: Error) => {
     console.error('Uncaught Exception. Shutting down...');

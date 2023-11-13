@@ -1,4 +1,4 @@
-import redis from "@common/redis";
+import redis from "../redis";
 import AppError from "../services/errors/app.error";
 import { NextFunction, Response, Request } from "express";
 
