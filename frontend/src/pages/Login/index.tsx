@@ -18,15 +18,19 @@ const LoginPage: React.FC = () => {
         // Lấy giá trị của tham số 'u_id' từ query parameters
         const queryParams = new URLSearchParams(location.search);
         const u_id = queryParams.get('u_id');
+        const access_token = queryParams.get('access_token');
         // Kiểm tra xem query string có thay đổi không
-        if (u_id !== null) { // có u_id tức người dùng đã xác thực bằng Social Oauth thành công, và cần yêu cầu lấy thông tin user về để lưu vào localStorage
+        if (u_id !== null && access_token !== null) { // có u_id tức người dùng đã xác thực bằng Social Oauth thành công, và cần yêu cầu lấy thông tin user về để lưu vào localStorage
             messageApi.open({
                 key,
                 type: 'loading',
                 content: 'Đang xử lý!',
             });
             axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/${u_id}`, {
-            withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': access_token ? `Bearer ${access_token}` : ''
+                }
             }).then((response) => {
                 if (response.status === 200) {
                     message.destroy(key)
@@ -39,9 +43,13 @@ const LoginPage: React.FC = () => {
                         });
                     }, 1500)
 
-                    dispatch(setUserProfile(response.data.user as UserProfile))
+                    dispatch(setUserProfile({
+                        user: response.data.user, 
+                        access_token
+                    }));
+
                     setTimeout(() => {
-                        navigate('/home', {replace: true})
+                        window.location.replace('/home');
                     }, 2000)
 
                     // set user's profile to local storage

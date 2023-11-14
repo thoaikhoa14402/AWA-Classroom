@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import authStorage from '~/utils/auth.storage';
 
 export default function useAuth() {
     const isAuthenticated = useRef<boolean>(false);
@@ -12,7 +13,10 @@ export default function useAuth() {
         const controller = new AbortController();
  
         axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/is-login`, {
-            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+            },
             signal: controller.signal
         }).then((response) => {
             if (response.status === 200) {

@@ -41,7 +41,10 @@ const LoginForm: React.FC = () => {
           content: 'Đang xử lý!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/login`, values, {
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+          }
         });
         // Kiểm tra response từ API
         if (response.status === 200) { // Nếu xác thực thành công
@@ -55,7 +58,11 @@ const LoginForm: React.FC = () => {
             });
           }, 1500)
 
-          dispatch(setUserProfile(response.data.user as UserProfile))
+          dispatch(setUserProfile({
+            user: response.data.user, 
+            access_token: response.data.accessToken
+          }));
+
           setTimeout(() => {
             window.location.replace('/home');
           }, 2000)

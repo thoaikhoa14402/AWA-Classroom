@@ -1,20 +1,26 @@
-import { UserProfile } from "~/store/reducers/userSlice";
+import { UserType } from './../store/reducers/userSlice';
 
 const authStorage = {
-    login(profile: UserProfile) {
+    login(profile: UserType, accessToken: string) {
         localStorage.setItem('user', JSON.stringify(profile));
+        localStorage.setItem('accessToken', accessToken);
+    },
+    getAccessToken() {
+        const accessToken = localStorage.getItem('accessToken');
+        return accessToken;
     },
     getUserProfile() {
-        const userJsonString = authStorage.isLogin();
+        const userJsonString = localStorage.getItem('user');
         return (userJsonString) ? JSON.parse(userJsonString) : null;
     },
     logout() {
-        if (authStorage.isLogin())
+        if (authStorage.isLogin()) {
             localStorage.removeItem('user');
+            localStorage.removeItem('accessToken');
+        }
     },
     isLogin() {
-        const authData = localStorage.getItem('user');
-        return authData;
+        return this.getUserProfile() && this.getAccessToken();
     }
 }
 

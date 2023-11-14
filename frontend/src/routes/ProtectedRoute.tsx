@@ -17,11 +17,14 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
 
     useEffect(() => { 
         
-        if (!isFetching && isAuthenticated && !authStorage.getUserProfile()) {
+        if (!isFetching && isAuthenticated && !authStorage.isLogin()) {
             const controller = new AbortController();
 
             axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/profile`, {
-                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                },
                 signal: controller.signal
             })
             .then(res => {
@@ -39,11 +42,11 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
             return null;
     }
     
-    if (auth && !authStorage.getUserProfile()) {
+    if (auth && !authStorage.isLogin()) {
         return <Navigate to = "/auth/login" replace />;
     }
 
-    if (auth && authStorage.getUserProfile()) {
+    if (auth && authStorage.isLogin()) {
         if (!isFetching && !isAuthenticated) {
             return <Navigate to = "/auth/login" replace />;
         }

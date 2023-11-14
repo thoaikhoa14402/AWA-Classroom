@@ -57,7 +57,7 @@ const LandingPage: React.FC = () => {
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => {
                 dispatch(clearUserProfile());
-                window.location.replace(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/logout`);
+                navigate('/auth/login', { replace: true });
             }
         }
     ], [navigate, dispatch]);

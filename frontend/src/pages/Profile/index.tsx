@@ -16,6 +16,7 @@ import axios from "axios";
 import useAppSelector from "~/hooks/useAppSelector";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import { setUserProfile } from "~/store/reducers/userSlice";
+import authStorage from "~/utils/auth.storage";
 
 const getBase64 = (file: RcFile): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -75,17 +76,20 @@ const Profile: React.FC = () => {
         
         axios.put(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/upload`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "multipart/form-data",
+                'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
             },
-            withCredentials: true,
             onUploadProgress: (event: any) => onProgress({ percent: (event.loaded / event.total) * 100 })
         })
-        .then((response) => {
+        .then((response: any) => {
             messageApi.success(`Upload ảnh đại diện thành công`);
             
             dispatch(setUserProfile({
-                ...userProfile,
-                avatar: response.data.data.secure_url || response.data.data.url
+                user: {
+                    ...userProfile,
+                    avatar: response.data.data.secure_url || response.data.data.url
+                },
+                access_token: authStorage.getAccessToken() || '',
             }));
 
             onSuccess(userProfile.avatar);
@@ -99,14 +103,17 @@ const Profile: React.FC = () => {
     const onFinish = (values: any) => {
         axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/profile`, values, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
             },
-            withCredentials: true
         })
         .then(res => {
             const updatedProfile = res.data.data;
             
-            dispatch(setUserProfile(updatedProfile));
+            dispatch(setUserProfile({
+                user: updatedProfile,
+                access_token: authStorage.getAccessToken() || '',
+            }));
 
             messageApi.success('Cập nhật thông tin thành công');
             

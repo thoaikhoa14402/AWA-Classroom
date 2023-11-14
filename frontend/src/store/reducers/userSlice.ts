@@ -2,19 +2,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authStorage from "~/utils/auth.storage";
 
-export interface UserProfile {
+export interface UserType {
     _id: string;
     username: string;
     email: string;
     lastname: string;
     firstname: string;
-	avatar?: string;
-	phoneNumber?: string;
+    avatar?: string;
+    phoneNumber?: string;
     role: string;
 }
 
+export interface UserProfile {
+    user: UserType,
+    access_token: string;
+}
+
 interface UserState {
-    profile: UserProfile | null;
+    profile: UserType | null;
+    access_token?: string;
 }
 
 const initialState: UserState = {
@@ -26,8 +32,8 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUserProfile: (state, action: PayloadAction<UserProfile>) => {
-            state.profile = action.payload;
-            authStorage.login(action.payload);
+            state.profile = action.payload.user;
+            authStorage.login(action.payload.user, action.payload.access_token);
         },
         clearUserProfile: (state) => {
             state.profile = null;
