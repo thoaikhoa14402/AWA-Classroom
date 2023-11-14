@@ -26,7 +26,11 @@ export default function useAuth() {
             console.log('error: ', err)
             if (err.response && err.response.status === 401) {
                 isAuthenticated.current = false;
-            } else if (authStorage.isLogin()) {
+            } 
+            else if (err.response?.data && err.response.data === 'No Auth Token' && err.response.status === 500) {
+                isAuthenticated.current = false;
+            }
+            else if (authStorage.isLogin()) {
                 isAuthenticated.current = true;
             }
         }).finally(() => {
