@@ -36,7 +36,7 @@ export default function useAuth() {
         return () => {
             controller.abort();
         }
-    }, [isAuthenticated.current, location]);
+    }, [isAuthenticated, location]);
    
     return { isAuthenticated: isAuthenticated.current, isFetching };
 }
