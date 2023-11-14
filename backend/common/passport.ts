@@ -15,7 +15,7 @@ const cookieExtractor = (req: Request): string | null => {
 }
 
 const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET as string,
     passReqToCallback: true
 }
