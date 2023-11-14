@@ -71,7 +71,7 @@ class Application {
         this.appName = `[${process.env.APP_NAME}]`;
         this.appVersion = `${process.env.APP_VERSION}`;
 
-        console = new Proxy(console, new ConsoleProxyHandler());
+        // console = new Proxy(console, new ConsoleProxyHandler());
 
         this.redisConnect(this.redisConnection.uri);
         this.mongoDBConnect(this.mongoConnection.uri, this.mongoConnection.options);
@@ -102,11 +102,11 @@ class Application {
             )
         );
 
-        this.app.use(
-            morgan(`${this.appName}[:date] :method :status :url :res[content-length] - :response-time ms`, {
-                stream: new Logger('./logs/access.log').createWritableStream(),
-            })
-        );
+        // this.app.use(
+        //     morgan(`${this.appName}[:date] :method :status :url :res[content-length] - :response-time ms`, {
+        //         stream: new Logger('./logs/access.log').createWritableStream(),
+        //     })
+        // );
 
         this.controllers.forEach((controller) => {
             this.app.use(`/${this.appVersion}${controller.path}`, controller.router);
