@@ -27,7 +27,7 @@ export default function useAuth() {
             if (err.response && err.response.status === 401) {
                 isAuthenticated.current = false;
             } 
-            else if (err.response?.data && err.response.data === 'No Auth Token' && err.response.status === 500) {
+            else if (err.response?.data && err.response.data === 'No auth token' && err.response.status === 500) {
                 isAuthenticated.current = false;
             }
             else if (authStorage.isLogin()) {
