@@ -24,15 +24,7 @@ export default function useAuth() {
             }
         }).catch((err) => {
             console.log('error: ', err)
-            if (err.response && err.response.status === 401) {
-                isAuthenticated.current = false;
-            } 
-            else if (err.response?.data && err.response.data === 'No auth token' && err.response.status === 500) {
-                isAuthenticated.current = false;
-            }
-            else if (authStorage.isLogin()) {
-                isAuthenticated.current = true;
-            }
+            isAuthenticated.current = false;
         }).finally(() => {
             setIsFetching(false);
         });
