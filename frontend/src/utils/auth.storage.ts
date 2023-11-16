@@ -7,20 +7,18 @@ const authStorage = {
     },
     getAccessToken() {
         const accessToken = localStorage.getItem('accessToken');
-        return accessToken;
+        return (accessToken && accessToken !== 'undefined') ? accessToken : null;
     },
     getUserProfile() {
         const userJsonString = localStorage.getItem('user');
-        return (userJsonString) ? JSON.parse(userJsonString) : null;
+        return (userJsonString && userJsonString !== 'undefined') ? JSON.parse(userJsonString) : null;
     },
     logout() {
-        if (authStorage.isLogin()) {
-            localStorage.removeItem('user');
-            localStorage.removeItem('accessToken');
-        }
-    },
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+    },  
     isLogin() {
-        return this.getUserProfile() && this.getAccessToken();
+        return !!this.getUserProfile() && !!this.getAccessToken();
     }
 }
 

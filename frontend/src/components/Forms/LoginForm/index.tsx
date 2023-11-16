@@ -21,12 +21,13 @@ const LoginForm: React.FC = () => {
   const { isAuthenticated, isFetching } = useAuth();
 
   // if user was authenticate but the cookie is expired
-  if (!isFetching && authStorage.isLogin() && !isAuthenticated) {
+  if (!authStorage.isLogin() || (authStorage.isLogin() && !isFetching && !isAuthenticated)) {
+    if (authStorage.isLogin() && !isFetching && !isAuthenticated)
+      messageApi.open({
+        type: 'error',
+        content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
+      });
     authStorage.logout();
-    messageApi.open({
-      type: 'error',
-      content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
-    });
   } 
  
   const onFinishFailed = (errorInfo: any) => {
