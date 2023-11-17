@@ -15,8 +15,6 @@ networks:
     driver: bridge
   nw-redis:
     driver: bridge
-  nw-rabbitmq:
-    driver: bridge
 
 services:
   nginx:
@@ -24,7 +22,6 @@ services:
       context: ./nginx
     networks:
       - nw-redis
-      - nw-rabbitmq
       - nw-admin
       - nw-api-admin
       - nw-lecturer
@@ -39,7 +36,6 @@ services:
       - ./nginx:/etc/nginx
     depends_on:
       - redis
-      - rabbitmq
       - admin-service
       - admin-api-service
       - lecturer-service
@@ -64,21 +60,6 @@ services:
       TERM: xterm-256color
       COLORTERM: truecolor
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    hostname: rabbitmq.local
-    networks:
-      - nw-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      FORCE_COLOR: 1
-      DEBUG_COLORS: "true"
-      TERM: xterm-256color
-      COLORTERM: truecolor
-
   admin-service:
     build:
       context: ../clients/admin
@@ -86,7 +67,6 @@ services:
     hostname: awa-classroom-admin.local
     networks:
       - nw-admin
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "3002:3002"
@@ -99,7 +79,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   admin-api-service:
     build:
@@ -108,7 +87,6 @@ services:
     hostname: awa-classroom-admin-api.local
     networks:
       - nw-api-admin
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "5002:5002"
@@ -121,7 +99,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   lecturer-service:
     build:
@@ -130,7 +107,6 @@ services:
     hostname: awa-classroom-lecturer.local
     networks:
       - nw-lecturer
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "3001:3001"
@@ -143,7 +119,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   lecturer-api-service:
     build:
@@ -152,7 +127,6 @@ services:
     hostname: awa-classroom-lecturer-api.local
     networks:
       - nw-api-lecturer
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "5001:5001"
@@ -165,7 +139,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   student-service:
     build:
@@ -174,7 +147,6 @@ services:
     hostname: awa-classroom-student.local
     networks:
       - nw-student
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "3000:3000"
@@ -187,7 +159,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   student-api-service:
     build:
@@ -196,7 +167,6 @@ services:
     hostname: awa-classroom-student-api.local
     networks:
       - nw-api-student
-      - nw-rabbitmq
       - nw-redis
     ports:
       - "5000:5000"
@@ -209,7 +179,6 @@ services:
       COLORTERM: truecolor
     depends_on:
       - redis
-      - rabbitmq
 
   # zookeeper:
   #   image: 'zookeeper'
