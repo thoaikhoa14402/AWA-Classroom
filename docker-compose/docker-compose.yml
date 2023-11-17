@@ -40,7 +40,12 @@ services:
     depends_on:
       - redis
       - rabbitmq
-      - api-example
+      - admin-service
+      - admin-api-service
+      - lecturer-service
+      - lecturer-api-service
+      - student-service
+      - student-api-service
 
   redis:
     image: redis:alpine
@@ -186,7 +191,7 @@ services:
 
   student-api-service:
     build:
-      context: ../servers/sutdent
+      context: ../servers/student
     container_name: student-api-service
     hostname: awa-classroom-student-api.local
     networks:
