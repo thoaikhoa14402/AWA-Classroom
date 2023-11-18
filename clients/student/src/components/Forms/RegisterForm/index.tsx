@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./RegisterForm.module.css"
 import axios from "axios";
@@ -25,7 +25,7 @@ const RegisterForm: React.FC = () => {
         messageApi.open({
           key,
           type: 'loading',
-          content: 'Đang xử lý!',
+          content: 'Processing!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/register`, values, {
           headers: {
@@ -41,17 +41,18 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng ký thành công!',
+              content: 'Register information is valid!',
             });
           }, 1500)
 
-          dispatch(setUserProfile({
+          dispatch(setUserRegisterProfile({
             user: response.data.user,
-            access_token: response.data.accessToken
-          }));
+            verification_token: response.data.verificationToken
+          } as UserRegisterProfile));
 
           setTimeout(() => {
-            window.location.replace('/home');
+            // window.location.replace('/home');
+            navigate('/otp-verification')
           }, 2000)
         }
       } catch (err: any) {
@@ -59,7 +60,7 @@ const RegisterForm: React.FC = () => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng ký thất bại!',
+            content: 'Register failed!',
           });
           form.setFields([
             {

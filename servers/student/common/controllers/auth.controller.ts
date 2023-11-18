@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import JsonWebToken from "../utils/jwt";
+import OTPGenerator from "../utils/otp-generator";
 import IController from "../interfaces/controller";
 import catchAsync from "../utils/catch.error";
 import DTOValidation from "../middlewares/validation.middleware";
@@ -8,6 +9,10 @@ import LoginUserDTO from "../dtos/login-user.dto";
 import UserModel, { IUser } from "../models/user.model";
 import AppError from "../services/errors/app.error";
 import passport from "passport";
+import GMailer from '../services/mailer.builder';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as handlebars from 'handlebars';
 
 /*
  AUTH CONTROLLER 
@@ -25,6 +30,8 @@ class AuthController implements IController {
         this.router.post('/login', DTOValidation.validate<LoginUserDTO>(LoginUserDTO, false),  this.isAuthenticated, catchAsync(this.login)) // if jwt are not set, handle login request
         this.router.get('/is-login', this.isAuthenticated, this.responseUnauthorizedMessage); // if jwt are expired, return unauthorized message to client
         this.router.post('/register', DTOValidation.validate<RegisterUserDTO>(RegisterUserDTO, true), catchAsync(this.register))
+        this.router.post('/verify-user-registration', this.protect, catchAsync(this.verifyUserRegistration))
+        this.router.post('/resend-otp', catchAsync(this.resendVerificationCodeViaEmail))
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
             scope: ['profile', 'email']
@@ -81,24 +88,87 @@ class AuthController implements IController {
         if (foundedUser)
             return next(new AppError('Tài khoản đã tồn tại', 400));
 
-        const newUser = await UserModel.create({
+        // const newUser = await UserModel.create({
+        //     username: req.body.username,
+        //     email: req.body.email,
+        //     password: req.body.password,
+        //     passwordConfirm: req.body.passwordConfirm
+        // })
+        // let clonedUser = JSON.parse(JSON.stringify(newUser));
+        // delete clonedUser.password;
+
+        const otpCode = new OTPGenerator().generate();
+        const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+        const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
+        const template = handlebars.compile(source);
+        const replacements = {
             username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            passwordConfirm: req.body.passwordConfirm
+            verificationCode: otpCode
+          };
+        const htmlToSend = template(replacements);
+        
+        await GMailer.sendMail({
+            to: req.body.email,
+            subject: 'Verify your account',
+            html: htmlToSend,
+        });
+
+        res.status(200).json({
+            message: "Register information is valid!",
+            verificationToken: verificationToken,
+            otp: otpCode,
         })
-        let clonedUser = JSON.parse(JSON.stringify(newUser));
-        delete clonedUser.password;
+        // const accessToken = await JsonWebToken.createToken({_id: newUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+        
+        // return res.status(200).json({
+        //     message: "Đăng ký thành công!",
+        //     user: clonedUser,
+        //     accessToken: accessToken
+        // })
+    }
 
-        const accessToken = await JsonWebToken.createToken({_id: newUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+    /// > VERIFY USER REGISTER, IF VALID CREATE NEW ACCOUNT
+    private verifyUserRegistration = async (req: Request, res: Response, next: NextFunction) => {
+        const userRegistrationInfo = req.body;
+        console.log('extracted verification code: ', req.verification_code);
+        console.log('req.body: ', req.body);
+        if (userRegistrationInfo.verification_code === req.verification_code) {
+            return res.status(200).json({
+                message: "Your verification code is valid"
+            })
+        }
+        else  {
+            console.log('wrong verification code');
+            return res.status(401).json({
+                message: "Your verification code is not valid, try again!"
+            })
+        }
+    }
 
+     /// > RESEND OTP
+     private resendVerificationCodeViaEmail = async (req: Request, res: Response, next: NextFunction) => {
+        const otpCode = new OTPGenerator().generate();
+        const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+        const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
+        const template = handlebars.compile(source);
+        const replacements = {
+            username: req.body.username,
+            verificationCode: otpCode
+          };
+        const htmlToSend = template(replacements);
+        await GMailer.sendMail({
+            to: req.body.email,
+            subject: 'Verify your account',
+            html: htmlToSend,
+        });
         return res.status(200).json({
-            message: "Đăng ký thành công!",
-            user: clonedUser,
-            accessToken: accessToken
+            message: "We've sent a new verification code to your email.",
+            verificationToken: verificationToken,
         })
     }
 
+
+  
     /// > LOGIN BY SOCIAL OAUTH
     private socialOAuthCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {
         const accessToken = await JsonWebToken.createToken({_id: req.user?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})

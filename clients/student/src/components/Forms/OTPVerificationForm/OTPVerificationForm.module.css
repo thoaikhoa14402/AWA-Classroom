@@ -1,0 +1,16 @@
+.otp-verification-form {
+  width: 30rem !important;
+  padding: 2rem 3rem 2rem !important;
+  border-radius: 12px !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+.input-style {
+  height: 3rem !important;
+}
+
+.btn-style {
+  margin-top: 6rem !important;
+  height: 4rem !important;
+  font-weight: 400 !important;
+}
