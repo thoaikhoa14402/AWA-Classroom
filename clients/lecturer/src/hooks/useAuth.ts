@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
@@ -25,6 +26,13 @@ export default function useAuth() {
         }).catch((err) => {
             console.log('error: ', err)
             isAuthenticated.current = false;
+
+            if (err.message && err.message === "canceled") {
+                if (!authStorage.isLogin())
+                    isAuthenticated.current = false;
+                else 
+                    isAuthenticated.current = true;
+            }
         }).finally(() => {
             setIsFetching(false);
         });

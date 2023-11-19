@@ -55,7 +55,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             key: 'reset-password',
             label: 'Đổi mật khẩu',
             icon: <KeyOutlined className="!text-lg" />,
-            className: '!px-4 !py-3 !text-md !gap-1.5'
+            className: '!px-4 !py-3 !text-md !gap-1.5',
+            onClick: () => { navigate('/user/reset-password'); props.toggleSidebar(false); }
         },
         {
             key: 'divider',
