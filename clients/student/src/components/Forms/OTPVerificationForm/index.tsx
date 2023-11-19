@@ -67,13 +67,12 @@ const OTPVerificationForm: React.FC = () => {
             access_token: response.data.accessToken
           }));
 
-          // reset user register profile to null
-          dispatch(clearUserRegisterProfile());
-          localStorage.removeItem("verificationToken");
-
           setTimeout(() => {
-            window.location.replace('/home');
-          }, 2000)
+            // reset user register profile to null
+            dispatch(clearUserRegisterProfile());
+            localStorage.removeItem("verificationToken");
+          }, 2500)
+          // Then let the protected otp route redirect user to home page
         }
       } catch (err: any) {
         setTimeout(() => {

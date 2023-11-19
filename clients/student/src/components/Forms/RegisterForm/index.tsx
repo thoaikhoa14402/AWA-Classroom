@@ -43,7 +43,7 @@ const RegisterForm: React.FC = () => {
               type: 'success',
               content: 'Register information is valid!',
             });
-          }, 2000)
+          }, 1500)
 
           dispatch(setUserRegisterProfile({
             user: {
@@ -56,7 +56,7 @@ const RegisterForm: React.FC = () => {
           setTimeout(() => {
             // window.location.replace('/home');
             navigate('/auth/otp-verification')
-          }, 3000)
+          }, 2500)
         }
       } catch (err: any) {
         setTimeout(() => {

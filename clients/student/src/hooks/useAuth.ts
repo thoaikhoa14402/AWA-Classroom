@@ -4,14 +4,14 @@ import { useLocation } from 'react-router-dom';
 import authStorage from '~/utils/auth.storage';
 
 export default function useAuth() {
-    const isAuthenticated = useRef<boolean>(false);
+    let isAuthenticated: boolean = authStorage.isLogin();
     const [isFetching, setIsFetching] = useState(true);
 
     const location = useLocation();
     
     useEffect(() => {
         const controller = new AbortController();
- 
+        
         axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/is-login`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -20,11 +20,13 @@ export default function useAuth() {
             signal: controller.signal
         }).then((response) => {
             if (response.status === 200) {
-                isAuthenticated.current = true;
+                isAuthenticated = true;
             }
         }).catch((err) => {
             console.log('error: ', err)
-            isAuthenticated.current = false;
+            if (err.message && err.message === "canceled") {
+                isAuthenticated = authStorage.isLogin();
+            }
         }).finally(() => {
             setIsFetching(false);
         });
@@ -34,5 +36,5 @@ export default function useAuth() {
         }
     }, [isAuthenticated, location]);
    
-    return { isAuthenticated: isAuthenticated.current, isFetching };
+    return { isAuthenticated: isAuthenticated, isFetching };
 }
