@@ -8,6 +8,8 @@ import SearchPage from "~/pages/Search";
 import LoginPage from "~/pages/Login";
 import RegisterPage from "~/pages/Register";
 import ProtectedRoute from "./ProtectedRoute";
+import OTPVerificationPage from "~/pages/OTPVerification";
+import ProtectedOTPRoute from "./ProtectedOTPRoute";
 import ResetPassword from "~/pages/ResetPassword";
 
 const AppRoutes = () => {
@@ -33,6 +35,9 @@ const AppRoutes = () => {
                     <Route index element = {<LoginPage/>}/>
                     <Route path = "login" element = {<LoginPage/>}/>
                     <Route path = "register" element = {<RegisterPage/>}/>
+                    <Route element={<ProtectedOTPRoute/>}>
+                        <Route path = "otp-verification" element = {<OTPVerificationPage/>}/>
+                    </Route>
                 </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" />}  />
