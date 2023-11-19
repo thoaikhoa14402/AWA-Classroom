@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
             messageApi.open({
                 key,
                 type: 'loading',
-                content: 'Đang xử lý!',
+                content: 'Processing!',
             });
             axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/user/${u_id}`, {
                 headers: {
@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
                         messageApi.open({
                         key,
                         type: 'success',
-                        content: 'Đăng nhập thành công!',
+                        content: 'Login successfully!',
                         });
                     }, 1500)
 
@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
                 messageApi.open({
                     key,
                     type: 'error',
-                    content: 'Đăng nhập thất bại!',
+                    content: 'Login failed!',
                     duration: 2
                   });
             });

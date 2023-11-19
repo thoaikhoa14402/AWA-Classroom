@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
+import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./RegisterForm.module.css"
 import axios from "axios";
@@ -25,7 +25,7 @@ const RegisterForm: React.FC = () => {
         messageApi.open({
           key,
           type: 'loading',
-          content: 'Processing!',
+          content: 'Đang xử lý!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/register`, values, {
           headers: {
@@ -41,29 +41,25 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Register information is valid!',
+              content: 'Đăng ký thành công!',
             });
           }, 1500)
 
-          dispatch(setUserRegisterProfile({
-            user: {
-              username: values.username,
-              email: values.email,
-            },
-            verification_token: response.data.verificationToken
-          } as UserRegisterProfile));
+          dispatch(setUserProfile({
+            user: response.data.user,
+            access_token: response.data.accessToken
+          }));
 
           setTimeout(() => {
-            // window.location.replace('/home');
-            navigate('/auth/otp-verification')
-          }, 2500)
+            window.location.replace('/home');
+          }, 2000)
         }
       } catch (err: any) {
         setTimeout(() => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Register failed!',
+            content: 'Đăng ký thất bại!',
           });
           form.setFields([
             {
@@ -86,16 +82,16 @@ const RegisterForm: React.FC = () => {
       className = {styles["register-form"]}
       form = {form}
     >
-      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Create an account</Title>
+      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Đăng ký</Title>
 
       <Form.Item
-        label="Username"
+        label="Tài khoản"
         name="username"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        rules={[{ required: true, message: 'Username must not be empty!' }]}
+        rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
       >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your username"/>
+        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
       </Form.Item>
 
       <Form.Item
@@ -106,74 +102,74 @@ const RegisterForm: React.FC = () => {
         rules={[
         { 
           required: true,
-          message: 'Email must not be empty!'
+          message: 'Email không được bỏ trống!'
         },
         {
           type: 'email',
-          message: 'Email format is not valid!'
+          message: 'Email không hợp lệ!'
         }
       ]}
       >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your email"/>
+        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập email"/>
       </Form.Item>
 
       <Form.Item
-        label="Password"
+        label="Mật khẩu"
         name="password"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         rules={[
         { 
-          required: true, message: 'Password must not be empty!'
+          required: true, message: 'Mật khẩu không được bỏ trống!'
         },
         {
           min: 8,
-          message: 'Password must be at least 8 characters!',
+          message: 'Mật khẩu phải tối thiểu 8 kí tự',
         }]}
       >
-        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your password"/>
+        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
       
       </Form.Item>
       
       <Form.Item
-        label="Confirm Password"
+        label="Mật khẩu xác nhận"
         name="password-confirm"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         dependencies={['password']}
         rules={[
         { 
-          required: true, message: 'Password confirm must not be empty!'
+          required: true, message: 'Mật khẩu xác nhận không được bỏ trống!'
         },
         {
           min: 8,
-          message: 'Password must be at least 8 characters!',
+          message: 'Mật khẩu phải tối thiểu 8 kí tự',
         },
         ({getFieldValue}) => ({
           validator(_, value) {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve();
             }
-            return Promise.reject(new Error('Password does not match!'));
+            return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
           },
         })
         ]}
       >
-        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your password"/>
+        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập lại mật khẩu"/>
       </Form.Item>
       
       <Form.Item>
         <Button type="primary" htmlType="submit" className = "!mt-6 !h-11" block>
-            Create your account
+            Đăng ký
         </Button>
       </Form.Item>
       
       <Flex justify = "center" gap = "small">
         <span>
-          Already have an account?
+          Đã có tài khoản?
         </span>
         <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/login', {replace: true})}>
-          Log in
+          Đăng nhập
         </span>
       </Flex>
 

@@ -10,7 +10,7 @@
   "password": "",
   "email": "nguyenthoaidangkhoa14402@gmail.com",
   "__v": 0,
-  "role": "Học viên"
+  "role": "Student"
 },
 {
   "_id": {
@@ -25,7 +25,7 @@
   "email": "nguyenthoaidangkhoa@gmail.com",
   "active": true,
   "__v": 0,
-  "role": "Học viên"
+  "role": "Student"
 },
 {
   "_id": {
@@ -39,7 +39,7 @@
   "email": "nguyenthoaidangkhoa@gmail.com",
   "active": true,
   "__v": 0,
-  "role": "Học viên"
+  "role": "Student"
 },
 {
   "_id": {
@@ -50,7 +50,7 @@
   "email": "nguyenthoaidangkhoa@gmail.com",
   "active": true,
   "__v": 0,
-  "role": "Học viên"
+  "role": "Student"
 },
 {
   "_id": {
@@ -61,7 +61,7 @@
   "googleID": "116122794118034760849",
   "firstname": "Minh",
   "lastname": "Nguyễn Đức",
-  "role": "Học viên",
+  "role": "Student",
   "password": "",
   "email": "ducminh68kg.mn@gmail.com",
   "active": true,
@@ -76,7 +76,7 @@
   "facebookID": "3577952569128133",
   "firstname": "Khoa",
   "lastname": "Thoại",
-  "role": "Học viên",
+  "role": "Student",
   "password": "",
   "email": "nguyenthoaidangkhoa@gmail.com",
   "active": true,
@@ -91,7 +91,7 @@
   "googleID": "104732869754946821601",
   "firstname": "Khoa",
   "lastname": "Nguyen",
-  "role": "Học viên",
+  "role": "Student",
   "password": "",
   "email": "thoaikhoa14402@gmail.com",
   "active": true,
@@ -105,7 +105,7 @@
   "username": "NG-MinG",
   "githubID": "90041846",
   "firstname": "Sukiro",
-  "role": "Học viên",
+  "role": "Student",
   "password": "",
   "email": "wgmin.it@outlook.com",
   "active": true,
