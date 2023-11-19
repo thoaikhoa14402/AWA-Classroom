@@ -10,6 +10,7 @@ import styles from "./LoginForm.module.css"
 import axios from "axios";
 import useAuth from "~/hooks/useAuth";
 import authStorage from "~/utils/auth.storage";
+import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
@@ -25,7 +26,7 @@ const LoginForm: React.FC = () => {
     if (authStorage.isLogin() && !isFetching && !isAuthenticated)
       messageApi.open({
         type: 'error',
-        content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
+        content: 'Your login session has expired. Please log in again!'
       });
     authStorage.logout();
   } 
@@ -39,7 +40,7 @@ const LoginForm: React.FC = () => {
         messageApi.open({
           key,
           type: 'loading',
-          content: 'Đang xử lý!',
+          content: 'Processing!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/login`, values, {
           headers: {
@@ -55,7 +56,7 @@ const LoginForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng nhập thành công!',
+              content: 'Login successfully!',
             });
           }, 1500)
 
@@ -69,11 +70,21 @@ const LoginForm: React.FC = () => {
           }, 2000)
         }
       } catch (err: any) {
-        setTimeout(() => {
+        if (err.response.status === 403) { // if account has been created but not activated yet
+          message.destroy(key)
+          console.log('response data: ', err.response.data);
+          dispatch(setUserRegisterProfile({
+            user: {
+              username: err.response.data.user.username,
+              email: err.response.data.user.email,
+            },
+            verification_token: err.response.data.verificationToken
+          } as UserRegisterProfile));
+          // redirect to otp verification page
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng nhập thất bại!',
+            content: 'Login failed!',
           });
           form.setFields([
             {
@@ -85,7 +96,31 @@ const LoginForm: React.FC = () => {
               errors: [err.response.data.message],
             },
           ]); 
-        }, 1500)
+          setTimeout(() => {
+            navigate('/auth/otp-verification');
+          }, 3000)
+        }
+        // If this account is failed authenticated
+        else {
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: 'error',
+              content: 'Login failed!',
+            });
+            form.setFields([
+              {
+                name: 'password',
+                errors: [err.response.data.message],
+              },
+              {
+                name: 'username',
+                errors: [err.response.data.message],
+              },
+            ]); 
+          }, 1500)
+        }
+      
       }
   };
   

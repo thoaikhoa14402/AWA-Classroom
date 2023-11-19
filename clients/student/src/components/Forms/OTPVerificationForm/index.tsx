@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
 import { NavLink, useNavigate } from "react-router-dom";
 import {setUserRegisterProfile, clearUserRegisterProfile, UserRegisterProfile } from "~/store/reducers/userRegisterSlice";
+import { setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./OTPVerificationForm.module.css"
 import axios from "axios";
@@ -14,11 +15,12 @@ const OTPVerificationForm: React.FC = () => {
   const [isFailedAuthenticated, setIsFailedAuthenticated] = useState(false);
   const dispatch = useAppDispatch();
   const verificationToken = useAppSelector((state) => state.userRegister.verification_token);
-  console.log('current verification token: ', verificationToken);
   const userRegisterProfile = useAppSelector((state) => state.userRegister.profile);
   const username = userRegisterProfile?.username;
   const email = userRegisterProfile?.email;
-  const role = userRegisterProfile?.role;
+  console.log('username: ', username);
+  console.log('email: ', email);
+  console.log('verification token in otp form: ', verificationToken);
 
   const navigate = useNavigate();
 
@@ -36,17 +38,17 @@ const OTPVerificationForm: React.FC = () => {
           type: 'loading',
           content: 'Processing!',
         });
-        console.log('verification_Token in onfinish: ', localStorage.getItem('verificationToken'));
+        // console.log('verification_Token in onfinish: ', localStorage.getItem('verificationToken'));
+        console.log('current bearer token: ', verificationToken);
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/verify-user-registration`, {
-          username: username || 'ntdkhoa14402', 
-          email: email || 'nguyenthoaidangkhoa@gmail.com', 
-          role: role || 'student',
+          username: username,
+          email: email,
           verification_code: values.verification_code,
         }, {
           headers: {
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${verificationToken}` || ''
-            'Authorization': localStorage.getItem('verificationToken') ?  `Bearer ${localStorage.getItem('verificationToken')}` : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjIwMTI3MDQ0IiwiZW1haWwiOiJuZ3V5ZW50aG9haWRhbmdraG9hQGdtYWlsLmNvbSIsInZlcmlmaWNhdGlvbl9jb2RlIjoiOTQyNDM3IiwiaWF0IjoxNzAwMzI4MzYyLCJleHAiOjE3MDA0MTQ3NjJ9.ZBM3CI3WdIhkcGD_AeXJtAXXerlIVNwqoYh947STF6A'
+            'Authorization': localStorage.getItem('verificationToken') ?  `Bearer ${localStorage.getItem('verificationToken')}` : `Bearer ${verificationToken}`
           }
         });
         // Kiểm tra response từ API
@@ -60,14 +62,18 @@ const OTPVerificationForm: React.FC = () => {
             });
           }, 1500)
 
-          // dispatch(setUserProfile({
-          //   user: response.data.user,
-          //   access_token: response.data.accessToken
-          // }));
+          dispatch(setUserProfile({
+            user: response.data.user,
+            access_token: response.data.accessToken
+          }));
 
-          // setTimeout(() => {
-          //   window.location.replace('/home');
-          // }, 2000)
+          // reset user register profile to null
+          dispatch(clearUserRegisterProfile());
+          localStorage.removeItem("verificationToken");
+
+          setTimeout(() => {
+            window.location.replace('/home');
+          }, 2000)
         }
       } catch (err: any) {
         setTimeout(() => {
@@ -97,9 +103,8 @@ const OTPVerificationForm: React.FC = () => {
         content: 'Processing!',
       });
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/resend-otp`, {
-        username: username || 'ntdkhoa14402', 
-        email: email || 'nguyenthoaidangkhoa@gmail.com', 
-        role: role || 'student',
+        username: username, 
+        email: email, 
       }, {
         headers: {
           'Content-Type': 'application/json',

@@ -43,17 +43,20 @@ const RegisterForm: React.FC = () => {
               type: 'success',
               content: 'Register information is valid!',
             });
-          }, 1500)
+          }, 2000)
 
           dispatch(setUserRegisterProfile({
-            user: response.data.user,
+            user: {
+              username: values.username,
+              email: values.email,
+            },
             verification_token: response.data.verificationToken
           } as UserRegisterProfile));
 
           setTimeout(() => {
             // window.location.replace('/home');
-            navigate('/otp-verification')
-          }, 2000)
+            navigate('/auth/otp-verification')
+          }, 3000)
         }
       } catch (err: any) {
         setTimeout(() => {

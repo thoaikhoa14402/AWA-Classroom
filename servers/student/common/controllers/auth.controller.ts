@@ -64,17 +64,47 @@ class AuthController implements IController {
     private login = async (req: Request, res: Response, next: NextFunction) => {
         const {username, password} = req.body
         const user = await UserModel.findOne({ username: username }).select('+password');
-        
-        if (!user || !(await user.correctPassword(password, user.password!)) || !user.active) {
-            return next(new AppError('Tài khoản hoặc mật khẩu không chính xác', 401));
+
+        if (!user || !(await user.correctPassword(password, user.password!))) {
+            return next(new AppError('The username or password is incorrect!', 401));
         }
+
+        if (user && !user.active) { // if this account is created, but not activated yet
+            const otpCode = new OTPGenerator().generate();
+            const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+            const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
+            const template = handlebars.compile(source);
+            const replacements = {
+                username: req.body.username,
+                verificationCode: otpCode
+            };
+
+            const htmlToSend = template(replacements);
+
+            await GMailer.sendMail({
+                to: user.email,
+                subject: 'Verify your account',
+                html: htmlToSend,
+            });
+
+            return res.status(403).json({
+                message: "This account has not been activated yet. Please active now!",
+                user: {
+                    username: user.username,
+                    email: user.email,
+                },
+                verificationToken: verificationToken
+            })
+            // return next(new AppError('This account has not been activated yet. Please active now!', 403));
+        }
+
         let clonedUser = JSON.parse(JSON.stringify(user));
         delete clonedUser.password;
 
         const accessToken = await JsonWebToken.createToken({_id: user.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
 
         return res.status(200).json({
-            message: "Đăng nhập thành công!",
+            message: "Login successfully!",
             user: clonedUser,
             accessToken: accessToken
         })
@@ -86,16 +116,14 @@ class AuthController implements IController {
         const foundedUser = await UserModel.findOne({ username: userRegisterInfo.username });
 
         if (foundedUser)
-            return next(new AppError('Tài khoản đã tồn tại', 400));
+            return next(new AppError('This username is already in use!', 400));
 
-        // const newUser = await UserModel.create({
-        //     username: req.body.username,
-        //     email: req.body.email,
-        //     password: req.body.password,
-        //     passwordConfirm: req.body.passwordConfirm
-        // })
-        // let clonedUser = JSON.parse(JSON.stringify(newUser));
-        // delete clonedUser.password;
+        const newUser = await UserModel.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+            passwordConfirm: req.body.passwordConfirm
+        })
 
         const otpCode = new OTPGenerator().generate();
         const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
@@ -114,17 +142,10 @@ class AuthController implements IController {
         });
 
         res.status(200).json({
-            message: "Register information is valid!",
+            message: "Register information is valid! Please check verification code in your email.",
             verificationToken: verificationToken,
-            otp: otpCode,
         })
-        // const accessToken = await JsonWebToken.createToken({_id: newUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
-        
-        // return res.status(200).json({
-        //     message: "Đăng ký thành công!",
-        //     user: clonedUser,
-        //     accessToken: accessToken
-        // })
+       
     }
 
     /// > VERIFY USER REGISTER, IF VALID CREATE NEW ACCOUNT
@@ -133,8 +154,16 @@ class AuthController implements IController {
         console.log('extracted verification code: ', req.verification_code);
         console.log('req.body: ', req.body);
         if (userRegistrationInfo.verification_code === req.verification_code) {
+            const updatedUser = await UserModel.findOneAndUpdate(
+                { username: req.body.username}, // Tìm người dùng dựa trên username
+                { active: true }, // Cập nhật trường active thành true
+                { new: true } // Tùy chọn này trả về đối tượng đã được cập nhật
+            );
+            const accessToken = await JsonWebToken.createToken({_id: updatedUser?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
             return res.status(200).json({
-                message: "Your verification code is valid"
+                message: "Register successfully",
+                user: updatedUser,
+                accessToken: accessToken
             })
         }
         else  {

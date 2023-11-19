@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         email: { type: String},
         active: {
             type: Boolean,
-            default: true
+            default: false
         },
         passwordChangedAt: { type: Number },
     },
