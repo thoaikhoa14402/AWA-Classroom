@@ -17,6 +17,7 @@ import useAppSelector from "~/hooks/useAppSelector";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import { setUserProfile } from "~/store/reducers/userSlice";
 import authStorage from "~/utils/auth.storage";
+import { NavLink } from "react-router-dom";
 
 const getBase64 = (file: RcFile): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -144,6 +145,10 @@ const Profile: React.FC = () => {
 
     return (
         <>
+            <div className="!mx-auto !w-full lg:!w-profile !border text-center flex justify-around mb-2 rounded-lg overflow-hidden">
+                <NavLink to='/user/profile' className={({ isActive }) => (isActive) ? 'bg-primary text-white font-semibold w-full p-3' : `w-full p-3 hover:text-primary transition-all duration-150`}>User Profile</NavLink>
+                <NavLink to='/user/reset-password' className={({ isActive }) => (isActive) ? 'bg-primary text-white font-semibold w-full p-3' : `w-full p-3 hover:text-primary transition-all duration-150`}>Reset Password</NavLink>
+            </div>
             {contextHolder}
             <Form
                 form={form}

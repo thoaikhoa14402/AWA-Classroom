@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import LandingPage from "~/pages/Landing";
 import OTPVerificationPage from "~/pages/OTPVerification";
 import ProtectedOTPRoute from "./ProtectedOTPRoute";
+import ResetPassword from "~/pages/ResetPassword";
 
 const AppRoutes = () => {
     return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
                     <Route path="/settings" element={<>Settings</>} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/user/profile" element={<Profile />} />
+                    <Route path="/user/reset-password" element={<ResetPassword />} />
                 </Route>
             </Route>
             {/* Authentication routes */}
