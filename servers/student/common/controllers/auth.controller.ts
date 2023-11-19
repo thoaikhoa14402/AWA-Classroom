@@ -215,7 +215,7 @@ class AuthController implements IController {
     /// >  RESPONSE ACCESS TOKEN STATUS
     private responseUnauthorizedMessage = (req: Request, res: Response, next: NextFunction) => {
         return res.status(401).json({
-            message: "Tài khoản chưa được xác thực!"
+            message: "This account has not been authenticated!"
         })
     }
 
@@ -228,7 +228,7 @@ class AuthController implements IController {
             // When using Axios, it will automatically add 'origin' field into request headers
             if (user._id) {
                 if (origin) { // from HTTP client 
-                    return res.status(200).json({ message: "Tài khoản đã được xác thực!" })
+                    return res.status(200).json({ message: "This account has been authenticated!" })
                 }
                 return res.redirect(`${process.env.CLIENT_HOST}/home`)
             }

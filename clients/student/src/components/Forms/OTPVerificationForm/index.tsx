@@ -94,7 +94,6 @@ const OTPVerificationForm: React.FC = () => {
   };
 
   const handleResendOTP = async () => {
-    console.log('resend otp...');
     const key = 'updatable';
     try {
       messageApi.open({
@@ -194,7 +193,7 @@ const OTPVerificationForm: React.FC = () => {
         </Button>
       </Form.Item>
       }
-      
+  
     </Form>
   </React.Fragment>
 }

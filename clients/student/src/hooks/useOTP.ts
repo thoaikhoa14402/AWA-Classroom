@@ -1,10 +1,10 @@
-// neu co token tu store hoac tu local storage -> navigate otp
-// khong co thi chuyen ve lai trang dang nhap
-import {useState, useEffect, useRef} from 'react';
 import useAppSelector from "~/hooks/useAppSelector";
-import {setUserRegisterProfile, clearUserRegisterProfile, UserRegisterProfile } from "~/store/reducers/userRegisterSlice";
+import {useMemo} from 'react';
 
 export default function useOTP() {
-    const isAuthenticated = useRef<boolean>(false);
-    const userRegisterProfile = useAppSelector((state) => state.userRegister.profile);
+    const verificationToken = useAppSelector((state) => state.userRegister.verification_token);
+    const verificationTokenByLocalStorage = localStorage.getItem('verificationToken');
+    return useMemo(() => {
+        return verificationToken || verificationTokenByLocalStorage || null;
+    }, [verificationToken, verificationTokenByLocalStorage])
 }

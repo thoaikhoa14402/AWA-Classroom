@@ -10,6 +10,7 @@ import RegisterPage from "~/pages/Register";
 import ProtectedRoute from "./ProtectedRoute";
 import LandingPage from "~/pages/Landing";
 import OTPVerificationPage from "~/pages/OTPVerification";
+import ProtectedOTPRoute from "./ProtectedOTPRoute";
 
 const AppRoutes = () => {
     return (
@@ -34,7 +35,9 @@ const AppRoutes = () => {
                     <Route index element = {<LoginPage/>}/>
                     <Route path = "login" element = {<LoginPage/>}/>
                     <Route path = "register" element = {<RegisterPage/>}/>
-                    <Route path = "otp-verification" element = {<OTPVerificationPage/>}/>
+                    <Route element={<ProtectedOTPRoute/>}>
+                        <Route path = "otp-verification" element = {<OTPVerificationPage/>}/>
+                    </Route>
                 </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" />}  />
