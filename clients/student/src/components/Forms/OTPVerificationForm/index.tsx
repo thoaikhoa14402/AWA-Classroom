@@ -51,17 +51,16 @@ const OTPVerificationForm: React.FC<OTPVerificationFormProps> = ({type}) => {
         // Kiểm tra response từ API
         if (response.status === 200) { // Nếu xác thực thành công
           message.destroy(key)
-          setTimeout(() => {
-            messageApi.open({
-              key,
-              type: 'success',
-              content: 'Register successfully!',
-            });
-          }, 1500)
-
-          console.log('type now in otp verification form: ', type);
-
           if (type === "register") {
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: 'success',
+                content: 'Register successfully!',
+              });
+            }, 1500)
+
+            // set user profile when response returned
             dispatch(setUserProfile({
               user: response.data.user,
               access_token: response.data.accessToken
@@ -72,11 +71,18 @@ const OTPVerificationForm: React.FC<OTPVerificationFormProps> = ({type}) => {
               dispatch(clearUserRegisterProfile());
               localStorage.removeItem("verificationToken");
             }, 2500)
+
             // Then let the protected otp route redirect user to home page
           }
 
           else if (type === "forgot") {
-            console.log('user profile in otp form: ', userRegisterProfile);
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: 'success',
+                content: 'Verification code is valid!',
+              });
+            }, 1500)
             setTimeout(() => {
               // redirect user to reset password page
               navigate('/auth/renew-password');
@@ -89,7 +95,7 @@ const OTPVerificationForm: React.FC<OTPVerificationFormProps> = ({type}) => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Register failed!',
+            content: 'Authenticated failed!',
           });
           form.setFields([
             {

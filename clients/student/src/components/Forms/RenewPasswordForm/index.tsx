@@ -1,12 +1,13 @@
 import React from "react";
 import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
+import { UserRegisterProfile, clearUserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import useAppSelector from "~/hooks/useAppSelector";
 import styles from "./RenewPasswordForm.module.css"
 import axios from "axios";
 import authStorage from "~/utils/auth.storage";
+import { setUserProfile } from "~/store/reducers/userSlice";
 
 const {Title} = Typography;
 
@@ -18,7 +19,7 @@ const RenewPasswordForm: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const userProfile = useAppSelector((state) => state.userRegister.profile);
-  console.log('user profile in renew password form: ', userProfile);
+  const verificationToken = useAppSelector((state) => state.userRegister.verification_token);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -31,36 +32,38 @@ const RenewPasswordForm: React.FC = () => {
           type: 'loading',
           content: 'Processing!',
         });
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/register`, values, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/renew-password`, {
+          username: userProfile?.username,
+          email: userProfile?.email,
+          ...values,
+        }, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+            'Authorization': localStorage.getItem('verificationToken') ?  `Bearer ${localStorage.getItem('verificationToken')}` : `Bearer ${verificationToken}`
           }
         });
         // Kiểm tra response từ API
         if (response.status === 200) { // Nếu xác thực thành công
           message.destroy(key)
-
           setTimeout(() => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Register information is valid!',
+              content: response.data.message,
             });
           }, 1500)
 
-          dispatch(setUserRegisterProfile({
-            user: {
-              username: values.username,
-              email: values.email,
-            },
-            verification_token: response.data.verificationToken
-          } as UserRegisterProfile));
+          dispatch(setUserProfile({
+            user: response.data.user,
+            access_token: response.data.accessToken
+          }));
 
           setTimeout(() => {
-            // window.location.replace('/home');
-            navigate('/auth/otp-verification')
+            // reset user register profile to null
+            dispatch(clearUserRegisterProfile());
+            localStorage.removeItem("verificationToken");
           }, 2500)
+          // Then let the protected otp route redirect user to home page
         }
       } catch (err: any) {
         setTimeout(() => {
@@ -102,7 +105,7 @@ const RenewPasswordForm: React.FC = () => {
                     
       <Form.Item
         label="New Password"
-        name="password"
+        name="newPassword"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         rules={[
@@ -120,7 +123,7 @@ const RenewPasswordForm: React.FC = () => {
       
       <Form.Item
         label="Confirm Password"
-        name="password-confirm"
+        name="passwordConfirm"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         dependencies={['password']}
@@ -134,7 +137,7 @@ const RenewPasswordForm: React.FC = () => {
         },
         ({getFieldValue}) => ({
           validator(_, value) {
-            if (!value || getFieldValue('password') === value) {
+            if (!value || getFieldValue('newPassword') === value) {
               return Promise.resolve();
             }
             return Promise.reject(new Error('Password does not match!'));

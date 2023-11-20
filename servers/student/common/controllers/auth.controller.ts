@@ -13,6 +13,7 @@ import GMailer from '../services/mailer.builder';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as handlebars from 'handlebars';
+import RenewPasswordDTO from "../dtos/renew-password.dto";
 
 /*
  AUTH CONTROLLER 
@@ -56,6 +57,9 @@ class AuthController implements IController {
         // facebook callback URL
         this.router.get('/github/cb', passport.authenticate('github', {session: false}), this.socialOAuthCallbackHandler) 
        
+        // renew password
+        this.router.post('/renew-password', DTOValidation.validate<RenewPasswordDTO>(RenewPasswordDTO, true), this.protect, catchAsync(this.renewPassword))
+
         // protected route
         this.router.get('/protect', this.protect, this.examplePrivateLogicHandler)
     }
@@ -142,7 +146,7 @@ class AuthController implements IController {
         });
 
         res.status(200).json({
-            message: "Register information is valid! Please check verification code in your email.",
+            message: "Your register information is valid.",
             verificationToken: verificationToken,
         })
        
@@ -241,9 +245,38 @@ class AuthController implements IController {
                     return res.status(200).json({ message: "This account has been authenticated!" })
                 }
                 return res.redirect(`${process.env.CLIENT_HOST}/home`)
-            }
+            }   
             next();
         })(req, res, next);
+    }
+
+    /// > RENEW PASSWORD
+    private renewPassword = async (req: Request, res: Response, next: NextFunction) => {
+        const user = req.body as RenewPasswordDTO;
+        // get user from collection 
+        const foundedUser = await UserModel.findOne({username: req.body.username}).select('+password');
+        // check user exists
+        if (!foundedUser) {
+            return res.status(401).json({
+                message: "This username does not exist!"
+            }) 
+        }
+        // if user exists, update new password
+        foundedUser.password = user.newPassword;
+        foundedUser.passwordChangedAt = Date.now() - 1000;
+        await foundedUser.save();
+
+        // delete password field of user to send back to client
+        let clonedUser = JSON.parse(JSON.stringify(foundedUser));
+        delete clonedUser.password;
+
+        const accessToken = await JsonWebToken.createToken({_id: foundedUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
+
+        return res.status(200).json({
+            message: "Change password successfully!",
+            user: clonedUser,
+            accessToken: accessToken
+        })
     }
 
     /// > EXAMPLE PRIVATE LOGIC HANDLER (used for testing purposes)

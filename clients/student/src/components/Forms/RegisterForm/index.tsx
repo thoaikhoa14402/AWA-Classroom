@@ -41,7 +41,7 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Register information is valid!',
+              content: response.data.message,
             });
           }, 1500)
 

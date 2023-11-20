@@ -38,7 +38,6 @@ const ForgotPasswordForm: React.FC = () => {
         }
       });
 
-      console.log('response in forgot password form: ', response.data);
       if (response.status === 200) { // Nếu xác thực thành công
         message.destroy(key)
 

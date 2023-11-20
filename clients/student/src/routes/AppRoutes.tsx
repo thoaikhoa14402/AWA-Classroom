@@ -44,9 +44,9 @@ const AppRoutes = () => {
                             <Route path = "register" element = {<OTPVerificationPage type = "register"/>}/>
                             <Route path = "forgot" element = {<OTPVerificationPage type = "forgot"/>}/>
                         </Route>
+                        <Route path = "renew-password" element = {<RenewPasswordPage/>}/>
                     </Route>
                     <Route path = "forgot-password" element = {<ForgotPasswordPage/>}/>
-                    <Route path = "renew-password" element = {<RenewPasswordPage/>}/>
                 </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" />}  />
