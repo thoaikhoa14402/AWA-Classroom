@@ -11,25 +11,25 @@ import useAppSelector from "~/hooks/useAppSelector";
 
 const {Title} = Typography;
 
-const OTPVerificationForm: React.FC = () => {
+interface OTPVerificationFormProps {
+  type: 'register' | 'forgot'; 
+}
+
+const OTPVerificationForm: React.FC<OTPVerificationFormProps> = ({type}) => {
   const [isFailedAuthenticated, setIsFailedAuthenticated] = useState(false);
   const dispatch = useAppDispatch();
   const verificationToken = useAppSelector((state) => state.userRegister.verification_token);
   const userRegisterProfile = useAppSelector((state) => state.userRegister.profile);
   const username = userRegisterProfile?.username;
   const email = userRegisterProfile?.email;
-  console.log('username: ', username);
-  console.log('email: ', email);
-  console.log('verification token in otp form: ', verificationToken);
-
   const navigate = useNavigate();
-
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
+
   const onFinish = async (values: any) => {
     const key = 'updatable';
     try {
@@ -38,8 +38,6 @@ const OTPVerificationForm: React.FC = () => {
           type: 'loading',
           content: 'Processing!',
         });
-        // console.log('verification_Token in onfinish: ', localStorage.getItem('verificationToken'));
-        console.log('current bearer token: ', verificationToken);
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/verify-user-registration`, {
           username: username,
           email: email,
@@ -47,7 +45,6 @@ const OTPVerificationForm: React.FC = () => {
         }, {
           headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${verificationToken}` || ''
             'Authorization': localStorage.getItem('verificationToken') ?  `Bearer ${localStorage.getItem('verificationToken')}` : `Bearer ${verificationToken}`
           }
         });
@@ -62,17 +59,30 @@ const OTPVerificationForm: React.FC = () => {
             });
           }, 1500)
 
-          dispatch(setUserProfile({
-            user: response.data.user,
-            access_token: response.data.accessToken
-          }));
+          console.log('type now in otp verification form: ', type);
 
-          setTimeout(() => {
-            // reset user register profile to null
-            dispatch(clearUserRegisterProfile());
-            localStorage.removeItem("verificationToken");
-          }, 2500)
-          // Then let the protected otp route redirect user to home page
+          if (type === "register") {
+            dispatch(setUserProfile({
+              user: response.data.user,
+              access_token: response.data.accessToken
+            }));
+
+            setTimeout(() => {
+              // reset user register profile to null
+              dispatch(clearUserRegisterProfile());
+              localStorage.removeItem("verificationToken");
+            }, 2500)
+            // Then let the protected otp route redirect user to home page
+          }
+
+          else if (type === "forgot") {
+            console.log('user profile in otp form: ', userRegisterProfile);
+            setTimeout(() => {
+              // redirect user to reset password page
+              navigate('/auth/renew-password');
+            }, 2500)
+          }
+          
         }
       } catch (err: any) {
         setTimeout(() => {
@@ -109,7 +119,6 @@ const OTPVerificationForm: React.FC = () => {
           'Authorization': ''
         }
       });
-      console.log('verification_Token in resetOTP: ', response.data.verificationToken);
       localStorage.setItem('verificationToken', response.data.verificationToken);
       if (response.status === 200) { // Nếu xác thực thành công
         message.destroy(key)

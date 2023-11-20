@@ -151,8 +151,6 @@ class AuthController implements IController {
     /// > VERIFY USER REGISTER, IF VALID CREATE NEW ACCOUNT
     private verifyUserRegistration = async (req: Request, res: Response, next: NextFunction) => {
         const userRegistrationInfo = req.body;
-        console.log('extracted verification code: ', req.verification_code);
-        console.log('req.body: ', req.body);
         if (userRegistrationInfo.verification_code === req.verification_code) {
             const updatedUser = await UserModel.findOneAndUpdate(
                 { username: req.body.username}, // Tìm người dùng dựa trên username
@@ -167,7 +165,6 @@ class AuthController implements IController {
             })
         }
         else  {
-            console.log('wrong verification code');
             return res.status(401).json({
                 message: "Your verification code is not valid, try again!"
             })
@@ -176,6 +173,15 @@ class AuthController implements IController {
 
      /// > RESEND OTP
      private resendVerificationCodeViaEmail = async (req: Request, res: Response, next: NextFunction) => {
+        // check if username exists
+        const foundedUsername = await UserModel.findOne({ username: req.body.username });
+
+        if (!foundedUsername || !(foundedUsername.email === req.body.email)) {
+            return res.status(401).json({
+                message: "This username or email does not exist!"
+            })
+        }
+
         const otpCode = new OTPGenerator().generate();
         const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
         const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
@@ -193,6 +199,10 @@ class AuthController implements IController {
         return res.status(200).json({
             message: "We've sent a new verification code to your email.",
             verificationToken: verificationToken,
+            user: {
+                username: req.body.username,
+                email: req.body.email,
+            }
         })
     }
 

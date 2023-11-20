@@ -3,18 +3,22 @@ import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
-import styles from "./RegisterForm.module.css"
+import useAppSelector from "~/hooks/useAppSelector";
+import styles from "./RenewPasswordForm.module.css"
 import axios from "axios";
 import authStorage from "~/utils/auth.storage";
 
 const {Title} = Typography;
 
-const RegisterForm: React.FC = () => {
+const RenewPasswordForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const userProfile = useAppSelector((state) => state.userRegister.profile);
+  console.log('user profile in renew password form: ', userProfile);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -55,7 +59,7 @@ const RegisterForm: React.FC = () => {
 
           setTimeout(() => {
             // window.location.replace('/home');
-            navigate('/auth/otp-verification/register')
+            navigate('/auth/otp-verification')
           }, 2500)
         }
       } catch (err: any) {
@@ -86,39 +90,18 @@ const RegisterForm: React.FC = () => {
       className = {styles["register-form"]}
       form = {form}
     >
-      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Create an account</Title>
+      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Create a new password</Title>
 
+      <div className="bg-green-50 border border-primary p-6 pt-5 px-6 mb-4 rounded-lg ">
+        <h1 className="font-semibold text-left mb-2.5">Hint</h1>
+        <ul className="text-left list-inside list-disc flex flex-col gap-2 text-sm px-4">
+            <li>Use password that you don't use on any other site.</li>
+            <li>Min length 8 characters.</li>
+        </ul>
+      </div>
+                    
       <Form.Item
-        label="Username"
-        name="username"
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
-        rules={[{ required: true, message: 'Username must not be empty!' }]}
-      >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your username"/>
-      </Form.Item>
-
-      <Form.Item
-        label="Email"
-        name="email"
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
-        rules={[
-        { 
-          required: true,
-          message: 'Email must not be empty!'
-        },
-        {
-          type: 'email',
-          message: 'Email format is not valid!'
-        }
-      ]}
-      >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your email"/>
-      </Form.Item>
-
-      <Form.Item
-        label="Password"
+        label="New Password"
         name="password"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
@@ -164,21 +147,12 @@ const RegisterForm: React.FC = () => {
       
       <Form.Item>
         <Button type="primary" htmlType="submit" className = "!mt-6 !h-11" block>
-            Create your account
+            Reset your password
         </Button>
       </Form.Item>
-      
-      <Flex justify = "center" gap = "small">
-        <span>
-          Already have an account?
-        </span>
-        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/login', {replace: true})}>
-          Log in
-        </span>
-      </Flex>
 
     </Form>
   </React.Fragment>
 }
 
-export default RegisterForm;
+export default RenewPasswordForm;
