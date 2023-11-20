@@ -34,7 +34,7 @@ module.exports = {
         'profile': '45rem'
       },
       zIndex: { 
-        '10000': '10000'
+        '999': '999'
       }
     },
   },

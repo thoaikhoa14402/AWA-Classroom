@@ -56,7 +56,7 @@ const HomePage: React.FC = () => {
                 classes.length 
                 ? 
                 <div className='flex justify-end items-center'>
-                    <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!}>
+                    <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!} overlayClassName='!z-0'>
                         <Button shape='circle' className='!w-10 !h-10'>
                             <FontAwesomeIcon icon={faEllipsis} size='lg' />
                         </Button>

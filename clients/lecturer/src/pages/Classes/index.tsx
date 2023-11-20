@@ -59,7 +59,7 @@ const Classes: React.FC = () => {
                 ? 
                 <div className='flex justify-end items-center'>
                     <span className='mr-auto'>Classes { params.class_id }</span>
-                    <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!}>
+                    <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!} overlayClassName='!z-0'>
                         <Button shape='circle' className='!w-10 !h-10'>
                             <FontAwesomeIcon icon={faEllipsis} size='lg' />
                         </Button>
