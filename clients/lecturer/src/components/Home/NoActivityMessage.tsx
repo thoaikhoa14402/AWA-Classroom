@@ -10,7 +10,7 @@ import useCreateClassModal from "~/hooks/useCreateClassModal";
 const NoActivityMessage: React.FC = () => {
 
     const navigate = useNavigate();
-    
+
     const handleCreate = (values: any) => {
         
         return new Promise((resolve, reject) => {
@@ -62,7 +62,7 @@ const NoActivityMessage: React.FC = () => {
                     Click <b className="text-primary">'Get Started'</b> to choose action which you want to begin
                     your education environment.
                 </p>
-                <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!}>
+                <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight" getPopupContainer={trigger => trigger.parentElement!} overlayClassName="!z-0">
                     <button className="bg-primary p-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3 px-4 rounded-md transition-all duration-200 hover:bg-hover">
                         <span>Get Started</span>
                         <FontAwesomeIcon icon={faAngleDown} />
