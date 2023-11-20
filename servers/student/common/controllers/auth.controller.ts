@@ -176,7 +176,7 @@ class AuthController implements IController {
     }
 
      /// > RESEND OTP
-     private resendVerificationCodeViaEmail = async (req: Request, res: Response, next: NextFunction) => {
+    private resendVerificationCodeViaEmail = async (req: Request, res: Response, next: NextFunction) => {
         // check if username exists
         const foundedUsername = await UserModel.findOne({ username: req.body.username });
 
@@ -209,8 +209,6 @@ class AuthController implements IController {
             }
         })
     }
-
-
   
     /// > LOGIN BY SOCIAL OAUTH
     private socialOAuthCallbackHandler = async (req: Request, res: Response, next: NextFunction) => {

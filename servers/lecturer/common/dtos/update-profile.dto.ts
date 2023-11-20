@@ -3,22 +3,22 @@ import { IsPhoneNumber } from "../utils/validators/phone";
 import { IUser } from "../models/user.model";
 
 class UpdateProfileDTO {	
-	@IsString({ message: "Tên phải là chuỗi" })
-    @IsNotEmpty({ message: "Tên không được bỏ trống" })
+	@IsString({ message: "First-name must be a string." })
+    @IsNotEmpty({ message: "First-name must not be empty." })
     public firstname!: string;
 
-    @IsString({message: "Họ và tên đệm không được bỏ trống"})
-    @IsNotEmpty({message: "Họ và tên đệm không được bỏ trống"})
+    @IsString({message: "Last-name must be a string."})
+    @IsNotEmpty({message: "Last-name must not be empty."})
     public lastname!: string;
 
-    @IsEmail({}, {message: "Email không hợp lệ"})
-    @IsString({message: "Email không hợp lệ"})
-    @IsNotEmpty({message: "Email không được bỏ trống"})
+    @IsEmail({}, {message: "Email is not valid."})
+    @IsString({message: "Email is not valid."})
+    @IsNotEmpty({message: "Email must not be empty."})
     public email!: string;
 
-	@IsString({ message: "Số điện thoại không tồn tại" })
+	@IsString({ message: "Phone number is not valid." })
     @IsOptional()
-    @IsPhoneNumber({ message: "Số điện thoại không tồn tại" })
+    @IsPhoneNumber({ message: "Phone number is not valid." })
     public phoneNumber?: string;
 
 	constructor(obj: IUser) {
