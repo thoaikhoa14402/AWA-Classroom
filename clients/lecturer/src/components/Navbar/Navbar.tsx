@@ -81,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     ), [items]);
 
     return (
-        <nav className="bg-white w-screen flex justify-center shadow-sm px-4 sticky top-0 z-10">
+        <nav className="bg-white w-screen flex justify-center shadow-sm px-4 sticky top-0 z-10000">
             <div
                 className={ 
                     "max-w-screen-2xl w-screen flex flex-col sm:flex-row justify-between items-center gap-3 lg:gap-0"

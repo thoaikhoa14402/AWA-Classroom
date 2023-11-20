@@ -32,6 +32,9 @@ module.exports = {
       },
       width: {
         'profile': '45rem'
+      },
+      zIndex: { 
+        '10000': '10000'
       }
     },
   },
