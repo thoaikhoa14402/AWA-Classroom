@@ -1,0 +1,1 @@
+export { default as NoClassMessage } from './NoClassMessage';
