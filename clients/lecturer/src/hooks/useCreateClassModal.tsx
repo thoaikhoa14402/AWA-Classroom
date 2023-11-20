@@ -53,7 +53,7 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
             maskClosable={!loading}>
             <Form autoComplete='off' form={form} layout="vertical" className="!mt-8 !px-1 !text-left flex flex-col gap-3">
                 <Form.Item
-                    name='class_name'
+                    name='name'
                     label={
                         <span className="flex justify-center items-center font-medium">
                             <FontAwesomeIcon icon={faChalkboardTeacher} />&nbsp;
@@ -65,7 +65,7 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
                     <Input placeholder="Enter class name" className="!p-2.5 !px-4" />
                 </Form.Item>
                 <Form.Item 
-                    name='class_section'
+                    name='section'
                     label={
                         <span className="flex justify-center items-center font-medium">
                             <FontAwesomeIcon icon={faSection} />&nbsp;

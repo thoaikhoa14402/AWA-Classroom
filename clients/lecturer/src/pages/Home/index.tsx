@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 console.log('create a class', values);
-                navigate(`/classes/${values.class_name}`);
+                navigate(`/classes/${values.name}`);
                 resolve(1);
             }, 2000);
         });
