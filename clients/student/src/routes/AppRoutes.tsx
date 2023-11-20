@@ -12,6 +12,8 @@ import LandingPage from "~/pages/Landing";
 import OTPVerificationPage from "~/pages/OTPVerification";
 import ProtectedOTPRoute from "./ProtectedOTPRoute";
 import ResetPassword from "~/pages/ResetPassword";
+import ForgotPasswordPage from "~/pages/ForgotPassword";
+import RenewPasswordPage from "~/pages/RenewPassword";
 
 const AppRoutes = () => {
     return (
@@ -38,8 +40,13 @@ const AppRoutes = () => {
                     <Route path = "login" element = {<LoginPage/>}/>
                     <Route path = "register" element = {<RegisterPage/>}/>
                     <Route element={<ProtectedOTPRoute/>}>
-                        <Route path = "otp-verification" element = {<OTPVerificationPage/>}/>
+                        <Route path = "otp-verification">
+                            <Route path = "register" element = {<OTPVerificationPage type = "register"/>}/>
+                            <Route path = "forgot" element = {<OTPVerificationPage type = "forgot"/>}/>
+                        </Route>
+                        <Route path = "renew-password" element = {<RenewPasswordPage/>}/>
                     </Route>
+                    <Route path = "forgot-password" element = {<ForgotPasswordPage/>}/>
                 </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" />}  />

@@ -1,9 +1,12 @@
 import React from "react";
 import OTPVerificationForm from "~/components/Forms/OTPVerificationForm";
-
-const OTPVerificationPage: React.FC = () => {
+interface OTPVerificationPageProps {
+    type: 'register' | 'forgot'; 
+}
+  
+const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({type}) => {
     return <React.Fragment>
-        <OTPVerificationForm/>
+        <OTPVerificationForm type = {type}/>
     </React.Fragment>
 }
 
