@@ -41,7 +41,7 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Register information is valid!',
+              content: response.data.message,
             });
           }, 1500)
 
@@ -55,7 +55,7 @@ const RegisterForm: React.FC = () => {
 
           setTimeout(() => {
             // window.location.replace('/home');
-            navigate('/auth/otp-verification')
+            navigate('/auth/otp-verification/register')
           }, 2500)
         }
       } catch (err: any) {

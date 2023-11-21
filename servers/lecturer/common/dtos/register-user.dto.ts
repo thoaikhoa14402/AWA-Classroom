@@ -3,24 +3,24 @@ import { IUser } from "../models/user.model"
 import { Match } from "../utils/match.decorator";
 
 class RegisterUserDTO {
-    @IsString({message: "Tên đăng nhập không hợp lệ"})
-    @IsNotEmpty({message: "Tên đăng nhập không được bỏ trống"})
+    @IsString({message: "Username is not valid."})
+    @IsNotEmpty({message: "Username must not be empty."})
     public username!: string;
 
-    @IsEmail({}, {message: "Email không hợp lệ"})
-    @IsString({message: "Email không hợp lệ"})
-    @IsNotEmpty({message: "Email không được bỏ trống"})
+    @IsEmail({}, {message: "Email is not valid."})
+    @IsString({message: "Email is not valid."})
+    @IsNotEmpty({message: "Email must not be empty."})
     public email!: string;
 
-    @MinLength(8, {message: 'Mật khẩu phải ít nhất 8 kí tự'})
-    @IsString({message: "Mật khẩu không hợp lệ"})
-    @IsNotEmpty({message: "Mật khẩu không được bỏ trống"})
+    @MinLength(8, {message: 'Password must be at least 8 characters.'})
+    @IsString({message: "Password is not valid."})
+    @IsNotEmpty({message: "Password is not valid."})
     public password!: string;
 
     @Match('password')
-    @MinLength(8, {message: 'Xác nhận mật khẩu ít nhất 8 kí tự'})
-    @IsString({message: "Xác nhận mật khẩu không hợp lệ"})
-    @IsNotEmpty({message: "Xác nhận mật khẩu không được bỏ trống"})
+    @MinLength(8, {message: 'Password confirm must be at least 8 characters.'})
+    @IsString({message: "Password confirm is not valid."})
+    @IsNotEmpty({message: "Password confirm must not be empty."})
     public passwordConfirm!: string;
 
     constructor(obj: IUser) {

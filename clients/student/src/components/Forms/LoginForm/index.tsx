@@ -169,7 +169,7 @@ const LoginForm: React.FC = () => {
       >
       <Flex className = "mt-3" justify = "space-between">
       <Checkbox >Remember me</Checkbox>
-      <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}}>
+      <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}} onClick = {() => navigate('/auth/forgot-password')}>
         Forgot password ?
       </span>
       </Flex>
