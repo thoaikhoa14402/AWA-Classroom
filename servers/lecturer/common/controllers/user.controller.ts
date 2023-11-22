@@ -9,6 +9,7 @@ import DTOValidation from "../middlewares/validation.middleware";
 import UserModel from "../models/user.model";
 import ResetPasswordDTO from "../dtos/reset-password.dto";
 import AppError from "../services/errors/app.error";
+import redis from "../redis";
 
 /*
  USER CONTROLLER 
@@ -27,20 +28,33 @@ class UserController implements IController {
     }
 
     constructor() {
-        this.router.get('/profile', AuthController.protect, cacheMiddleware(this.profileCacheKey), catchAsync(this.getProfile));
+        this.router.get('/profile', AuthController.protect, cacheMiddleware(this.profileCacheKey, this.profileCacheRes), catchAsync(this.getProfile));
         
         this.router.patch('/profile', DTOValidation.validate<UpdateProfileDTO>(UpdateProfileDTO), AuthController.protect, catchAsync(this.updateProfile));
         
         const multercloud = new MulterCloudinaryUploader(['jpg', 'jpeg', 'png'], 1 * 1024 * 1024);
         this.router.put('/upload', AuthController.protect, multercloud.single('avatar'), multercloud.uploadCloud('avatars'), catchAsync(this.uploadAvatar));
 
-        this.router.get('/:id', AuthController.protect, cacheMiddleware(this.profileCacheKey), catchAsync(this.getProfileById));
+        this.router.get('/:id', AuthController.protect, cacheMiddleware(this.profileCacheKey, this.profileCacheRes), catchAsync(this.getProfileById));
 
         this.router.patch('/reset-password', AuthController.protect, DTOValidation.validate<ResetPasswordDTO>(ResetPasswordDTO), catchAsync(this.resetPassword));
     }
     
+    /// > HANDLE RES CACHE
+    private profileCacheRes = async (req: Request, res: Response, next: NextFunction, data: any) => { 
+        return res.status(200).json({
+            status: 'success',
+            data: data
+        });  
+    };
+
+
     /// > GET PROFILE
     private getProfile = async (req: Request, res: Response, next: NextFunction) => {
+
+        const redisClient = redis.getClient();
+        await redisClient?.setEx(this.profileCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(req.user));
+
         return res.status(200).json({
             status: 'success',
             data: req.user
@@ -76,6 +90,9 @@ class UserController implements IController {
         const userId = req.params.id;
         
         const user = await UserModel.findById(userId);
+
+        const redisClient = redis.getClient();
+        await redisClient?.setEx(this.profileCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(req.user));
 
         return res.status(200).json({
             message: "success",

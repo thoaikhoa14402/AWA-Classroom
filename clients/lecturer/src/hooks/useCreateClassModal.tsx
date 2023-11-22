@@ -53,6 +53,18 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
             maskClosable={!loading}>
             <Form autoComplete='off' form={form} layout="vertical" className="!mt-8 !px-1 !text-left flex flex-col gap-3">
                 <Form.Item
+                    name='cid'
+                    label={
+                        <span className="flex justify-center items-center font-medium">
+                            <FontAwesomeIcon icon={faChalkboardTeacher} />&nbsp;
+                            Class ID
+                        </span>
+                    }
+                    rules={[{ required: true, message: 'A class must have a ID !' }]}
+                >
+                    <Input placeholder="Enter class name" className="!p-2.5 !px-4" />
+                </Form.Item>
+                <Form.Item 
                     name='name'
                     label={
                         <span className="flex justify-center items-center font-medium">
@@ -61,17 +73,6 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
                         </span>
                     }
                     rules={[{ required: true, message: 'A class must have a name !' }]}
-                >
-                    <Input placeholder="Enter class name" className="!p-2.5 !px-4" />
-                </Form.Item>
-                <Form.Item 
-                    name='section'
-                    label={
-                        <span className="flex justify-center items-center font-medium">
-                            <FontAwesomeIcon icon={faSection} />&nbsp;
-                            Section
-                        </span>
-                    }
                 >
                     <Input placeholder="Enter section" className="!p-2.5 !px-4" />
                 </Form.Item>

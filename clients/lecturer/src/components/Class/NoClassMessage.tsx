@@ -1,22 +1,47 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "antd";
+import { Button, message } from "antd";
 
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import useCreateClassModal from "~/hooks/useCreateClassModal";
+import useAppDispatch from "~/hooks/useAppDispatch";
+import authStorage from "~/utils/auth.storage";
+import axios from "axios";
+import { addClass } from "~/store/reducers/classSlice";
 
 const NoClassMessage: React.FC = () => {
+    const dispatch = useAppDispatch();
+
     const navigate = useNavigate();
+
+    const [messageApi, contextHolder] = message.useMessage();
 
     const handleCreate = (values: any) => {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                console.log('create a class', values);
-                navigate(`/classes/${values.class_name}`);
+            axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/`, values, {
+                headers: {
+                    Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                }
+            })
+            .then(res => {
+                const classRes = res.data.data;
+                console.log(classRes);
+                
+                messageApi.success('Class created successfully!', 2, () => {
+                    dispatch(addClass(classRes));
+                    navigate(`/classes/feeds/${classRes.slug}`);
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                messageApi.error('Class created failed!');
+                reject(err);
+            })
+            .finally(() => {
                 resolve(1);
-            }, 2000);
+            });
         });
     }
 
@@ -33,6 +58,7 @@ const NoClassMessage: React.FC = () => {
 
     return (
         <>
+            { contextHolder }
             { ModalContext }
             <div className="flex flex-col items-center justify-center h-full pb-28">
                 <p className="font-semibold mb-6 text-2xl">
