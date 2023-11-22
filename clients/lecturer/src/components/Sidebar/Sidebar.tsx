@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 
 import { ReactComponent as HomeIcon } from "~/assets/svg/home.svg";
@@ -7,47 +7,32 @@ import { ReactComponent as ScheduleIcon } from "~/assets/svg/schedule.svg";
 import { ReactComponent as SettingIcon } from "~/assets/svg/setting.svg";
 
 import classes from './Sidebar.module.css';
+import { ClassType } from "~/store/reducers/classSlice";
+import useAppSelector from "~/hooks/useAppSelector";
 
 interface SidebarProps {
     open: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = (props) => {
+    const classInfo = useAppSelector(state => state.classes);
 
-    const items = [{
-        title: 'Cơ trở trí tuệ nhân tạo',
-        color: 'bg-bluex'
-    }, {
-        title: 'Nhập môn lập trình OOP',
-        color: 'bg-redx'
-    }, {
-        title: 'Kỹ thuật lập trình',
-        color: 'bg-pinkx'
-    }, {
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    },{
-        title: 'Lập trình ứng dụng web nâng cao',
-        color: 'bg-purplex'
-    }]
+    const items: ClassType[] = classInfo.classes;
+
+    const generateRandomColor = () => {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+
+    const colors = useMemo(() => {
+        return items.map(el => {
+            return generateRandomColor();
+        });
+    }, [items]);
 
     return (
         <aside
@@ -72,16 +57,22 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                         : '' 
                     }
                 </NavLink>
-                <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
-                    { props.open && items.map((el, _) => {
-                        return <NavLink 
-                                style={({ isActive }) => (isActive ? {backgroundColor: 'white', color: '#00A331', borderLeft: '4px solid #00A551', fontWeight: '500' } : {})}
-                                to={`/classes/${_ + 1}`} key={_} title={el.title} className="flex border-l-4 border-l-transparent gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
-                            <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full ${el.color}`}>{el.title[0]}</span>
-                            {(el.title.length > 22) ? `${el.title.substring(0, 22)}...` : el.title}
-                        </NavLink>
-                    }) }
-                </div>
+                {
+                    props.open && items.length > 0 &&
+                    <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
+                        { items.map((el, _) => {
+                            return <NavLink 
+                            style={({ isActive }) => (isActive ? {backgroundColor: 'white', color: '#00A331', borderLeft: '4px solid #00A551', fontWeight: '500' } : {})}
+                            to={`/classes/feeds/${el.slug}`} key={el._id} title={el.cid} className="flex border-l-4 border-l-transparent gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
+                                <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full`} style={{ backgroundColor: colors[_] }} >{el.cid[0]}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-md">{(el.cid.length > 22) ? `${el.cid.substring(0, 22)}...` : el.cid}</span>
+                                    <span className="text-sm text-gray-700">{(el.name.length > 22) ? `${el.name.substring(0, 22)}...` : el.name}</span>
+                                </div>
+                            </NavLink>
+                        }) }
+                    </div>
+                }
             </div>
             <NavLink
                 style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
