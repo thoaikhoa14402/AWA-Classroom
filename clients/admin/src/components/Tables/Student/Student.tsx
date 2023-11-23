@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Button, Input, Popconfirm, Space, Table, InputRef, Form, InputNumber, message, Typography } from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 
@@ -15,53 +15,6 @@ interface DataType {
 }
 
 type DataIndex = keyof DataType;
-
-
-// Editable cell
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-    editing: boolean;
-    dataIndex: string;
-    title: any;
-    inputType: 'number' | 'text';
-    record: DataType;
-    index: number;
-    children: React.ReactNode;
-  }
-  
-  const EditableCell: React.FC<EditableCellProps> = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-  }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-  
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={dataIndex}
-            style={{ margin: 0 }}
-            rules={[
-              {
-                required: true,
-                message: `Please Input ${title}!`,
-              },
-            ]}
-          >
-            {inputNode}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
 
 const StudentTable: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -270,6 +223,54 @@ const StudentTable: React.FC = () => {
         active: true,
         email: "vinhhuynh212@gmail.com",
       },
+      {
+        id: '26',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
+      {
+        id: '27',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
+      {
+        id: '28',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
+      {
+        id: '29',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
+      {
+        id: '30',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
+      {
+        id: '30',
+        username: '20127050',
+        fullname: 'Jim Stuck',
+        phonenumber: '0903861717',
+        active: true,
+        email: "vinhhuynh212@gmail.com",
+      },
   ]);
 
   // search item in column
@@ -403,7 +404,7 @@ const StudentTable: React.FC = () => {
         title: 'Phone',
         dataIndex: 'phonenumber',
         key: 'phonenumber',
-        width: "15%",
+        width: "14%",
         ...getColumnSearchProps('phonenumber'),
         className: "!text-md",
       },
@@ -417,11 +418,10 @@ const StudentTable: React.FC = () => {
       className: "!text-md",
     },
     {
-        title: 'Active',
+        title: 'Status',
         dataIndex: 'active',
         key: 'active',
         width: '11%',
-        ellipsis: true,
         filters: [
           { text: 'Active', value: 'active' },
           { text: 'Inactive', value: 'inactive' },
@@ -431,12 +431,18 @@ const StudentTable: React.FC = () => {
           else if (value === "inactive") return record.active === false;
           return true;
         },
-        className: "!text-small",
         // customize cell content
         render: (_, record) => {
-            return <span className = {`${record.active ? "!text-primary" : "!text-orange-500"} !font-medium !text-center`}>
-                {record.active ? 'Active' : 'Inactive'}
-            </span>
+            return (
+                <Tag color= {record.active ? "green" : "orange" } style = {{
+                fontSize: 16,
+                minWidth: 80,
+                textAlign: 'center',
+                padding: 4,
+              }}>
+                {record.active ? "Active" : "Inactive"}
+              </Tag>
+            );
         }
     },
     {
@@ -448,7 +454,10 @@ const StudentTable: React.FC = () => {
             <Space size="middle">
               <Button
                 type="primary"
-                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white" : ''}
+                style={{
+                  width: '80px'
+                }}
+                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
                 onClick={() => {
                   setIsTableLoading(true);
                   setTimeout(() => {
@@ -488,7 +497,9 @@ const StudentTable: React.FC = () => {
                   }
                 }
                 >
-                <Button danger>Delete</Button>
+                <Button danger style = {{
+                  width: '80px'
+                }} className = "!flex !justify-center !items-center">Delete</Button>
                 </Popconfirm>
         ) : null}
             </Space>
@@ -503,16 +514,12 @@ const StudentTable: React.FC = () => {
 
     <Table 
       className = "myTable"
+      bordered = {true}
       columns={columns} dataSource={dataSource} 
       loading = {isTableLoading}
-      components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
       pagination={{
       total: dataSource.length,
-      pageSize: 4,
+      pageSize: 7,
       showSizeChanger: false, // Turn off feature to change page size
       showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     }}/>
