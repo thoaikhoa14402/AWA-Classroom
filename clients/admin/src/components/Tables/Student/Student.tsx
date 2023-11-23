@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Button, Input, Popconfirm, Space, Table, InputRef, Form, InputNumber } from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Form, InputNumber, message, Typography } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 
@@ -10,7 +10,7 @@ interface DataType {
   username: string;
   fullname: string;
   phonenumber: string;
-  active: string;
+  active: boolean;
   email: string;
 }
 
@@ -64,18 +64,17 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 
 
 const StudentTable: React.FC = () => {
-  const [form] = Form.useForm();
-  const [editingKey, setEditingKey] = useState('');
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState<string>('');
+  const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
+  const [isTableLoading, setIsTableLoading] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<DataType[]>([
     {
         id: '1',
         username: '20127043',
         fullname: 'Brown Christan',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "nguyenthoaidangkhoa@gmail.com",
       },
       {
@@ -83,7 +82,7 @@ const StudentTable: React.FC = () => {
         username: '20127044',
         fullname: 'Joe Black',
         phonenumber: '0903861717',
-        active: "false",
+        active: false,
         email: "ntdkhoa14402@gmail.com",
     
       },
@@ -92,7 +91,7 @@ const StudentTable: React.FC = () => {
         username: '20127045',
         fullname: 'Jim Green',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "nguyenducminh@gmail.com",
       },
       {
@@ -100,7 +99,7 @@ const StudentTable: React.FC = () => {
         username: '20127046',
         fullname: 'Jim Red',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "khangdinh017@gmail.com",
       },
       {
@@ -108,7 +107,7 @@ const StudentTable: React.FC = () => {
         username: '20127047',
         fullname: 'Jim Lara',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "khoinguyen128@gmail.com",
       },
       {
@@ -116,7 +115,7 @@ const StudentTable: React.FC = () => {
         username: '20127048',
         fullname: 'Jim High',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "minhtue167@gmail.com",
       },
       {
@@ -124,7 +123,7 @@ const StudentTable: React.FC = () => {
         username: '20127049',
         fullname: 'Jim Low',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "ngoctram194@gmail.com",
       },
       {
@@ -132,7 +131,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -140,7 +139,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -148,7 +147,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -156,7 +155,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -164,7 +163,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -172,7 +171,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -180,7 +179,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -188,7 +187,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -196,7 +195,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -204,7 +203,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -212,7 +211,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -220,7 +219,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -228,7 +227,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -236,7 +235,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -244,7 +243,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -252,7 +251,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -260,7 +259,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
       {
@@ -268,7 +267,7 @@ const StudentTable: React.FC = () => {
         username: '20127050',
         fullname: 'Jim Stuck',
         phonenumber: '0903861717',
-        active: "true",
+        active: true,
         email: "vinhhuynh212@gmail.com",
       },
   ]);
@@ -290,6 +289,7 @@ const StudentTable: React.FC = () => {
     setSearchText('');
   };
 
+  // handle searching for columns
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -316,14 +316,13 @@ const StudentTable: React.FC = () => {
             className= "!flex !justify-center !items-center"
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}
+            style={{ width: 90}}
           >
             Reset
           </Button>
           <Button
             type="link"
             size="small"
-            className = "!text-primary"
             onClick={() => {
               confirm({ closeDropdown: false });
               setSearchText((selectedKeys as string[])[0]);
@@ -335,7 +334,6 @@ const StudentTable: React.FC = () => {
           <Button
             type="link"
             size="small"
-            className = "!text-primary"
             onClick={() => {
               close();
             }}
@@ -377,45 +375,6 @@ const StudentTable: React.FC = () => {
     setDataSource(newData);
   };
 
-  // Add a new row (new data item)
-  const handleAddRow = () => {
-    const newData: DataType = {
-      id: '',
-      username: '',
-      fullname: '',
-      phonenumber: '',
-      active: "true",
-      email: '',
-    };
-    setDataSource([newData, ...dataSource]);
-  };
-
-  // Handle save data in row
-  const handleSave = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as DataType;
-
-      const newData = [...dataSource];
-      const index = newData.findIndex((item) => key === item.id);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setDataSource(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setDataSource(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
-
   const columns: ColumnsType<DataType> = [
     {
         title: 'Username',
@@ -427,7 +386,6 @@ const StudentTable: React.FC = () => {
             editable: true,
             dataIndex: 'username',
             title: 'Username',
-            handleSave: handleSave,
           }),
         className: "!text-md",
 
@@ -464,27 +422,73 @@ const StudentTable: React.FC = () => {
         key: 'active',
         width: '11%',
         ellipsis: true,
-        ...getColumnSearchProps('active'),
-        className: "!text-md",
+        filters: [
+          { text: 'Active', value: 'active' },
+          { text: 'Inactive', value: 'inactive' },
+        ],
+        onFilter: (value: any, record) => {
+          if (value === "active") return record.active === true;
+          else if (value === "inactive") return record.active === false;
+          return true;
+        },
+        className: "!text-small",
+        // customize cell content
         render: (_, record) => {
-            return <span className = {`${record.active === "true" ? "!text-primary" : "!text-red-500"} !font-medium !text-center`}>
-                {record.active}
+            return <span className = {`${record.active ? "!text-primary" : "!text-orange-500"} !font-medium !text-center`}>
+                {record.active ? 'Active' : 'Inactive'}
             </span>
         }
-      },
+    },
     {
         title: 'Actions',
         dataIndex: 'actions',
         key: 'actions',
-        width: "20%",
+        width: "21%",
         render: (_, record) => (
-            // const editable = isEditing(record);
             <Space size="middle">
-              <Button type="primary">Edit</Button>  
-              {/* <Button danger>Delete</Button> */}
+              <Button
+                type="primary"
+                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white" : ''}
+                onClick={() => {
+                  setIsTableLoading(true);
+                  setTimeout(() => {
+                    const updatedDataSource = dataSource.map((item: DataType) => {
+                      if (item.id === record.id) {
+                        item.active = !item.active;
+                      }
+                      return item;
+                    })
+                    setDataSource(updatedDataSource);
+                    setIsTableLoading(false);
+                    message.success({
+                      content: 'This account status was updated successfully!',
+                      style: {
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                      }
+                    });
+                  }, 1500);
+                }}>         
+                {record.active ? 'Lock' : 'Unlock'}
+              </Button>
               {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => handleDeleteRow(record.id)}>
-                    <Button danger>Delete</Button>
+                <Popconfirm title="Sure to delete?" onConfirm={() => {
+                  setIsTableLoading(true);
+                  setTimeout(() => {
+                    handleDeleteRow(record.id)
+                    setIsTableLoading(false);
+                    message.success({
+                      content: 'This account was deleted successfully!',
+                      style: {
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                      }
+                    });
+                  }, 1500);
+                  }
+                }
+                >
+                <Button danger>Delete</Button>
                 </Popconfirm>
         ) : null}
             </Space>
@@ -493,19 +497,24 @@ const StudentTable: React.FC = () => {
   ];
 
   return <div>
-    <Button type="primary" style={{ marginBottom: 16 }} onClick = {handleAddRow}>Add new row</Button>
+    <Typography.Title level={3} style={{ margin: 0, color: "#00A551" }} className='!uppercase !mt-4 !mb-4'>
+       Student Management
+    </Typography.Title>
+
     <Table 
-        columns={columns} dataSource={dataSource} 
-        components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-        pagination={{
-        total: dataSource.length,
-        pageSize: 4,
-        showSizeChanger: false, // Tắt chức năng thay đổi kích thước trang
-        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+      className = "myTable"
+      columns={columns} dataSource={dataSource} 
+      loading = {isTableLoading}
+      components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+      pagination={{
+      total: dataSource.length,
+      pageSize: 4,
+      showSizeChanger: false, // Turn off feature to change page size
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     }}/>
   </div>
 };
