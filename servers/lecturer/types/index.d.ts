@@ -1,6 +1,7 @@
 import { IUser } from '../common/models/user.model';
 import { UploadApiResponse } from 'cloudinary';
 import {Options as otpOptions}  from "../common/utils/otp-generator";
+import { IClass } from '../common/models/class.model';
 declare global {
     namespace Express {
         export interface User extends IUser {}
@@ -9,6 +10,7 @@ declare global {
             user?: IUser;
             verification_code?: string;
             cloudinaryResult: UploadApiResponse;
+            class: IClass;
         }
     }
 }

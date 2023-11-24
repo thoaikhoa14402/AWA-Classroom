@@ -28,7 +28,7 @@ type UserModel = Model<IUser, {}, IUserMethods>;
 
 const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
     {
-        avatar: { type: String },
+        avatar: { type: String, default: 'https://lh3.googleusercontent.com/a/default-user=s50-p' },
         phoneNumber: {type: String},
         username: { type: String},
         googleID: {type: String},

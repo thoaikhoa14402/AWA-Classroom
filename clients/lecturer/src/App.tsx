@@ -13,21 +13,23 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes`, {
-      headers: {
-        Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
-      }
-    })
-    .then((res) => {
-      const classes = res.data.data;
-      dispatch(setClasses(classes));
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    });
+    if (authStorage.isLogin()) {
+      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes`, {
+        headers: {
+          Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+        }
+      })
+      .then((res) => {
+        const classes = res.data.data;
+        dispatch(setClasses(classes));
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+    }
   }, []);
 
   useEffect(() => {

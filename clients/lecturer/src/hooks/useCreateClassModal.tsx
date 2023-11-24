@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { faBookOpenReader, faChalkboardTeacher, faSection } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpenReader, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form, Input, Modal } from "antd";
 
@@ -21,11 +21,13 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
             
             await handleCreate(values);
             
-            setLoading(false);
             handleCancelModal();
         })
         .catch((err: any) => {
             console.log(err);
+        })
+        .finally(() => { 
+            setLoading(false);
         });
     }
 

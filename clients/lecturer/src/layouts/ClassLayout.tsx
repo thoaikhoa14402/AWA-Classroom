@@ -2,8 +2,8 @@ import { faArrowRightToBracket, faCheck, faClone, faEllipsis, faPlus, faUserPlus
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, MenuProps, Typography, message } from 'antd';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { NavLink, Navigate, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NoClassMessage } from '~/components/Class';
 import useAppDispatch from '~/hooks/useAppDispatch';
 import useAppSelector from '~/hooks/useAppSelector';
@@ -19,9 +19,11 @@ const ClassLayout: React.FC = () => {
 
     const classInfo = useAppSelector(state => state.classes);
 
+    
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
-
+    
+    console.log(classes);
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
@@ -85,6 +87,11 @@ const ClassLayout: React.FC = () => {
     const [classDetail, setClassDetail] = useState<ClassType>();
     const [isDetailLoading, setIsDetailLoading] = useState<boolean>(true);
 
+    const [searchParams, _] = useSearchParams();
+
+    const isInvite = !!(classID && /\w{15}/.test(classID) && searchParams.get('code'));
+    const isJoined = useRef(!isInvite);
+
     useEffect(() => {
         if (classID) {
             axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/${classID}`, {
@@ -93,6 +100,7 @@ const ClassLayout: React.FC = () => {
                 }
             })
             .then(res => {
+                isJoined.current = res.data.data.slug === classID;
                 setClassDetail(res.data.data);
             })
             .catch(err => {
@@ -105,15 +113,17 @@ const ClassLayout: React.FC = () => {
         else {
             setIsDetailLoading(false);
         }
-    }, [classID]);
+    }, [classID, classInfo.classes]);
 
     return (
         <>
             { contextHolder }
             { ModalContext }
             {
-                (!isLoading && !isDetailLoading) 
-                ? classes.length 
+                (!isLoading && !isDetailLoading)
+                ? isInvite && !isJoined.current ? <Outlet /> 
+                : isInvite && isJoined ? 'You are joined'                    
+                    : classes.length 
                     ? 
                     <>
                         <div className='flex justify-end items-center h-13 px-3'>
@@ -168,7 +178,7 @@ const ClassLayout: React.FC = () => {
                                 </div>
                                 <Outlet context={[classDetail]} />
                             </>
-                            : null
+                            : 'Class not founded'
                         }
                     </>
                     : <NoClassMessage />

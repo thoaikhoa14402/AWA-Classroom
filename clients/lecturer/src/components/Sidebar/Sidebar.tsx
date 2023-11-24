@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 import { ReactComponent as HomeIcon } from "~/assets/svg/home.svg";
 import { ReactComponent as AcademyCap } from "~/assets/svg/academy-cap.svg";
@@ -34,6 +34,8 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
         });
     }, [items]);
 
+    const params = useParams();
+
     return (
         <aside
             className={`sticky inset-mbsize lg:inset-desksize sm:inset-desksize items-start flex flex-col border-r w-20 gap-2 whitespace-nowrap overflow-hidden px-4 py-5 border-r-gray-100 h-screen transition-all ease-in-out duration-300${
@@ -62,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                     <div className="relative left-0 flex flex-col justify-start items-start rounded-lg max-h-60 overflow-y-auto bg-slate-50">
                         { items.map((el, _) => {
                             return <NavLink 
-                            style={({ isActive }) => (isActive ? {backgroundColor: 'white', color: '#00A331', borderLeft: '4px solid #00A551', fontWeight: '500' } : {})}
+                            style={(el.slug === params.classID ? {backgroundColor: 'white', color: '#00A331', borderLeft: '4px solid #00A551', fontWeight: '500'} : {})}
                             to={`/classes/feeds/${el.slug}`} key={el._id} title={el.cid} className="flex border-l-4 border-l-transparent gap-3 items-center p-3 text-md hover:bg-slate-100 w-full">
                                 <span className={`flex justify-center items-center w-8 h-8 text-white rounded-full`} style={{ backgroundColor: colors[_] }} >{el.cid[0]}</span>
                                 <div className="flex flex-col">

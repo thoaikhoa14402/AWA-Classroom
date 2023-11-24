@@ -96,7 +96,7 @@ const LoginForm: React.FC = () => {
             },
           ]); 
           setTimeout(() => {
-            navigate('/auth/otp-verification');
+            navigate('/auth/otp-verification/register');
           }, 3000)
         }
         // If this account is failed authenticated
