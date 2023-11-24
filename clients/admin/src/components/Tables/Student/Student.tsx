@@ -1,9 +1,10 @@
 import { SearchOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
+import axios from "axios";
 
 interface DataType {
   id: string;
@@ -20,258 +21,41 @@ const StudentTable: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
-  const [isTableLoading, setIsTableLoading] = useState<boolean>(false);
-  const [dataSource, setDataSource] = useState<DataType[]>([
-    {
-        id: '1',
-        username: '20127043',
-        fullname: 'Brown Christan',
-        phonenumber: '0903861717',
-        active: true,
-        email: "nguyenthoaidangkhoa@gmail.com",
-      },
-      {
-        id: '2',
-        username: '20127044',
-        fullname: 'Joe Black',
-        phonenumber: '0903861717',
-        active: false,
-        email: "ntdkhoa14402@gmail.com",
-    
-      },
-      {
-        id: '3',
-        username: '20127045',
-        fullname: 'Jim Green',
-        phonenumber: '0903861717',
-        active: true,
-        email: "nguyenducminh@gmail.com",
-      },
-      {
-        id: '4',
-        username: '20127046',
-        fullname: 'Jim Red',
-        phonenumber: '0903861717',
-        active: true,
-        email: "khangdinh017@gmail.com",
-      },
-      {
-        id: '5',
-        username: '20127047',
-        fullname: 'Jim Lara',
-        phonenumber: '0903861717',
-        active: true,
-        email: "khoinguyen128@gmail.com",
-      },
-      {
-        id: '6',
-        username: '20127048',
-        fullname: 'Jim High',
-        phonenumber: '0903861717',
-        active: true,
-        email: "minhtue167@gmail.com",
-      },
-      {
-        id: '7',
-        username: '20127049',
-        fullname: 'Jim Low',
-        phonenumber: '0903861717',
-        active: true,
-        email: "ngoctram194@gmail.com",
-      },
-      {
-        id: '8',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '9',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '10',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '11',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '12',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '13',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '14',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '15',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '16',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '17',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '18',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '19',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '20',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '21',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '22',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '23',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '24',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '25',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '26',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '27',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '28',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '29',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '30',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-      {
-        id: '30',
-        username: '20127050',
-        fullname: 'Jim Stuck',
-        phonenumber: '0903861717',
-        active: true,
-        email: "vinhhuynh212@gmail.com",
-      },
-  ]);
+  const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
+
+  
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/list`).then((response) => {
+      if (response.status === 200) {
+        setTimeout(() => { 
+          setIsTableLoading(false);
+          if (response.data.students.length === 0) {
+            message.info({
+              content: 'No students found!',
+              style: {
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+              },
+              duration: 1.2,
+            })
+            return;
+          }
+          message.success({
+            content: 'Data was loaded successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            },
+            duration: 1.2,
+          });
+        setDataSource(response.data.students);
+        }, 1200); 
+       
+      }
+    }).catch((error: Response) => console.log('err:', error));
+
+  }, [])
 
   // search item in column
   const handleSearch = (
@@ -371,16 +155,69 @@ const StudentTable: React.FC = () => {
   });
 
   // Delete a row (new data item)
-  const handleDeleteRow = (key: React.Key) => {
-    const newData = dataSource.filter((item) => item.id !== key);
-    setDataSource(newData);
+  const handleActionDelete = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
+      if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This account was deleted successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        setDataSource(response.data.updatedStudents);
+        }, 1500);
+      }
+      else message.error({
+        content: response.data.message,
+      })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
   };
+
+  // handle update student's status
+  const handleActionUpdateStatus = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
+      if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This account status was updated successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        setDataSource(response.data.updatedStudents);
+        }, 1500);
+      }
+      else message.error({
+        content: response.data.message,
+      })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
+  }
 
   const columns: ColumnsType<DataType> = [
     {
         title: 'Username',
         dataIndex: 'username',
         key: 'username',
+        ellipsis: true,
         ...getColumnSearchProps('username'),
         onCell: (record) => ({
             record,
@@ -458,44 +295,11 @@ const StudentTable: React.FC = () => {
                   width: '80px'
                 }}
                 className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
-                onClick={() => {
-                  setIsTableLoading(true);
-                  setTimeout(() => {
-                    const updatedDataSource = dataSource.map((item: DataType) => {
-                      if (item.id === record.id) {
-                        item.active = !item.active;
-                      }
-                      return item;
-                    })
-                    setDataSource(updatedDataSource);
-                    setIsTableLoading(false);
-                    message.success({
-                      content: 'This account status was updated successfully!',
-                      style: {
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                      }
-                    });
-                  }, 1500);
-                }}>         
+                onClick={() => handleActionUpdateStatus(record.id)}>         
                 {record.active ? 'Lock' : 'Unlock'}
               </Button>
               {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => {
-                  setIsTableLoading(true);
-                  setTimeout(() => {
-                    handleDeleteRow(record.id)
-                    setIsTableLoading(false);
-                    message.success({
-                      content: 'This account was deleted successfully!',
-                      style: {
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                      }
-                    });
-                  }, 1500);
-                  }
-                }
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
                 >
                 <Button danger style = {{
                   width: '80px'
@@ -527,3 +331,257 @@ const StudentTable: React.FC = () => {
 };
 
 export default StudentTable;
+
+
+// fake data
+// const [dataSource, setDataSource] = useState<DataType[]>([
+  //   {
+  //       id: '1',
+  //       username: '20127043',
+  //       fullname: 'Brown Christan',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "nguyenthoaidangkhoa@gmail.com",
+  //     },
+  //     {
+  //       id: '2',
+  //       username: '20127044',
+  //       fullname: 'Joe Black',
+  //       phonenumber: '0903861717',
+  //       active: false,
+  //       email: "ntdkhoa14402@gmail.com",
+    
+  //     },
+  //     {
+  //       id: '3',
+  //       username: '20127045',
+  //       fullname: 'Jim Green',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "nguyenducminh@gmail.com",
+  //     },
+  //     {
+  //       id: '4',
+  //       username: '20127046',
+  //       fullname: 'Jim Red',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "khangdinh017@gmail.com",
+  //     },
+  //     {
+  //       id: '5',
+  //       username: '20127047',
+  //       fullname: 'Jim Lara',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "khoinguyen128@gmail.com",
+  //     },
+  //     {
+  //       id: '6',
+  //       username: '20127048',
+  //       fullname: 'Jim High',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "minhtue167@gmail.com",
+  //     },
+  //     {
+  //       id: '7',
+  //       username: '20127049',
+  //       fullname: 'Jim Low',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "ngoctram194@gmail.com",
+  //     },
+  //     {
+  //       id: '8',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '9',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '10',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '11',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '12',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '13',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '14',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '15',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '16',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '17',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '18',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '19',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '20',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '21',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '22',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '23',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '24',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '25',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '26',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '27',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '28',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '29',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '30',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '30',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  // ]);

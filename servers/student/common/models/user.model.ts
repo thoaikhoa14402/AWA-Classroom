@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         githubID: {type: String},
         firstname: { type: String },
         lastname: { type: String},
-        role: {type: String, default: 'Học viên'},
+        role: {type: String, default: 'student'},
         address: {type: String},
         password: { 
             type: String,

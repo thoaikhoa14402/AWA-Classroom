@@ -6,6 +6,7 @@ import { ReactComponent as AcademyCap } from "~/assets/svg/academy-cap.svg";
 import { ReactComponent as ScheduleIcon } from "~/assets/svg/schedule.svg";
 import { ReactComponent as SettingIcon } from "~/assets/svg/setting.svg";
 import { ReactComponent as StudentIcon } from "~/assets/svg/student.svg";
+import {ReactComponent as ClassroomIcon} from '~/assets/svg/classroom.svg';
 
 
 import classes from './Sidebar.module.css';
@@ -33,9 +34,20 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
                 to='/classroom-management'
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
-                <AcademyCap className="w-7 h-7" />{" "}
+                <ClassroomIcon className="w-7 h-7" />{" "}
                 { props.open 
                     ? <div className="mt-0.5 text-ellipsis">Classroom Management</div>
+                    : '' 
+                }
+            </NavLink>
+
+            <NavLink
+                style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
+                to='/lecturer-management'
+                className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
+                <AcademyCap className="w-7 h-7" />{" "}
+                { props.open 
+                    ? <div className="mt-0.5 text-ellipsis">Lecturer Management</div>
                     : '' 
                 }
             </NavLink>
