@@ -67,6 +67,9 @@ class UserController implements IController {
 
         const updatedProfile = await UserModel.findByIdAndUpdate(req.user!.id, newProfile, { new: true, runValidators: true });
 
+        const redisClient = redis.getClient();
+        await redisClient?.del(this.profileCacheKey(req));
+
         res.status(200).json({
             message: "update profile successfully",
             data: updatedProfile
@@ -79,6 +82,9 @@ class UserController implements IController {
         await UserModel.findByIdAndUpdate(req.user!.id, {
             avatar: req.cloudinaryResult.secure_url || req.cloudinaryResult.url
         });
+
+        const redisClient = redis.getClient();
+        await redisClient?.del(this.profileCacheKey(req));
 
         return res.status(200).json({
             status: 'success',
