@@ -46,14 +46,14 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     const items: MenuProps['items'] = useMemo(() => [
         {
             key: 'profile',
-            label: 'Cá nhân',
+            label: 'Profile',
             icon: <UserOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => { navigate('/user/profile'); props.toggleSidebar(false); }
         },
         {
             key: 'reset-password',
-            label: 'Đổi mật khẩu',
+            label: 'Reset password',
             icon: <KeyOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => { navigate('/user/reset-password'); props.toggleSidebar(false); }
@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         },
         {
             key: 'logout',
-            label: 'Đăng xuất',
+            label: 'Logout',
             icon: <LogoutOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => {
@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 <div className="flex items-center gap-3 whitespace-nowrap">
                     <button type="button" title="Menu" onClick={() => props.toggleSidebar()} className="rounded-full px-3 py-3 flex justify-center items-center hover:bg-slate-100 transition-all duration-300"><FontAwesomeIcon icon={faBars} width={16} color="grey" /></button>
                     {/* <img src="rocket.png" alt="Logo" className="w-8 h-8 mr-2" /> */}
-                    <NavLink to="/" className="text-primary text-xl font-medium py-5">
+                    <NavLink to="/home" className="text-primary text-xl font-medium py-5">
                         AWA Classroom
                     </NavLink>
                 </div>

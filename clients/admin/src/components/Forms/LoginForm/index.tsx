@@ -55,7 +55,7 @@ const LoginForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng nhập thành công!',
+              content: 'Login successfully!',
             });
           }, 1500)
 
@@ -73,7 +73,7 @@ const LoginForm: React.FC = () => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng nhập thất bại!',
+            content: 'Login failed!',
           });
           form.setFields([
             {

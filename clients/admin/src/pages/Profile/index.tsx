@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
             onUploadProgress: (event: any) => onProgress({ percent: (event.loaded / event.total) * 100 })
         })
         .then((response: any) => {
-            messageApi.success(`Upload ảnh đại diện thành công`);
+            messageApi.success(`Avatar upload successfully`);
             
             dispatch(setUserProfile({
                 user: {
@@ -95,7 +95,7 @@ const Profile: React.FC = () => {
             onSuccess(userProfile.avatar);
         })
         .catch((error) => { 
-            messageApi.error(`Xử lý không thành công`);
+            messageApi.error(`Update failed`);
             onError({ error });
         });
     };
@@ -115,7 +115,7 @@ const Profile: React.FC = () => {
                 access_token: authStorage.getAccessToken() || '',
             }));
 
-            messageApi.success('Cập nhật thông tin thành công');
+            messageApi.success('Update profile successfully');
             
             setChange(false);
         })
@@ -185,7 +185,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="lastname"
-                        label="Họ và tên đệm"
+                        label="Lastname"
                         rules={[
                             {
                                 required: true,
@@ -199,7 +199,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="firstname"
-                        label="Tên"
+                        label="Firstname"
                         rules={[
                             {
                                 required: true,
@@ -214,7 +214,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="email"
-                        label="Địa chỉ email"
+                        label="Email"
                         rules={[
                             { type: "email", message: "Email không hợp lệ" },
                             {
@@ -229,7 +229,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="phoneNumber"
-                        label="Số điện thoại"
+                        label="Phone number"
                         rules={[
                             {
                                 pattern:
@@ -250,7 +250,7 @@ const Profile: React.FC = () => {
                         className="mr-2 !text-sm !font-semibold !py-2 !px-4 !h-auto"
                         disabled={!change}
                     >
-                        Hủy
+                        Cancel
                     </Button>
                     <Button
                         type="primary"
@@ -258,7 +258,7 @@ const Profile: React.FC = () => {
                         className="!text-sm !font-semibold !py-2 !px-4 !h-auto"
                         disabled={!change}
                     >
-                        Cập nhật
+                        Update
                     </Button>
                 </Form.Item>
             </Form>

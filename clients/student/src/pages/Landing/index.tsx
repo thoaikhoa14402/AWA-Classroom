@@ -33,14 +33,14 @@ const LandingPage: React.FC = () => {
     const items: MenuProps['items'] = useMemo(() => [
         {
             key: 'profile',
-            label: 'Cá nhân',
+            label: 'Profile',
             icon: <UserOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => { navigate('/user/profile'); }
         },
         {
             key: 'reset-password',
-            label: 'Đổi mật khẩu',
+            label: 'Reset password',
             icon: <KeyOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5'
         },
@@ -52,7 +52,7 @@ const LandingPage: React.FC = () => {
         },
         {
             key: 'logout',
-            label: 'Đăng xuất',
+            label: 'Logout',
             icon: <LogoutOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => {
@@ -104,8 +104,8 @@ const LandingPage: React.FC = () => {
             <div className='flex justify-center px-12 py-2 sm:pb-16 md:pb-32 items-center border-b border-gray-100 min-h-screen'>
                 <div className='flex flex-col items-start lg:w-1/3 sm:w-full gap-5'>
                     <b className='font-bold text-primary text-3xl'>AWA Classroom</b>
-                    <h1 className='text-2xl font-bold'>Một cách hiệu quả để quản lý lớp học của bạn</h1>
-                    <p>AWA Classroom giúp các nhà giáo dục tạo ra trải nghiệm học tập hấp dẫn mà họ có thể cá nhân hóa, quản lý và đo lường. Hỗ trợ tổ chức của bạn bằng các công cụ cộng tác đơn giản, an toàn hơn.</p>
+                    <h1 className='text-2xl font-bold'>An effective way to manage your classroom</h1>
+                    <p>AWA Classroom supports educators in creating engaging learning experiences that they can personalize, manage, and measure. It aids your organization with simple, secure collaborative tools.</p>
                     <NavLink to={'/auth/register'} className='bg-primary text-white font-semibold px-8 py-4 rounded-xl text-md hover:bg-hover transition-all duration-150'>Tham gia ngay</NavLink>
                 </div>
                 <div className='w-1/2 rounded-3xl overflow-hidden md:block hidden'>
@@ -113,14 +113,14 @@ const LandingPage: React.FC = () => {
                 </div>
             </div>
             <div className='flex flex-col items-center py-12 bg-slate-50 gap-5 text-center'>
-                <h1 className='text-3xl font-medium text-gray-600'>Theo dõi lịch trình, học tập theo nhóm, kết nối - trao đổi</h1>
+                <h1 className='text-3xl font-medium text-gray-600'>Tracking schedules, group-based, connecting and exchanging.</h1>
                 <div className='flex justify-center w-full gap-20 mt-8 flex-wrap'>
                     <div className='flex flex-col justify-center items-center gap-8 p-10 text-center bg-white w-60 h-60 rounded-3xl border border-primary border-dashed'>
                         <div className='bg-primary p-4 rounded-full'>
                             <ScheduleIcon className="w-10 text-white" strokeWidth={1.5} />
                         </div>
                         <div className='font-medium'>
-                            Theo dõi lịch học linh động
+                            Flexible schedule monitoring
                         </div>
                     </div>
                     <div className='flex flex-col justify-center items-center gap-8 p-10 text-center bg-white w-60 h-60 rounded-3xl border border-primary border-dashed'>
@@ -128,7 +128,7 @@ const LandingPage: React.FC = () => {
                             <AcademyCap className="w-10 text-white" strokeWidth={1.5} />
                         </div>
                         <div className='font-medium'>
-                            Môi trường làm việc nhóm
+                            Team working environment
                         </div>
                     </div>
                     <div className='flex flex-col justify-center items-center gap-8 p-10 text-center bg-white w-60 h-60 rounded-3xl border border-primary border-dashed'>
@@ -136,13 +136,13 @@ const LandingPage: React.FC = () => {
                             <DiscussIcon className="w-10 text-white" strokeWidth={1.5} />
                         </div>
                         <div className='font-medium'>
-                            Kết nối - trao đổi nhanh chóng
+                            Efficient communication and connection
                         </div>
                     </div>
                 </div>
             </div>
             <div className='flex flex-col items-center py-12 pb-16 gap-5 text-center'>
-                <h1 className='text-3xl font-medium text-gray-600'>Tại sao chọn AWA Classroom</h1>
+                <h1 className='text-3xl font-medium text-gray-600'>Why choose AWA Classroom</h1>
                 <div className='flex justify-center w-full mt-8 flex-wrap'>
                     <div className='flex flex-col justify-center items-end gap-20 px-8 text-center bg-white w-1/3 rounded-3xl'>
                         <div className='flex flex-col justify-center items-end gap-4 text-right bg-white rounded-3xl'>
@@ -150,27 +150,27 @@ const LandingPage: React.FC = () => {
                                 <WifiIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Tiện Lợi và Linh Hoạt:
+                                Convenient and Flexible
                             </div>
-                            <p>Truy cập học mọi lúc, mọi nơi, giúp quản lý thời gian hiệu quả.</p>
+                            <p>Access learning anytime, anywhere, aiding effective time management.</p>
                         </div>
                         <div className='flex flex-col justify-center items-end gap-4 text-right bg-white rounded-3xl'>
                             <div className='bg-primary p-4 rounded-full'>
                                 <BookOpenIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Truy Cập Dễ Dàng đến Nội Dung
+                                Easy access to content
                             </div>
-                            <p>Nhanh chóng tiếp cận nội dung học với bài giảng, video và tài liệu trực tuyến.</p>
+                            <p>Quick access to learning content through lectures, videos, and online materials.</p>
                         </div>
                         <div className='flex flex-col justify-center items-end gap-4 text-right bg-white rounded-3xl'>
                             <div className='bg-primary p-4 rounded-full'>
                                 <DiscussIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Giao Tiếp Hiệu Quả và Phản Hồi Nhanh Chóng
+                                Effective Communication and Prompt Feedback
                             </div>
-                            <p>Tương tác dễ dàng với giáo viên, nhận phản hồi nhanh chóng.</p>
+                            <p>Seamless interaction with teachers and receiving prompt feedback.</p>
                         </div>
                     </div>
                     <div className='flex justify-center items-center gap-8 text-center bg-white w-1/3 rounded-3xl'>
@@ -182,27 +182,27 @@ const LandingPage: React.FC = () => {
                                 <ChartIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Quản Lý Tiến Trình Học Tập
+                                Managing the learning process
                             </div>
-                            <p>Theo dõi tiến trình học tập và đánh giá hiệu suất học viên.</p>
+                            <p>Tracking learning progress and assessing student performance.</p>
                         </div>
                         <div className='flex flex-col justify-center items-start gap-4 text-left bg-white rounded-3xl'>
                             <div className='bg-primary p-4 rounded-full'>
                                 <PuzzleIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Tính Tương Tác và Hợp Tác
+                                Interactivity and Collaboration
                             </div>
-                            <p>Tạo môi trường học tập đa chiều, khuyến khích tương tác và hợp tác.</p>
+                            <p>Fostering a multidimensional learning environment, encouraging interaction and collaboration.</p>
                         </div>
                         <div className='flex flex-col justify-center items-start gap-4 text-left bg-white rounded-3xl'>
                             <div className='bg-primary p-4 rounded-full'>
                                 <ClockIcon className="w-10 text-white" strokeWidth={1.5} />
                             </div>
                             <div className='font-medium'>
-                                Hiệu Quả và Tiết Kiệm Thời Gian
+                                Efficiency and Time-Saving
                             </div>
-                            <p>Tiết kiệm thời gian với quản lý lớp học hiệu quả và truy cập nhanh chóng vào tài nguyên.</p>
+                            <p>Save time through efficient classroom management and quick access to resources.</p>
                         </div>
                     </div>
                 </div>
@@ -213,21 +213,21 @@ const LandingPage: React.FC = () => {
                 <div className="flex flex-wrap justify-center items-center">
                     <div className="w-full md:w-1/2 lg:w-1/3 pr-20">
                         <h2 className="text-lg font-bold mb-2">AWA Classroom</h2>
-                        <p className="text-sm font-medium">Nền tảng online classroom giúp học viên và giảng viên kết nối và học tập hiệu quả.</p>
+                        <p className="text-sm font-medium">The online classroom platform facilitates effective connections and learning between students and instructors.</p>
                     </div>
                     <div className="w-full md:w-1/2 lg:w-1/3">
-                        <h2 className="text-lg font-bold mb-2">Đường dẫn</h2>
+                        <h2 className="text-lg font-bold mb-2">Link</h2>
                         <ul className="list-none p-0">
-                            <li><NavLink to="/auth/login" className="text-sm font-medium">Đăng nhập</NavLink></li>
-                            <li><NavLink to="/auth/register" className="text-sm font-medium">Đăng ký</NavLink></li>
-                            <li><NavLink to="/home" className="text-sm font-medium">Trang chủ</NavLink></li>
+                            <li><NavLink to="/auth/login" className="text-sm font-medium">Login</NavLink></li>
+                            <li><NavLink to="/auth/register" className="text-sm font-medium">Register</NavLink></li>
+                            <li><NavLink to="/home" className="text-sm font-medium">Home</NavLink></li>
                         </ul>
                     </div>
                     <div className="w-full md:w-1/2 lg:w-1/3">
-                        <h2 className="text-lg font-bold mb-2">Học viên và Giảng viên</h2>
+                        <h2 className="text-lg font-bold mb-2">Student & Lecturer</h2>
                         <ul className="list-none p-0">
-                            <li><NavLink to="#" className="text-sm font-medium">Học viên</NavLink></li>
-                            <li><NavLink to="#" className="text-sm font-medium">Giảng viên</NavLink></li>
+                            <li><NavLink to="#" className="text-sm font-medium">Student</NavLink></li>
+                            <li><NavLink to="#" className="text-sm font-medium">Lecturer</NavLink></li>
                         </ul>
                     </div>
                 </div>

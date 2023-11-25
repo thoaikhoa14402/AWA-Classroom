@@ -1,14 +1,12 @@
-import { faCheck, faClone, faEllipsis, faPlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightToBracket, faCheck, faClone, faEllipsis, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Dropdown, MenuProps, Typography, message } from 'antd';
+import { Button, Dropdown, MenuProps, Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, Outlet, useParams, useSearchParams } from 'react-router-dom';
 import { NoClassMessage } from '~/components/Class';
-import useAppDispatch from '~/hooks/useAppDispatch';
 import useAppSelector from '~/hooks/useAppSelector';
-import useCreateClassModal from '~/hooks/useCreateClassModal';
-import { ClassType, addClass } from '~/store/reducers/classSlice';
+import { ClassType } from '~/store/reducers/classSlice';
 import authStorage from '~/utils/auth.storage';
 import { ReactComponent as LoadingIndicator } from '~/assets/svg/loading-indicator.svg'; 
 import ClassCard from '~/components/Class/ClassCard';
@@ -23,59 +21,13 @@ const ClassLayout: React.FC = () => {
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
     
-    console.log(classes);
-    const dispatch = useAppDispatch();
-
-    const navigate = useNavigate();
-
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const handleCreate = (values: any) => {
-        return new Promise((resolve, reject) => {
-            axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/`, values, {
-                headers: {
-                    Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
-                }
-            })
-            .then(res => {
-                const classRes = res.data.data;
-                console.log(classRes);
-                
-                messageApi.success('Class created successfully!', 2, () => {
-                    dispatch(addClass(classRes));
-                    navigate(`/classes/feeds/${classRes.slug}`);
-                });
-            })
-            .catch(err => {
-                console.log(err);
-                messageApi.error('Class created failed!');
-                reject(err);
-            })
-            .finally(() => {
-                resolve(1);
-            });
-        });
-    }
-
-    const handleCancel = () => {
-        console.log('cancel create a class');
-    }
-
-    const { setOpenCreateModal, ModalContext } = useCreateClassModal(
-        {
-            handleCreate,
-            handleCancel,
-        }
-    );
-
     const items: MenuProps["items"] = [
         {
-            key: "create-class",
-            label: 'Create a class',
-            icon: <FontAwesomeIcon icon={faPlus} />,
+            key: "join-class",
+            label: 'Join a class',
+            icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
             className: "!px-4 !py-2.5 !text-md !gap-1",
-            onClick: () => setOpenCreateModal(true)
-        },
+        }
     ];
 
     const [classDetail, setClassDetail] = useState<ClassType>();
@@ -113,8 +65,6 @@ const ClassLayout: React.FC = () => {
 
     return (
         <>
-            { contextHolder }
-            { ModalContext }
             {
                 (!isLoading && !isDetailLoading)
                 ? isInvite && !isJoined.current ? <Outlet /> 
@@ -156,10 +106,7 @@ const ClassLayout: React.FC = () => {
                             <>
                                 <div className='flex w-full my-5'>
                                     <div className='relative w-full'>
-                                        <div className='absolute left-0 top-0 !z-1 m-5 !text-white flex flex-col gap-1'>
-                                            <Button className='!w-auto !h-auto !px-5 !py-2.5 !text-hover-dark !rounded-md !text-sm !font-medium !border-none !shadow-none' icon={<FontAwesomeIcon icon={faUserPlus} />}>Invite</Button>
-                                        </div>
-                                        <div className='absolute left-0 bottom-0 !z-1 m-5 !text-white flex flex-col gap-1'>
+                                        {/* <div className='absolute left-0 bottom-0 !z-1 m-5 !text-white flex flex-col gap-1'>
                                             <div className='font-medium'>Class code:</div>
                                             <Typography.Text 
                                                 className='!text-white font-semibold !text-xl'
@@ -168,7 +115,7 @@ const ClassLayout: React.FC = () => {
                                                     tooltips: ['Copy', 'Copied!'],
                                                     icon: [<FontAwesomeIcon key={classDetail.inviteCode} icon={faClone} className='text-gray-300 hover:text-white ml-1' />, <FontAwesomeIcon key={`copied_${classDetail.inviteCode}`} className='ml-1' icon={faCheck} color='lightgreen' />]
                                                 }}>{ classDetail.inviteCode }</Typography.Text>
-                                        </div>
+                                        </div> */}
                                         <img className='w-full rounded-xl' alt={`banner_${classDetail.name}`} src={classDetail.banner} />
                                     </div>
                                 </div>

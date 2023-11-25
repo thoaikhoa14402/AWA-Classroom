@@ -53,7 +53,7 @@ const AppRoutes = () => {
                     <Route path = "forgot-password" element = {<ForgotPasswordPage/>}/>
                 </Route>
             </Route>
-            <Route path="*" element={<Navigate to="/" />}  />
+            <Route path="*" element={<Navigate to="/home" />}  />
         </Routes>
     );
 };

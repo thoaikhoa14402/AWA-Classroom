@@ -157,14 +157,14 @@ const ResetPassword: React.FC = () => {
                             type="primary"
                             className="mr-2 !text-sm !font-semibold !py-2 !px-4 !h-auto"
                         >
-                            Hủy
+                            Cancel
                         </Button>
                         <Button
                             type="primary"
                             htmlType="submit"
                             className="!text-sm !font-semibold !py-2 !px-4 !h-auto"
                         >
-                            Cập nhật
+                            Update
                         </Button>
                     </Form.Item>
                 </Form>

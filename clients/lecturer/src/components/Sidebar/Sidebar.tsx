@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 className={`flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80`}
                 to='/home'>
                 <HomeIcon className="w-7 h-7" />{" "}
-                { props.open ? <div className="mt-0.5 text-ellipsis">Màn hình chính</div> : '' }
+                { props.open ? <div className="mt-0.5 text-ellipsis">Home screen</div> : '' }
             </NavLink>
             <div className="relative flex flex-col gap-2">
                 <NavLink
@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                     className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                     <AcademyCap className="w-7 h-7" />{" "}
                     { props.open 
-                        ? <div className="mt-0.5 text-ellipsis">Danh sách lớp học</div>
+                        ? <div className="mt-0.5 text-ellipsis">Classes</div>
                         : '' 
                     }
                 </NavLink>
@@ -81,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 to='/schedule'
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                 <ScheduleIcon className="w-7 h-7" />{" "}
-                { props.open ? <div className="mt-0.5">Lịch</div> : '' }
+                { props.open ? <div className="mt-0.5">Calendar</div> : '' }
             </NavLink>
             <NavLink
                 style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}
@@ -89,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
                 type="button"
                 className="flex gap-6 items-start p-3 text-md hover:bg-slate-100 hover:rounded-lg w-80">
                 <SettingIcon className="w-7 h-7" />{" "}
-                { props.open ? <div className="mt-0.5">Cài đặt</div> : '' }
+                { props.open ? <div className="mt-0.5">Settings</div> : '' }
             </NavLink>
         </aside>
     );

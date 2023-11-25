@@ -2,7 +2,7 @@ import redis from "../redis";
 import AppError from "../services/errors/app.error";
 import { NextFunction, Response, Request } from "express";
 
-const cacheMiddleware = (keyGetter: (request: Request) => string) => {
+const cacheMiddleware = (keyGetter: (request: Request) => string, callback: (req: Request, res: Response, next: NextFunction, data: any) => any) => {
 	return async (request: Request, response: Response, next: NextFunction) => {
         try {
             const redisClient = redis.getClient();
@@ -13,9 +13,10 @@ const cacheMiddleware = (keyGetter: (request: Request) => string) => {
             
 			const cachedResponse = await redisClient?.get(key);
 
-			if (cachedResponse)
-				response.send(JSON.parse(cachedResponse));
-			
+			if (cachedResponse) {
+				return callback(request, response, next, JSON.parse(cachedResponse));
+			}
+				
 			return next();
 
 		} catch (error) {

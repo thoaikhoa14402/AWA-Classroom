@@ -158,7 +158,7 @@ class AuthController implements IController {
         if (userRegistrationInfo.verification_code === req.verification_code) {
             const updatedUser = await UserModel.findOneAndUpdate(
                 { username: req.body.username}, // Tìm người dùng dựa trên username
-                { active: true }, // Cập nhật trường active thành true
+                { active: true }, // Update trường active thành true
                 { new: true } // Tùy chọn này trả về đối tượng đã được cập nhật
             );
             const accessToken = await JsonWebToken.createToken({_id: updatedUser?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})

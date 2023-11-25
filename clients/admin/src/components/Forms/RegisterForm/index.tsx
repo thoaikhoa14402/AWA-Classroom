@@ -41,7 +41,7 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng ký thành công!',
+              content: 'Register successfully!',
             });
           }, 1500)
 
@@ -59,7 +59,7 @@ const RegisterForm: React.FC = () => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng ký thất bại!',
+            content: 'Register failed!',
           });
           form.setFields([
             {

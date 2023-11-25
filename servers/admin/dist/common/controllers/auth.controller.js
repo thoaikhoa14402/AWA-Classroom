@@ -43,7 +43,7 @@ class AuthController {
             delete clonedUser.password;
             const accessToken = yield jwt_1.default.createToken({ _id: user.id }, { expiresIn: process.env.JWT_ACCESS_EXPIRES });
             return res.status(200).json({
-                message: "Đăng nhập thành công!",
+                message: "Login successfully!",
                 user: clonedUser,
                 accessToken: accessToken
             });
@@ -64,7 +64,7 @@ class AuthController {
             delete clonedUser.password;
             const accessToken = yield jwt_1.default.createToken({ _id: newUser.id }, { expiresIn: process.env.JWT_ACCESS_EXPIRES });
             return res.status(200).json({
-                message: "Đăng ký thành công!",
+                message: "Register successfully!",
                 user: clonedUser,
                 accessToken: accessToken
             });

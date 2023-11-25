@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Dropdown, MenuProps, message } from "antd";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faArrowRightToBracket, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import useCreateClassModal from "~/hooks/useCreateClassModal";
 import axios from "axios";
@@ -65,12 +65,6 @@ const NoActivityMessage: React.FC = () => {
             className: "!px-4 !py-2.5 !text-md !gap-1",
             onClick: () => setOpenCreateModal(true)
         },
-        {
-            key: "join-class",
-            label: 'Join a class',
-            icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
-            className: "!px-4 !py-2.5 !text-md !gap-1",
-        }
     ];
 
     return (

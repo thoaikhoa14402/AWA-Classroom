@@ -66,7 +66,7 @@ const useInviteModal = ({ handleCreate, handleCancel, code }: inviteModalProps) 
         else if (options.length > 0) setOptions([]);
     }
 
-    const inviteLink = `${window.location.origin}/classes/invite/${params.classID ?? ''}?code=${code}`
+    const inviteLink = `${ (role === 'lecturer') ? window.location.origin : 'http://localhost:3000' }/classes/invite/${params.classID ?? ''}?code=${code}`
 
     const ModalContext = (
         openInviteModal 

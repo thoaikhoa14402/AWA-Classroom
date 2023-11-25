@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import BaseLayout from "~/layouts/BaseLayout";
 import AuthLayout from "~/layouts/AuthLayout";
-import Classes from "~/pages/Classes";
 import HomePage from "~/pages/Home";
 import Profile from "~/pages/Profile";
 import SearchPage from "~/pages/Search";
@@ -14,6 +13,9 @@ import ProtectedOTPRoute from "./ProtectedOTPRoute";
 import ResetPassword from "~/pages/ResetPassword";
 import ForgotPasswordPage from "~/pages/ForgotPassword";
 import RenewPasswordPage from "~/pages/RenewPassword";
+import ClassLayout from "~/layouts/ClassLayout";
+import Member from "~/pages/Class/Member";
+import Invite from "~/pages/Invite";
 
 const AppRoutes = () => {
     return (
@@ -23,8 +25,12 @@ const AppRoutes = () => {
              <Route element={<ProtectedRoute auth />}>
                 <Route element={<BaseLayout />}>
                     <Route path="/home" element={<HomePage />} />
-                    <Route path="/classes">
-                        <Route path=":class_id?" element={<Classes />} />    
+                    <Route path="/classes" element={<ClassLayout />}>
+                        <Route path="feeds/:classID?" element={<>FEEDS</>} />    
+                        <Route path="works/:classID?" element={<>WORKS</>} />    
+                        <Route path="members/:classID?" element={<Member />} />    
+                        <Route path="grades/:classID?" element={<>GRADES</>} />    
+                        <Route path="invite/:classID?" element={<Invite />} />    
                     </Route>
                     <Route path="/schedule" element={<>Schedule</>} />
                     <Route path="/settings" element={<>Settings</>} />

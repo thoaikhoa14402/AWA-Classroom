@@ -46,14 +46,14 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     const items: MenuProps['items'] = useMemo(() => [
         {
             key: 'profile',
-            label: 'Cá nhân',
+            label: 'Profile',
             icon: <UserOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => { navigate('/user/profile'); props.toggleSidebar(false); }
         },
         {
             key: 'reset-password',
-            label: 'Đổi mật khẩu',
+            label: 'Reset password',
             icon: <KeyOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5'
         },
@@ -65,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         },
         {
             key: 'logout',
-            label: 'Đăng xuất',
+            label: 'Logout',
             icon: <LogoutOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => {

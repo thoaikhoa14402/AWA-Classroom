@@ -67,7 +67,7 @@ class AuthController implements IController {
         const accessToken = await JsonWebToken.createToken({_id: user.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
 
         return res.status(200).json({
-            message: "Đăng nhập thành công!",
+            message: "Login successfully!",
             user: clonedUser,
             accessToken: accessToken
         })
@@ -93,7 +93,7 @@ class AuthController implements IController {
         const accessToken = await JsonWebToken.createToken({_id: newUser.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
 
         return res.status(200).json({
-            message: "Đăng ký thành công!",
+            message: "Register successfully!",
             user: clonedUser,
             accessToken: accessToken
         })

@@ -1,4 +1,4 @@
-import { faArrowRightToBracket, faEllipsis, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, MenuProps, message } from 'antd';
 import axios from 'axios';
@@ -71,12 +71,6 @@ const HomePage: React.FC = () => {
             className: "!px-4 !py-2.5 !text-md !gap-1",
             onClick: () => setOpenCreateModal(true)
         },
-        {
-            key: "join-class",
-            label: 'Join a class',
-            icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
-            className: "!px-4 !py-2.5 !text-md !gap-1",
-        }
     ];
 
     return (
