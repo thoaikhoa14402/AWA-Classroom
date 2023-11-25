@@ -1,17 +1,51 @@
 import { faArrowRightToBracket, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Dropdown, MenuProps } from 'antd';
+import { Button, Dropdown, MenuProps, message } from 'antd';
 import React from 'react';
 import { NoActivityMessage } from '~/components/Home';
 import useAppSelector from '~/hooks/useAppSelector';
 import useJoinModal from '~/hooks/useJoinModal';
 import { ReactComponent as LoadingIndicator } from '~/assets/svg/loading-indicator.svg';
 import ClassCard from '~/components/Class/ClassCard';
+import axios from 'axios';
+import authStorage from '~/utils/auth.storage';
+import { addClass } from '~/store/reducers/classSlice';
+import useAppDispatch from '~/hooks/useAppDispatch';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
 
+    const navigate = useNavigate();
+
+    const dispatch = useAppDispatch();
+
+    const [messageApi, contextHolder] = message.useMessage();
+
     const { setOpenJoinModal, ModalContext } = useJoinModal({
-        handleCreate: async () => {},
+        handleCreate: (values) => {
+            return new Promise((resolve, reject) => {
+                axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/join-with-code/`, {
+                    code: values.code,
+                }, {
+                    headers: {
+                        Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                    }
+                })
+                .then(res => {
+                    messageApi.success('Joined class successfully!', 2, () => {
+                        dispatch(addClass(res.data.data));
+                        navigate(`/classes/feeds/${res.data.data.slug}`);
+                    });
+
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                    messageApi.error('Joined class failed!');
+                    reject(err);
+                });
+            });
+        },
         handleCancel: async () => {}
     });
 
@@ -31,6 +65,7 @@ const HomePage: React.FC = () => {
 
     return (
         <>
+            {contextHolder}
             {ModalContext}
             {
                 !isLoading 

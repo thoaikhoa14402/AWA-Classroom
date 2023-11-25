@@ -44,7 +44,6 @@ const Member: React.FC = () => {
             });
         },
         handleCancel: () => {
-            console.log('cancel invite a user');
         },
         code: details.inviteCode
     });
