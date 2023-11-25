@@ -82,7 +82,7 @@ const LandingPage: React.FC = () => {
                     <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
                         <span className="hidden flex-col items-end lg:flex md:flex">
                             <span className="font-medium text-right">{profile.username}</span>
-                            <small>{profile.role}</small>
+                            <small className="capitalize">{profile?.role}</small>
                         </span>
                         <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
                             backgroundColor: color,
@@ -93,9 +93,9 @@ const LandingPage: React.FC = () => {
                 </Dropdown>
                 : 
                 <div className="flex gap-2 whitespace-nowrap">
-                    <NavLink to='/auth/login' className="px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-slate-100 transition-all duration-300">Đăng Nhập</NavLink>
+                    <NavLink to='/auth/login' className="px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-slate-100 transition-all duration-300">Login</NavLink>
                     <NavLink to='/auth/register' className="flex items-center gap-1.5 px-4 py-2.5 outline-none border-2 font-semibold border-primary rounded-lg text-white text-sm bg-primary hover:shadow-lg hover:border-transparent disabled:bg-gray-400/80 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-300 hover:bg-hover">
-                        Đăng Ký 
+                        Register 
                     </NavLink>
                 </div>  
             }
@@ -106,7 +106,7 @@ const LandingPage: React.FC = () => {
                     <b className='font-bold text-primary text-3xl'>AWA Classroom</b>
                     <h1 className='text-2xl font-bold'>An effective way to manage your classroom</h1>
                     <p>AWA Classroom supports educators in creating engaging learning experiences that they can personalize, manage, and measure. It aids your organization with simple, secure collaborative tools.</p>
-                    <NavLink to={'/auth/register'} className='bg-primary text-white font-semibold px-8 py-4 rounded-xl text-md hover:bg-hover transition-all duration-150'>Tham gia ngay</NavLink>
+                    <NavLink to={'/auth/register'} className='bg-primary text-white font-semibold px-8 py-4 rounded-xl text-md hover:bg-hover transition-all duration-150'>Join now</NavLink>
                 </div>
                 <div className='w-1/2 rounded-3xl overflow-hidden md:block hidden'>
                     <img src={landingPicture} className='w-full' alt='landing-page' />

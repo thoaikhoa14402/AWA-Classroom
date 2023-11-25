@@ -73,6 +73,8 @@ class AuthController implements IController {
             return next(new AppError('The username or password is incorrect!', 401));
         }
 
+        if (user.role !== 'student') next(new AppError('The username or password is incorrect', 401));
+
         if (user && !user.active) { // if this account is created, but not activated yet
             const otpCode = new OTPGenerator().generate();
             const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
@@ -219,6 +221,7 @@ class AuthController implements IController {
     /// > PROTECT
     public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
+            if (!req.verification_code && user.role !== 'student') next(new AppError('The username or password is incorrect', 401));
             if (info instanceof Error) return next(info);
             next();
         })(req, res, next);
@@ -238,7 +241,9 @@ class AuthController implements IController {
             // res.redirect only works with request from browser (<a href = ></a>, ...), and it does not contain 'origin' field
             // res.redirect and can not be worked with Axios because Axios is HTTP client not browser, and can not redirect by itself.
             // When using Axios, it will automatically add 'origin' field into request headers
-            if (user._id) {
+            if (user) {
+                if (user.role !== 'student') next(new AppError('Unauthorized', 401));
+
                 if (origin) { // from HTTP client 
                     return res.status(200).json({ message: "This account has been authenticated!" })
                 }
