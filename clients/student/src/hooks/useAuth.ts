@@ -1,15 +1,13 @@
-import { message } from 'antd';
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import authStorage from '~/utils/auth.storage';
 
 export default function useAuth() {
-    let isAuthenticated: boolean = authStorage.isLogin();
+    const isAuthenticated = useRef(authStorage.isLogin());
     const [isFetching, setIsFetching] = useState(true);
 
-    const location = useLocation();
-    
+    isAuthenticated.current = authStorage.isLogin();
+
     useEffect(() => {
         const controller = new AbortController();
         
@@ -21,13 +19,13 @@ export default function useAuth() {
             signal: controller.signal
         }).then((response) => {
             if (response.status === 200) {
-                isAuthenticated = true;
+                isAuthenticated.current = true;
             }
         }).catch((err) => {
-            isAuthenticated = false;
+            isAuthenticated.current = false;
             console.log('error: ', err)
             if (err.message && err.message === "canceled") {
-                isAuthenticated = authStorage.isLogin();
+                isAuthenticated.current = authStorage.isLogin();
             }
         }).finally(() => {
             setIsFetching(false);
@@ -36,7 +34,7 @@ export default function useAuth() {
         return () => {
             controller.abort();
         }
-    }, [isAuthenticated, location]);
+    }, []);
    
-    return { isAuthenticated: isAuthenticated, isFetching };
+    return { isAuthenticated: isAuthenticated.current, isFetching };
 }

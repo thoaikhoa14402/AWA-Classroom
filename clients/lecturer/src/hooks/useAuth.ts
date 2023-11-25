@@ -1,18 +1,15 @@
-import { message } from 'antd';
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import authStorage from '~/utils/auth.storage';
 
 export default function useAuth() {
     const isAuthenticated = useRef(authStorage.isLogin());
     const [isFetching, setIsFetching] = useState(true);
 
-    const location = useLocation();
-    
+    isAuthenticated.current = authStorage.isLogin();
+
     useEffect(() => {
         const controller = new AbortController();
-        isAuthenticated.current = authStorage.isLogin();
         
         axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/is-login`, {
             headers: {
@@ -37,7 +34,7 @@ export default function useAuth() {
         return () => {
             controller.abort();
         }
-    }, [isAuthenticated, location]);
+    }, []);
    
     return { isAuthenticated: isAuthenticated.current, isFetching };
 }

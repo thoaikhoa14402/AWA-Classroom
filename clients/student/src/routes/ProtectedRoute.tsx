@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
             return null;
     }
     
-    if (auth && authStorage.isLogin()) {    
+    if (auth && authStorage.isLogin()) {   
         if (!isFetching && !isAuthenticated) {
             return <Navigate to = "/auth/login" replace />;
         }

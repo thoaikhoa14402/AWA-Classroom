@@ -4,10 +4,16 @@ import { Button, Dropdown, MenuProps } from 'antd';
 import React from 'react';
 import { NoActivityMessage } from '~/components/Home';
 import useAppSelector from '~/hooks/useAppSelector';
+import useJoinModal from '~/hooks/useJoinModal';
 import { ReactComponent as LoadingIndicator } from '~/assets/svg/loading-indicator.svg';
 import ClassCard from '~/components/Class/ClassCard';
 
 const HomePage: React.FC = () => {
+
+    const { setOpenJoinModal, ModalContext } = useJoinModal({
+        handleCreate: async () => {},
+        handleCancel: async () => {}
+    });
 
     const classInfo = useAppSelector(state => state.classes);
     const classes = classInfo.classes;
@@ -19,11 +25,13 @@ const HomePage: React.FC = () => {
             label: 'Join a class',
             icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
             className: "!px-4 !py-2.5 !text-md !gap-1",
+            onClick: () => { setOpenJoinModal(true); }
         }
     ];
 
     return (
         <>
+            {ModalContext}
             {
                 !isLoading 
                 ? classes.length 

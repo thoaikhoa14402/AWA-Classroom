@@ -27,6 +27,10 @@ class UserController implements IController {
         return `profile?id=${req.user!.id}`;
     }
 
+    public profileAccountCacheKey(req: Request): string {
+        return `profileById?id=${req.params.id}`;
+    }
+
     constructor() {
         this.router.get('/profile', AuthController.protect, cacheMiddleware(this.profileCacheKey, this.profileCacheRes), catchAsync(this.getProfile));
         
@@ -35,7 +39,7 @@ class UserController implements IController {
         const multercloud = new MulterCloudinaryUploader(['jpg', 'jpeg', 'png'], 1 * 1024 * 1024);
         this.router.put('/upload', AuthController.protect, multercloud.single('avatar'), multercloud.uploadCloud('avatars'), catchAsync(this.uploadAvatar));
 
-        this.router.get('/:id', AuthController.protect, cacheMiddleware(this.profileCacheKey, this.profileCacheRes), catchAsync(this.getProfileById));
+        this.router.get('/:id', AuthController.protect, cacheMiddleware(this.profileAccountCacheKey, this.profileCacheByIdRes), catchAsync(this.getProfileById));
 
         this.router.patch('/reset-password', AuthController.protect, DTOValidation.validate<ResetPasswordDTO>(ResetPasswordDTO), catchAsync(this.resetPassword));
     }
@@ -47,6 +51,13 @@ class UserController implements IController {
             data: data
         });  
     };
+
+    private profileCacheByIdRes = async (req: Request, res: Response, next: NextFunction, data: any) => { 
+        return res.status(200).json({
+            status: 'success',
+            user: data
+        }); 
+    }
 
 
     /// > GET PROFILE
@@ -98,7 +109,7 @@ class UserController implements IController {
         const user = await UserModel.findById(userId);
 
         const redisClient = redis.getClient();
-        await redisClient?.setEx(this.profileCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(req.user));
+        await redisClient?.setEx(this.profileAccountCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(user));
 
         return res.status(200).json({
             message: "success",
