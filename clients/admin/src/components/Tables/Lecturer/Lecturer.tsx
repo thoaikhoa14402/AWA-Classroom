@@ -1,52 +1,63 @@
 import { SearchOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import type { InputRef } from 'antd';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
+import axios from "axios";
 
 interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
+  id: string;
+  username: string;
+  fullname: string;
+  phonenumber: string;
+  active: boolean;
+  email: string;
 }
 
 type DataIndex = keyof DataType;
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Joe Black',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Jim Green',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
-
-const App: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+const LecturerTable: React.FC = () => {
+  const [searchText, setSearchText] = useState<string>('');
+  const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
+  const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
 
+  
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/list`).then((response) => {
+      if (response.status === 200) {
+        setTimeout(() => { 
+          setIsTableLoading(false);
+          if (response.data.lecturers.length === 0) {
+            message.info({
+              content: 'No lecturers found!',
+              style: {
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+              },
+              duration: 1.2,
+            })
+            return;
+          }
+          message.success({
+            content: 'Data was loaded successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            },
+            duration: 1.2,
+          });
+        setDataSource(response.data.lecturers);
+        }, 1200); 
+       
+      }
+    }).catch((error: Response) => console.log('err:', error));
+
+  }, [])
+
+  // search item in column
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -57,11 +68,13 @@ const App: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
+  // reset search text
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
   };
 
+  // handle searching for columns
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -75,6 +88,7 @@ const App: React.FC = () => {
         />
         <Space>
           <Button
+            className = "!flex !justify-center !items-center !gap-0"
             type="primary"
             onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             icon={<SearchOutlined />}
@@ -84,9 +98,10 @@ const App: React.FC = () => {
             Search
           </Button>
           <Button
+            className= "!flex !justify-center !items-center"
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
-            style={{ width: 90 }}
+            style={{ width: 90}}
           >
             Reset
           </Button>
@@ -108,13 +123,13 @@ const App: React.FC = () => {
               close();
             }}
           >
-            close
+           Close
           </Button>
         </Space>
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined className = {filtered ? "!text-primary" : ''}/>
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -139,32 +154,434 @@ const App: React.FC = () => {
       ),
   });
 
+  // Delete a row (new data item)
+  const handleActionDelete = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
+      if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This account was deleted successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        setDataSource(response.data.updatedLecturers);
+        }, 1500);
+      }
+      else message.error({
+        content: response.data.message,
+      })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
+  };
+
+  // handle update lecturer's status
+  const handleActionUpdateStatus = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
+      if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This account status was updated successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        setDataSource(response.data.updatedLecturers);
+        }, 1500);
+      }
+      else message.error({
+        content: response.data.message,
+      })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
+  }
+
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-      ...getColumnSearchProps('name'),
+        title: 'Username',
+        dataIndex: 'username',
+        key: 'username',
+        ellipsis: true,
+        ...getColumnSearchProps('username'),
+        onCell: (record) => ({
+            record,
+            editable: true,
+            dataIndex: 'username',
+            title: 'Username',
+          }),
+        className: "!text-md",
+
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      width: '20%',
-      ...getColumnSearchProps('age'),
+      title: 'Full name',
+      dataIndex: 'fullname',
+      key: 'fullname',
+      width: "15%",
+      ellipsis: true,
+      ...getColumnSearchProps('fullname'),
+      className: "!text-md",
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
+        title: 'Phone',
+        dataIndex: 'phonenumber',
+        key: 'phonenumber',
+        width: "14%",
+        ...getColumnSearchProps('phonenumber'),
+        className: "!text-md",
+      },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      width: '25%',
+      ellipsis: true,
+      ...getColumnSearchProps('email'),
+      className: "!text-md",
+    },
+    {
+        title: 'Status',
+        dataIndex: 'active',
+        key: 'active',
+        width: '11%',
+        filters: [
+          { text: 'Active', value: 'active' },
+          { text: 'Inactive', value: 'inactive' },
+        ],
+        onFilter: (value: any, record) => {
+          if (value === "active") return record.active === true;
+          else if (value === "inactive") return record.active === false;
+          return true;
+        },
+        // customize cell content
+        render: (_, record) => {
+            return (
+                <Tag color= {record.active ? "green" : "orange" } style = {{
+                fontSize: 16,
+                minWidth: 80,
+                textAlign: 'center',
+                padding: 4,
+              }}>
+                {record.active ? "Active" : "Inactive"}
+              </Tag>
+            );
+        }
+    },
+    {
+        title: 'Actions',
+        dataIndex: 'actions',
+        key: 'actions',
+        width: "21%",
+        render: (_, record) => (
+            <Space size="middle">
+              <Button
+                type="primary"
+                style={{
+                  width: '80px'
+                }}
+                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
+                onClick={() => handleActionUpdateStatus(record.id)}>         
+                {record.active ? 'Lock' : 'Unlock'}
+              </Button>
+              {dataSource.length >= 1 ? (
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
+                >
+                <Button danger style = {{
+                  width: '80px'
+                }} className = "!flex !justify-center !items-center">Delete</Button>
+                </Popconfirm>
+        ) : null}
+            </Space>
+          )
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return <div>
+    <Typography.Title level={3} style={{ margin: 0, color: "#00A551" }} className='!uppercase !mt-4 !mb-4'>
+       Lecturer Management
+    </Typography.Title>
+
+    <Table 
+      className = "myTable"
+      bordered = {true}
+      columns={columns} dataSource={dataSource} 
+      loading = {isTableLoading}
+      pagination={{
+      total: dataSource.length,
+      pageSize: 7,
+      showSizeChanger: false, // Turn off feature to change page size
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+    }}/>
+  </div>
 };
 
-export default App;
+export default LecturerTable;
+
+
+// fake data
+// const [dataSource, setDataSource] = useState<DataType[]>([
+  //   {
+  //       id: '1',
+  //       username: '20127043',
+  //       fullname: 'Brown Christan',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "nguyenthoaidangkhoa@gmail.com",
+  //     },
+  //     {
+  //       id: '2',
+  //       username: '20127044',
+  //       fullname: 'Joe Black',
+  //       phonenumber: '0903861717',
+  //       active: false,
+  //       email: "ntdkhoa14402@gmail.com",
+    
+  //     },
+  //     {
+  //       id: '3',
+  //       username: '20127045',
+  //       fullname: 'Jim Green',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "nguyenducminh@gmail.com",
+  //     },
+  //     {
+  //       id: '4',
+  //       username: '20127046',
+  //       fullname: 'Jim Red',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "khangdinh017@gmail.com",
+  //     },
+  //     {
+  //       id: '5',
+  //       username: '20127047',
+  //       fullname: 'Jim Lara',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "khoinguyen128@gmail.com",
+  //     },
+  //     {
+  //       id: '6',
+  //       username: '20127048',
+  //       fullname: 'Jim High',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "minhtue167@gmail.com",
+  //     },
+  //     {
+  //       id: '7',
+  //       username: '20127049',
+  //       fullname: 'Jim Low',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "ngoctram194@gmail.com",
+  //     },
+  //     {
+  //       id: '8',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '9',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '10',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '11',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '12',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '13',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '14',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '15',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '16',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '17',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '18',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '19',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '20',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '21',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '22',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '23',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '24',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '25',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '26',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '27',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '28',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '29',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '30',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  //     {
+  //       id: '30',
+  //       username: '20127050',
+  //       fullname: 'Jim Stuck',
+  //       phonenumber: '0903861717',
+  //       active: true,
+  //       email: "vinhhuynh212@gmail.com",
+  //     },
+  // ]);
