@@ -1,15 +1,18 @@
-import { faArrowRightToBracket, faCheck, faClone, faEllipsis, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightToBracket, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Dropdown, MenuProps, Typography } from 'antd';
+import { Button, Dropdown, MenuProps, message } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, Outlet, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NoClassMessage } from '~/components/Class';
 import useAppSelector from '~/hooks/useAppSelector';
-import { ClassType } from '~/store/reducers/classSlice';
+import { ClassType, addClass } from '~/store/reducers/classSlice';
 import authStorage from '~/utils/auth.storage';
 import { ReactComponent as LoadingIndicator } from '~/assets/svg/loading-indicator.svg'; 
 import ClassCard from '~/components/Class/ClassCard';
+import useJoinModal from '~/hooks/useJoinModal';
+import useAppDispatch from '~/hooks/useAppDispatch';
+import useStudentIDModal from '~/hooks/useStudentIDModal';
 
 const ClassLayout: React.FC = () => {
     const params = useParams();
@@ -17,6 +20,39 @@ const ClassLayout: React.FC = () => {
 
     const classInfo = useAppSelector(state => state.classes);
 
+    const navigate = useNavigate();
+
+    const dispatch = useAppDispatch();
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const { setOpenJoinModal, ModalContext } = useJoinModal({
+        handleCreate: (values) => {
+            return new Promise((resolve, reject) => {
+                axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/join-with-code/`, {
+                    code: values.code,
+                }, {
+                    headers: {
+                        Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                    }
+                })
+                .then(res => {
+                    messageApi.success('Joined class successfully!', 2, () => {
+                        dispatch(addClass(res.data.data));
+                        navigate(`/classes/feeds/${res.data.data.slug}`);
+                    });
+
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                    messageApi.error('Joined class failed!');
+                    reject(err);
+                });
+            });
+        },
+        handleCancel: async () => {}
+    });
     
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
@@ -27,6 +63,7 @@ const ClassLayout: React.FC = () => {
             label: 'Join a class',
             icon: <FontAwesomeIcon icon={faArrowRightToBracket} />,
             className: "!px-4 !py-2.5 !text-md !gap-1",
+            onClick: () => { setOpenJoinModal(true); }
         }
     ];
 
@@ -37,6 +74,36 @@ const ClassLayout: React.FC = () => {
 
     const isInvite = !!(classID && /\w{15}/.test(classID) && searchParams.get('code'));
     const isJoined = useRef(!isInvite);
+
+    const { setOpenStudentIDModal, ModalContext: StudentIDModalContext } = useStudentIDModal({
+        handleCreate: (values) => {
+            return new Promise((resolve, reject) => {
+                axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/student-id/${classID}`, {
+                    studentID: values.studentID,
+                }, {
+                    headers: {
+                        Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                    }
+                })
+                .then(res => {
+                    messageApi.success('Updated student ID successfully!', 2, () => {
+                        setClassDetail(prev => ({ ...prev!, studentID: values.studentID }));
+                    });
+
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                    if (err?.response?.data.message === 'Student ID is used') {
+                        messageApi.error('Your student ID is used!');
+                    }
+                    else messageApi.error('Updated student ID failed!');
+                    reject(err);
+                });
+            });
+        },
+        handleCancel: async () => {}
+    });
 
     useEffect(() => {
         if (classID) {
@@ -63,8 +130,18 @@ const ClassLayout: React.FC = () => {
         }
     }, [classID, classInfo.classes]);
 
+    useEffect(() => {
+        if (classDetail) {
+            if (!isInvite && !classDetail.studentID) {
+                setOpenStudentIDModal(true);
+            }
+        }
+    }, [classDetail]);
+
     return (
         <>
+            {contextHolder}
+            {ModalContext}
             {
                 (!isLoading && !isDetailLoading)
                 ? isInvite && !isJoined.current ? <Outlet /> 
@@ -72,6 +149,7 @@ const ClassLayout: React.FC = () => {
                     : classes.length 
                     ? 
                     <>
+                        {StudentIDModalContext}
                         <div className='flex justify-end items-center h-13 px-3'>
                             { classDetail && classID ? 
                                 <>

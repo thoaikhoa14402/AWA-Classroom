@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faIdBadge, faIdCard, faIdCardAlt, faIdCardClip, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form, Input, Modal } from "antd";
 
-interface joinModalProps {
+interface studentIDModalProps {
     handleCreate: (...args: any[]) => void;
     handleCancel: () => void;
 }
 
-const useJoinModal = ({ handleCreate, handleCancel }: joinModalProps) => {
+const useStudentIDModal = ({ handleCreate, handleCancel }: studentIDModalProps) => {
     const [form] = Form.useForm();
 
-    const [openJoinModal, setOpenJoinModal] = useState(false);
+    const [openStudentIDModal, setOpenStudentIDModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleCreateModal = () => {
@@ -33,44 +33,44 @@ const useJoinModal = ({ handleCreate, handleCancel }: joinModalProps) => {
     const handleCancelModal = async () => { 
         await handleCancel();
 
-        setOpenJoinModal(false);
+        setOpenStudentIDModal(false);
         form.resetFields();
     };
 
     const ModalContext = (
-        openJoinModal 
+        openStudentIDModal 
         ? <Modal
             className="!text-center"
-            title={<b className="font-semibold text-2xl ml-4 text-primary py-3 block"><FontAwesomeIcon icon={faUserPlus} size="lg" />&nbsp; Join class</b>}
+            title={<b className="font-semibold text-2xl ml-4 text-primary py-3 block"><FontAwesomeIcon className='mr-2' icon={faIdCardClip} size='lg' />&nbsp;Student ID</b>}
             centered
-            open={openJoinModal}
+            open={openStudentIDModal}
             onOk={handleCreateModal}
             confirmLoading={loading}
             onCancel={handleCancelModal}
             closable={false}
-            okText="Join"
-            cancelButtonProps={{ disabled: loading, className: "!px-4 !py-2 !w-auto !h-auto !font-medium !mr-2", type: "primary", danger: true }}
-            okButtonProps={{ className: "!px-4 !py-2 !w-auto !h-auto !font-medium !m-0", type: "primary" }}
+            okText="Update"
+            cancelText="Later"
+            cancelButtonProps={{ disabled: loading, className: "!px-4 !py-2 !w-auto !h-auto", type: "text" }}
+            okButtonProps={{ className: "!px-4 !py-2 !w-auto !h-auto !m-0", type: "text" }}
             maskClosable={!loading}>
             <Form autoComplete='off' form={form} layout="vertical" className="!mt-8 !px-1 !text-left flex flex-col gap-3">
                 <Form.Item
-                    name="code"
-                    label="Class code"
+                    name="studentID"
+                    label="Student ID"
                     rules={[
-                        { required: true, message: 'Please input the class code!' },
-                        { pattern: /[A-Z]{7}/, message: 'Class code not found!' }
+                        { required: true, message: 'Please input the student ID!' },
                     ]}
                     className="!m-0 !mb-4">
                     <Input 
                         className="!w-full !h-10 !px-4 !py-2 !rounded-lg !border !border-gray-300 !focus:outline-none !focus:ring-2 !focus:ring-primary !focus:border-transparent" 
-                        placeholder='Enter class code' />
+                        placeholder='Enter student ID' />
                 </Form.Item>
             </Form>
         </Modal>
         : null
     );
 
-    return { openJoinModal, setOpenJoinModal, loading, setLoading, ModalContext };
+    return { openStudentIDModal, setOpenStudentIDModal, loading, setLoading, ModalContext };
 }
 
-export default useJoinModal;
+export default useStudentIDModal;

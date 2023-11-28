@@ -53,7 +53,6 @@ const HomePage: React.FC = () => {
     }
 
     const handleCancel = () => {
-        console.log('cancel create a class');
     }
 
     const { setOpenCreateModal, ModalContext } = useCreateClassModal(

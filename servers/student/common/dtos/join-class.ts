@@ -10,4 +10,10 @@ export class JoinClassDTO {
     public classID!: string;
 }
 
+export class JoinWithCodeDTO {
+    @IsString({message: "Bad Request"})
+    @IsNotEmpty({message: "Bad Request"})
+    public code!: string;
+}
+
 export default JoinClassDTO;

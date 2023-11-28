@@ -28,6 +28,7 @@ export interface ClassType {
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
+    studentID?: string;
 }
 
 interface ClassState {
