@@ -18,12 +18,10 @@ const ClassLayout: React.FC = () => {
     const classID = params.classID;
 
     const classInfo = useAppSelector(state => state.classes);
-
     
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
     
-    console.log(classes);
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();

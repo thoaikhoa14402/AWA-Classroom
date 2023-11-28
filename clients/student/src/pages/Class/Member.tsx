@@ -21,7 +21,7 @@ const Member: React.FC = () => {
                     <h1 className='text-2xl font-medium mb-2'>Lecturers</h1>
                 </div>
                 <hr />
-                <div className='flex flex-col my-6'>
+                <div className='flex flex-col my-6 mt-2 gap-2'>
                     <div className='flex justify-start items-center gap-6 py-2.5 px-5 hover:bg-slate-100 rounded-md cursor-pointer'>
                         <img src={details.owner.avatar} alt={details.owner.username} className='w-14 h-14 rounded-full border object-cover overflow-hidden' />
                         <p>
@@ -47,7 +47,7 @@ const Member: React.FC = () => {
                     <h1 className='text-2xl font-medium mb-2'>Students</h1>
                 </div>
                 <hr />
-                <div className='flex flex-col my-6'>
+                <div className='flex flex-col my-6 mt-2 gap-2'>
                     { details.students.length > 0
                         ? details.students.map((student) => (
                             <div key={student._id} className='flex justify-start items-center gap-6 py-2.5 px-5 hover:bg-slate-100 rounded-md cursor-pointer'>

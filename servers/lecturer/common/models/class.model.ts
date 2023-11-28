@@ -15,6 +15,12 @@ export interface IClassPermission {
     comment: ClassPermissionType;
 }
 
+export interface IGradeColumn {
+    name: string;
+    scale: number;
+    order: number;
+};
+
 export interface IClass {
     _id?: mongoose.Types.ObjectId;
     id: string;
@@ -30,6 +36,7 @@ export interface IClass {
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
+    gradeColumns: Array<IGradeColumn>;
 }
 
 const ClassSchema = new mongoose.Schema<IClass>(
@@ -143,7 +150,24 @@ const ClassSchema = new mongoose.Schema<IClass>(
                 enum: Object.values(ClassPermissionType),
                 default: ClassPermissionType.WRITE
             }
-        }
+        },
+        gradeColumns: {
+            type: [{
+                name: {
+                    type: String,
+                    required: [true, 'Grade column must have a name']
+                },
+                scale: {
+                    type: Number,
+                    required: [true, 'Grade column must have a scale']
+                },
+                order: {
+                    type: Number,
+                    default: 0
+                }
+            }],
+            default: []
+        },
     },
     {
         toJSON: {
