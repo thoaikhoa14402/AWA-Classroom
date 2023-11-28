@@ -14,6 +14,13 @@ export interface IClassPermission {
     comment: ClassPermissionType;
 }
 
+export interface IGradeColumn {
+    _id: string;
+    name: string;
+    scale: number;
+    order: number;
+};
+
 export interface ClassType {
     _id: string;
     cid: string;
@@ -28,6 +35,7 @@ export interface ClassType {
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
+    gradeColumns: Array<IGradeColumn>;
 }
 
 interface ClassState {
@@ -52,12 +60,19 @@ export const classSlice = createSlice({
         },
         removeClass: (state) => {
         },
+        updateGradeComposition: (state, action: PayloadAction<{ classID: string, gradeCompositions: IGradeColumn[] }>) => {
+            const { classID, gradeCompositions } = action.payload;
+            const index = state.classes.findIndex((classInfo) => classInfo.slug === classID);
+            if (index !== -1) {
+                state.classes[index].gradeColumns = gradeCompositions;
+            }
+        },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
     },
 });
 
-export const { setClasses, addClass, removeClass, setLoading } = classSlice.actions;
+export const { setClasses, addClass, removeClass, updateGradeComposition, setLoading } = classSlice.actions;
 export default classSlice.reducer;
 
