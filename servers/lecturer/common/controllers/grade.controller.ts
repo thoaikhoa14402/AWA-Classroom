@@ -1,3 +1,4 @@
+import { GradeListDTO } from './../dtos/grade-list.dto';
 import { NextFunction, Request, Response, Router } from "express";
 import IController from "../interfaces/controller";
 import catchAsync from "../utils/catch.error";
@@ -36,7 +37,8 @@ class GradeController implements IController {
 
         const multercloud = new MulterCloudinaryUploader(['xlsx', 'csv'], 15 * 1024 * 1024);
         this.router.put('/grade-list/:classID/upload', AuthController.protect, multercloud.single('gradelist'), multercloud.uploadCloud('gradelist'), catchAsync(this.putGradeListWithFile));
-    
+
+        this.router.put('/list/:classID?', DTOValidation.validate<GradeListDTO>(GradeListDTO), AuthController.protect, catchAsync(this.putGradeList));
     }
 
     private getClassDataWithGradeListQuery = async (classID: string) => {
@@ -44,12 +46,12 @@ class GradeController implements IController {
             {
                 $lookup: {
                     from: 'joinedclassinfos',
-                    let: { studentListIds: '$gradeList.student_id' },
+                    let: { gradeListIds: '$gradeList.student_id' },
                     pipeline: [
                         {
                             $match: {
                                 $expr: {
-                                    $in: ['$studentID', '$$studentListIds']
+                                    $in: ['$studentID', '$$gradeListIds']
                                 }
                             }
                         },
@@ -140,11 +142,13 @@ class GradeController implements IController {
         const gradeCol = classInfo.gradeColumns.map((col) => col.name);
         const gradeTemplate = ['Student ID', ...gradeCol, 'Total'];
 
-        console.log(gradeTemplate);
-
         const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet([gradeTemplate], { skipHeader: true });
+        const studentIDs = classInfo.studentList.map((student) => student.student_id);
+
+        const ws = XLSX.utils.aoa_to_sheet([gradeTemplate, ...studentIDs.map((studentID) => [studentID])]);
+
         XLSX.utils.book_append_sheet(wb, ws, 'Grade Template');
+        
         const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 
         const bufferStream = new PassThrough();
@@ -230,8 +234,33 @@ class GradeController implements IController {
         res.status(200).json({
             status: 'success',
             message: 'Upload grade list successfully',
-            // data: fullclassData.length ? fullclassData[0].gradeList : [],
-            data: fullclassData
+            data: fullclassData.length ? fullclassData[0].gradeList : [],
+        });
+    }
+
+    private putGradeList = async (req: Request, res: Response, next: NextFunction) => {
+        const gradeListInfo = req.body as GradeListDTO;
+
+        if (!gradeListInfo.classID) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const classInfo = await ClassModel.findOne({ slug: gradeListInfo.classID });
+
+        if (!classInfo) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        classInfo.gradeList = gradeListInfo.gradeList;
+
+        await classInfo.save();
+
+        const fullclassData = await this.getClassDataWithGradeListQuery(gradeListInfo.classID);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Upload grade list successfully',
+            data: fullclassData.length ? fullclassData[0].gradeList : [],
         });
     }
 }

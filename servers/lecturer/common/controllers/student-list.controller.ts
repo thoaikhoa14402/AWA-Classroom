@@ -5,7 +5,7 @@ import { AuthController } from ".";
 import cacheMiddleware from "../middlewares/cache.middleware";  
 import AppError from "../services/errors/app.error";
 import redis from "../redis";
-import ClassModel from "../models/class.model";
+import ClassModel, { IGradeList } from "../models/class.model";
 import MulterCloudinaryUploader from "../multer";
 import XLSX from "xlsx";
 import axios from "axios";
@@ -115,6 +115,25 @@ class StudentListController implements IController {
 
         classInfo.studentList = studentListInfo.studentList;
 
+        const gradeList: any[] = classInfo.studentList.map((student: any) => {
+            if (student.student_id) {
+
+                const grade = {
+                    student_id: student.student_id,
+                    grade_name: classInfo.gradeColumns.map((gradeCol) => gradeCol.name),
+                    grade: classInfo.gradeColumns.map((gradeCol) => {
+                        return {
+                            col: gradeCol.name,
+                            value: 0
+                        }
+                    })
+                }
+                return grade;
+            }
+        });
+
+        classInfo.gradeList = gradeList;
+
         await classInfo.save();
 
         const fullclassData = await this.getClassDataWithStudentListQuery(studentListInfo.classID);
@@ -168,14 +187,35 @@ class StudentListController implements IController {
             const student: any = {};
 
             header.forEach((column: string, index: any) => {
-                const key = column.toLowerCase().replace(/ /g, '_');
+                const key: any = column.toLowerCase().replace(/ /g, '_');
+                if (key !== 'student_id' || key !== 'full_name' || key !== 'email') return;
                 student[key] = row[index];
             });
             
-            return student;
+            if (student)
+                return student;
         });
 
         classInfo.studentList = studentList;
+
+        const gradeList: any[] = classInfo.studentList.map((student: any) => {
+            if (student.student_id) {
+
+                const grade = {
+                    student_id: student.student_id,
+                    grade_name: classInfo.gradeColumns.map((gradeCol) => gradeCol.name),
+                    grade: classInfo.gradeColumns.map((gradeCol) => {
+                        return {
+                            col: gradeCol.name,
+                            value: 0
+                        }
+                    })
+                }
+                return grade;
+            }
+        });
+
+        classInfo.gradeList = gradeList;
 
         await classInfo.save();
 

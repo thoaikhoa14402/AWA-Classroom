@@ -151,6 +151,59 @@ class ClassController implements IController {
                         }
                     }
                 },
+                {
+                    $lookup: {
+                        from: 'joinedclassinfos',
+                        let: { gradeListIds: '$gradeList.student_id' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $in: ['$studentID', '$$gradeListIds']
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    user: 1,
+                                    class: 1,
+                                    joinAt: 1,
+                                    studentID: 1
+                                }
+                            }
+                        ],
+                        as: 'student_grade_info'
+                    }
+                },
+                {
+                    $addFields: {
+                        "gradeList": {
+                            $map: {
+                                input: "$gradeList",
+                                as: "grades",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$grades",
+                                        {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$student_grade_info",
+                                                        as: "matched",
+                                                        cond: {
+                                                            $eq: ["$$matched.studentID", "$$grades.student_id"]
+                                                        }
+                                                    }
+                                                }, 0
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
                 { $limit: 1 }
             ]);
 

@@ -23,34 +23,38 @@ const StudentGradeList: React.FC = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [isUpload, setIsUpload] = useState(false);
 
-    interface StudentGradeListStructure {
-        key: string;
-        student_id: string;
-        full_name: string;
-        email: string;
-        user?: string;
-    }
-    
-    const data: StudentGradeListStructure[] = useMemo(() => {
+    const data: any[] = useMemo(() => {
         if (details) {
-            const studentList = details?.studentList?.map((item, index) => {
-                return {
+            const studentList = details?.gradeList?.map((item: any, index) => {
+                const dataValue: any = {
                     key: `${item._id}`,
-                    student_id: item.student_id,
-                    full_name: item.full_name,
-                    email: item.email,
                     index,
                     user: item?.user,
                     no: index + 1,
+                    cols: details.gradeColumns.map((el: any) => el.name)
+                };
+
+                details.studentList.forEach((student: any) => {
+                    if (student.student_id === item.student_id) {
+                        dataValue.student_id = student.student_id;
+                    }
+                });
+
+                if (dataValue.student_id) {
+                    item.grade.forEach((grade: any) => {
+                        dataValue[grade.col] = grade.value;
+                    });
+                    
+                    return dataValue;
                 }
             });
             
-            return studentList;
+            return studentList.length && studentList[0] ? studentList : [];
         }
         return [];
     }, [details]);
 
-    const [dataSource, setDataSource] = useState<StudentGradeListStructure[]>(data);
+    const [dataSource, setDataSource] = useState<any[]>(data);
 
     const dispatch = useAppDispatch();
 
@@ -122,21 +126,22 @@ const StudentGradeList: React.FC = () => {
         });
     };
     
-    const handleRemove = (key: React.Key) => {
-        setDataSource(prev => prev.filter((item) => item.key !== key));
-    }
-
     const handleEdit = () => {
         form.validateFields()
         .then((formData: any) => {
-            const updatedData = [...dataSource];
+            const updatedData: any[] = [...dataSource];
             
             const sortedNewData = updatedData.map((data, index) => {
-                const newData: any = (Object.values(formData)).find((el: any) => el.action.key === data.key);
+                const newData: any = (Object.values(formData)).find((el: any) => el.student_id === data.student_id);
 
                 updatedData[index].student_id = newData?.student_id;
-                updatedData[index].full_name = newData?.full_name;
-                updatedData[index].email = newData?.email;
+                updatedData[index].grade_name = details.gradeColumns.map((el: any) => el.name);
+                updatedData[index].grade = details.gradeColumns.map((el: any) => {
+                    return {
+                        col: el.name,
+                        value: newData[el.name],
+                    }
+                });
 
                 return {
                     ...updatedData[index]
@@ -146,9 +151,9 @@ const StudentGradeList: React.FC = () => {
             setDataSource(sortedNewData);
 
             setIsLoading(true);
-            axios.put(`${process.env.REACT_APP_BACKEND_HOST}/v1/student-list/${classID}`, 
+            axios.put(`${process.env.REACT_APP_BACKEND_HOST}/v1/grade/list/${classID}`, 
             {
-                studentList: sortedNewData,
+                gradeList: sortedNewData,
             }, 
             {
                 headers: {
@@ -156,15 +161,15 @@ const StudentGradeList: React.FC = () => {
                 }
             })
             .then(res => {
-                messageApi.success('Student list updated successfully', 1, () => {
-                    dispatch(uploadStudentList({
+                messageApi.success('Grade list updated successfully', 1, () => {
+                    dispatch(uploadGradeList({
                         classID: classID!,
-                        studentList: res.data.data,
+                        gradeList: res.data.data,
                     }));
                 });
             })
             .catch(err => {
-                messageApi.error('Failed to update student list');
+                messageApi.error('Failed to update grade list');
                 console.log(err);
             })
             .finally(() => {
@@ -185,59 +190,52 @@ const StudentGradeList: React.FC = () => {
 
     const columns: ProColumns[] = useMemo(() => {
 
-        const extendsColumns: ProColumns = {
-            title: '',
-            dataIndex: '',
+        const studentIdCol: ProColumns = {
+            title: 'Student ID',
+            dataIndex: 'student_id',
+            className: 'drag-visible !px-3.5',
             width: 70,
-            className: 'drag-visible',
-            key: 'action',
-            align: 'center',
-            renderFormItem: (_, { record }) => <Button icon={<FontAwesomeIcon icon={faTrash} />} danger ghost onClick={() => handleRemove(record.key)} />,
+            formItemProps: {
+                rules: [
+                    {
+                        required: true,
+                        message: 'Student ID is required',
+                    },
+                ],
+            },
+            render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
+            renderFormItem: (_, { isEditable, record }) => isEditable ? <span className='flex items-center justify-center'><span>{record.student_id}</span><Input className='!p-0 !m-0 !invisible' /></span> : null,
         };
 
-        const col: ProColumns[] = [
-            {
-                title: 'N.o',
-                key: 'index',
+        const cols: ProColumns[] = data?.length && data[0] ? data[0].cols.map((el: any) => {
+            return {
+                title: el,
+                dataIndex: el,
+                className: 'drag-visible',
                 width: 70,
-                align: 'center',
-                render: (_, record, index) => record.no,
-                renderFormItem: (_, {record}) => <span className='flexa items-center justify-center'><Input className='!invisible !w-0 !h-0 !p-0' />{record.no}</span>,
-            }, 
-            {
-                title: 'Student ID',
-                dataIndex: 'student_id',
-                className: 'drag-visible !px-3.5',
-                width: 170,
                 formItemProps: {
                     rules: [
                         {
-                            required: true,
-                            message: 'Student ID is required',
+                            validator: async (_, value, callback) => {
+                                try {
+                                    if (value < 0 || value > 10) {
+                                        throw new Error('Grade must be between 0 and 10');
+                                    }
+                                    
+                                    return Promise.resolve();
+                                }
+                                catch (err) {
+                                    return Promise.reject(err);
+                                }
+                            }
                         },
                     ],
                 },
-                render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
                 renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='Enter grade name' /> : null,
-            },
-            {
-                title: 'Full name',
-                dataIndex: 'full_name',
-                className: 'drag-visible',
-                width: 370,
-                renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='0%' /> : null,
-            },
-            {
-                title: 'Email',
-                dataIndex: 'email',
-                className: 'drag-visible',
-                renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='0%' /> : null,
-            },
-        ];
+            } as ProColumns;
+        }) : [];
 
-        if (isEdit) {
-            col.push(extendsColumns);
-        }
+        const col: ProColumns[] = cols ? [studentIdCol, ...cols] : [];
 
         return col;
     }, [isEdit]);
@@ -246,7 +244,7 @@ const StudentGradeList: React.FC = () => {
         const editableKeys = isEdit ? dataSource.map((item) => item.key) : [];
 
         return (
-            <EditableProTable<StudentGradeListStructure>
+            <EditableProTable<any>
                 actionRef={actionRef}
                 columns={columns}
                 rowKey="key"

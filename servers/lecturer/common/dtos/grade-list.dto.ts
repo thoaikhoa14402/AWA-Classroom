@@ -1,0 +1,13 @@
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IGradeList } from '../models/class.model';
+
+export class GradeListDTO {
+    @IsString({message: "Class ID must be a string"})
+    @IsNotEmpty({message: "Class ID not founded!"})
+    public classID!: string;
+
+    @IsArray({message: "Student list must have a studentID, fullname and email"})
+    public gradeList!: Array<IGradeList>;
+}
+
+export default GradeListDTO;

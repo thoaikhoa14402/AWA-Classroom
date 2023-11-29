@@ -94,8 +94,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     </NavLink>
                 </div>
                 <form onSubmit={handleSearch} autoComplete="off" className="w-1/2 bg-transparent flex justify-center items-center px-0.5 shadow-sm shadow-slate-200 overflow-hidden rounded-full" action='/' method='GET'>
-                    <input ref={searchRef} required type="search" name="q" className="w-full px-3.5 py-2.5 text-sm outline-none" placeholder="Tìm kiếm lớp học, bài tập, ..." />
-                    <button type="submit" className={`${classes['submit-btn']} bg-primary flex items-center p-3 border-none outline-none rounded-full font-bold`} title="Tìm kiếm">
+                    <input ref={searchRef} required type="search" name="q" className="w-full px-3.5 py-2.5 text-sm outline-none" placeholder="Search class, assignments, ..." />
+                    <button type="submit" className={`${classes['submit-btn']} bg-primary flex items-center p-3 border-none outline-none rounded-full font-bold`} title="Search">
                         <FontAwesomeIcon icon={faSearch} color="white" size="sm" />
                     </button>
                 </form>
