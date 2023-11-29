@@ -140,7 +140,7 @@ class GradeController implements IController {
         }
         
         const gradeCol = classInfo.gradeColumns.map((col) => col.name);
-        const gradeTemplate = ['Student ID', ...gradeCol, 'Total'];
+        const gradeTemplate = ['Student ID', ...gradeCol];
 
         const wb = XLSX.utils.book_new();
         const studentIDs = classInfo.studentList.map((student) => student.student_id);
@@ -198,7 +198,6 @@ class GradeController implements IController {
         const filteredData = jsonData.slice(1).filter((el: any) => el.length > 0);
         
         const availableHeader = header.map((colName) => {
-            if (colName === 'Total') return colName;
             if (colName === 'Student ID') return 'student_id';
 
             if (classInfo.gradeColumns.find((gradeCol) => gradeCol.name === colName)) {

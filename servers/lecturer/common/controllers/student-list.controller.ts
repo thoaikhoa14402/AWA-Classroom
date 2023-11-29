@@ -124,7 +124,7 @@ class StudentListController implements IController {
                     grade: classInfo.gradeColumns.map((gradeCol) => {
                         return {
                             col: gradeCol.name,
-                            value: 0
+                            value: ''
                         }
                     })
                 }
@@ -188,10 +188,12 @@ class StudentListController implements IController {
 
             header.forEach((column: string, index: any) => {
                 const key: any = column.toLowerCase().replace(/ /g, '_');
-                if (key !== 'student_id' || key !== 'full_name' || key !== 'email') return;
+                console.log(key);
+
+                if (key !== 'student_id' && key !== 'full_name' && key !== 'email') return;
                 student[key] = row[index];
             });
-            
+
             if (student)
                 return student;
         });
@@ -207,7 +209,7 @@ class StudentListController implements IController {
                     grade: classInfo.gradeColumns.map((gradeCol) => {
                         return {
                             col: gradeCol.name,
-                            value: 0
+                            value: ''
                         }
                     })
                 }

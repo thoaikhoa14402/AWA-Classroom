@@ -2,11 +2,11 @@ import React, { useMemo, useRef, useState } from 'react';
 
 import { Button, Dropdown, Empty, Form, Input, MenuProps, Upload, message } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import axios from 'axios';
 import authStorage from '~/utils/auth.storage';
-import { ClassType, uploadStudentList, uploadGradeList } from '~/store/reducers/classSlice';
+import { ClassType, uploadGradeList } from '~/store/reducers/classSlice';
 import useAppDispatch from '~/hooks/useAppDispatch';
 import { ActionType, EditableProTable, ProColumns } from '@ant-design/pro-components';
 
@@ -41,6 +41,13 @@ const StudentGradeList: React.FC = () => {
                 });
 
                 if (dataValue.student_id) {
+                    dataValue.total = details.gradeColumns.reduce((acc: number, el: any) => {
+                        const grade = item.grade.find((grade: any) => grade.col === el.name);
+                        const gradeScale = details.gradeColumns.find((grade: any) => grade.name === el.name)?.scale ?? 0;
+
+                        return acc + (grade ? grade.value * gradeScale / 100 : 0);
+                    }, 0);
+
                     item.grade.forEach((grade: any) => {
                         dataValue[grade.col] = grade.value;
                     });
@@ -195,16 +202,18 @@ const StudentGradeList: React.FC = () => {
             dataIndex: 'student_id',
             className: 'drag-visible !px-3.5',
             width: 70,
-            formItemProps: {
-                rules: [
-                    {
-                        required: true,
-                        message: 'Student ID is required',
-                    },
-                ],
-            },
             render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
             renderFormItem: (_, { isEditable, record }) => isEditable ? <span className='flex items-center justify-center'><span>{record.student_id}</span><Input className='!p-0 !m-0 !invisible' /></span> : null,
+        };
+
+        const totalCol: ProColumns = {
+            title: 'Total',
+            dataIndex: 'total',
+            className: 'drag-visible !px-3.5 !font-semibold !text-primary',
+            align: 'center',
+            width: 70,
+            render: (_, record) => <span>{record.total}</span>,
+            renderFormItem: (_, { isEditable, record }) => isEditable ? <span className='flex items-center justify-center'><span className='text-primary'>{record.total}</span><Input className='!p-0 !m-0 !invisible !w-0 !h-0' /></span> : null,
         };
 
         const cols: ProColumns[] = data?.length && data[0] ? data[0].cols.map((el: any) => {
@@ -213,6 +222,7 @@ const StudentGradeList: React.FC = () => {
                 dataIndex: el,
                 className: 'drag-visible',
                 width: 70,
+                align: 'center',
                 formItemProps: {
                     rules: [
                         {
@@ -221,7 +231,7 @@ const StudentGradeList: React.FC = () => {
                                     if (value < 0 || value > 10) {
                                         throw new Error('Grade must be between 0 and 10');
                                     }
-                                    
+
                                     return Promise.resolve();
                                 }
                                 catch (err) {
@@ -231,11 +241,12 @@ const StudentGradeList: React.FC = () => {
                         },
                     ],
                 },
+                render: (_, record) => <span className={record[el] === 0 ? 'text-red-500 font-semibold' : ''}>{record[el] ?? '-'}</span>,
                 renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='Enter grade name' /> : null,
             } as ProColumns;
         }) : [];
 
-        const col: ProColumns[] = cols ? [studentIdCol, ...cols] : [];
+        const col: ProColumns[] = cols ? [studentIdCol, ...cols, totalCol] : [];
 
         return col;
     }, [isEdit]);
@@ -286,11 +297,16 @@ const StudentGradeList: React.FC = () => {
                             <Button title="finish" icon={<FontAwesomeIcon size='lg' icon={faCheck} />} type='primary' ghost onClick={handleEdit} />
                         </> 
                         : 
-                        data?.length && !isUpload ? <Button title="edit" className='!border-none !shadow-none' icon={<FontAwesomeIcon size='lg' icon={faEdit} />} onClick={() => {
-                            if (!isLoading) {
-                                setIsEdit(true);
-                            }
-                        }} /> : null
+                        data?.length && !isUpload ? <>
+                            <Button title='download grade list' className='!border-none !shadow-none' icon={<FontAwesomeIcon size='lg' icon={faDownload} />} 
+                                onClick={() => {}}
+                            />
+                            <Button title="edit" className='!border-none !shadow-none' icon={<FontAwesomeIcon size='lg' icon={faEdit} />} onClick={() => {
+                                if (!isLoading) {
+                                    setIsEdit(true);
+                                }
+                            }} />
+                        </> : null
                     }
                     { isUpload && data?.length ? <Button title="cancel" icon={<FontAwesomeIcon size='lg' icon={faClose} />} danger onClick={() => setIsUpload(false)} /> : null }
                     <div className='flex justify-end'>
