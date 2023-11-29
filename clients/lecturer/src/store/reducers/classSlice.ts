@@ -21,6 +21,25 @@ export interface IGradeColumn {
     order: number;
 };
 
+export interface IStudentList {
+    user?: string;
+    _id: string;
+    student_id: string;
+    full_name: string;
+    email: string;
+}
+
+export interface IGradeList {
+    user?: string;
+    _id: string;
+    student_id: string;
+    grade_name: string[];
+    grade: {
+        col: string;
+        value: number;
+    }[];
+}
+
 export interface ClassType {
     _id: string;
     cid: string;
@@ -36,6 +55,8 @@ export interface ClassType {
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
     gradeColumns: Array<IGradeColumn>;
+    studentList: Array<IStudentList>;
+    gradeList: Array<IGradeList>;
 }
 
 interface ClassState {
@@ -67,12 +88,26 @@ export const classSlice = createSlice({
                 state.classes[index].gradeColumns = gradeCompositions;
             }
         },
+        uploadStudentList: (state, action: PayloadAction<{ classID: string, studentList: IStudentList[] }>) => {
+            const { classID, studentList } = action.payload;
+            const index = state.classes.findIndex((classInfo) => classInfo.slug === classID);
+            if (index !== -1) {
+                state.classes[index].studentList = studentList;
+            }
+        },
+        uploadGradeList: (state, action: PayloadAction<{ classID: string, gradeList: IGradeList[] }>) => {
+            const { classID, gradeList } = action.payload;
+            const index = state.classes.findIndex((classInfo) => classInfo.slug === classID);
+            if (index !== -1) {
+                state.classes[index].gradeList = gradeList;
+            }
+        },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
     },
 });
 
-export const { setClasses, addClass, removeClass, updateGradeComposition, setLoading } = classSlice.actions;
+export const { setClasses, addClass, removeClass, updateGradeComposition, uploadStudentList, uploadGradeList, setLoading } = classSlice.actions;
 export default classSlice.reducer;
 

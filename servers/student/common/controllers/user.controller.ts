@@ -10,6 +10,7 @@ import UserModel from "../models/user.model";
 import ResetPasswordDTO from "../dtos/reset-password.dto";
 import AppError from "../services/errors/app.error";
 import redis from "../redis";
+import cloudinary from "../cloudinary";
 
 /*
  USER CONTROLLER 
@@ -93,6 +94,13 @@ class UserController implements IController {
         await UserModel.findByIdAndUpdate(req.user!.id, {
             avatar: req.cloudinaryResult.secure_url || req.cloudinaryResult.url
         });
+
+        const avatar = req.user!.avatar;
+
+        if (avatar?.includes('cloudinary')) {
+            const matches = RegExp(/avatars\/[a-zA-Z0-9]+/).exec(avatar);
+            await cloudinary.delete([matches![0]]);
+        }
 
         const redisClient = redis.getClient();
         await redisClient?.del(this.profileCacheKey(req));

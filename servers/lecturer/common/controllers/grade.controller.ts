@@ -8,13 +8,15 @@ import AppError from "../services/errors/app.error";
 import redis from "../redis";
 import GradeStructureDTO from "../dtos/grade-structure.dto";
 import ClassModel from "../models/class.model";
+import XLSX from 'xlsx';
+import { PassThrough } from 'stream';
+import MulterCloudinaryUploader from "../multer";
+import cloudinary from "../cloudinary";
+import axios from "axios";
 
 /*
  USER CONTROLLER 
-1. GET PROFILE
-2. UPDATE PROFILE
-3. UPLOAD AVATAR
-4. RESET PASSWORD
+1. GET COMPOSITION
 */
 
 class GradeController implements IController {
@@ -29,6 +31,78 @@ class GradeController implements IController {
         this.router.param('classID', DTOValidation.extractParams(['classID']));
 
         this.router.put('/composition/:classID?', DTOValidation.validate<GradeStructureDTO>(GradeStructureDTO), AuthController.protect, catchAsync(this.putGradeComposition));
+
+        this.router.post('/template/export', AuthController.protect, catchAsync(this.requestDownloadTemplate));
+
+        const multercloud = new MulterCloudinaryUploader(['xlsx', 'csv'], 15 * 1024 * 1024);
+        this.router.put('/grade-list/:classID/upload', AuthController.protect, multercloud.single('gradelist'), multercloud.uploadCloud('gradelist'), catchAsync(this.putGradeListWithFile));
+    
+    }
+
+    private getClassDataWithGradeListQuery = async (classID: string) => {
+        return await ClassModel.aggregate([
+            {
+                $lookup: {
+                    from: 'joinedclassinfos',
+                    let: { studentListIds: '$gradeList.student_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $in: ['$studentID', '$$studentListIds']
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                user: 1,
+                                class: 1,
+                                joinAt: 1,
+                                studentID: 1
+                            }
+                        }
+                    ],
+                    as: 'student_grade_info'
+                }
+            },
+            {
+                $addFields: {
+                    "gradeList": {
+                        $map: {
+                            input: "$gradeList",
+                            as: "grades",
+                            in: {
+                                $mergeObjects: [
+                                    "$$grades",
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$student_grade_info",
+                                                    as: "matched",
+                                                    cond: {
+                                                        $eq: ["$$matched.studentID", "$$grades.student_id"]
+                                                    }
+                                                }
+                                            }, 0
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $match: {
+                    slug: classID
+                }
+            },
+            {
+                $limit: 1
+            }
+        ]);
     }
 
     private putGradeComposition = async (req: Request, res: Response, next: NextFunction) => {
@@ -49,6 +123,117 @@ class GradeController implements IController {
             data: newClassData.gradeColumns
         });
     };
+
+    private requestDownloadTemplate = async (req: Request, res: Response, next: NextFunction) => {
+        const classID = req.body.classID;
+        
+        if (!classID) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const classInfo = await ClassModel.findOne({ slug: classID });
+
+        if (!classInfo) {
+            return next(new AppError('Class not found!', 404));
+        }
+        
+        const gradeCol = classInfo.gradeColumns.map((col) => col.name);
+        const gradeTemplate = ['Student ID', ...gradeCol, 'Total'];
+
+        console.log(gradeTemplate);
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet([gradeTemplate], { skipHeader: true });
+        XLSX.utils.book_append_sheet(wb, ws, 'Grade Template');
+        const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+        const bufferStream = new PassThrough();
+        bufferStream.end(Buffer.from(buffer));
+
+        bufferStream.pipe(res);
+    }
+
+    private putGradeListWithFile = async (req: Request, res: Response, next: NextFunction) => {
+        const classID = req.params.classID;
+        
+        if (!classID) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const classInfo = await ClassModel.findOne({ slug: classID });
+
+        if (!classInfo) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const gradelistURL = classInfo.gradeListUrl;
+
+        if (gradelistURL?.includes('cloudinary')) {
+            const matches = RegExp(/gradelist\/[a-zA-Z0-9]+/).exec(gradelistURL);
+            await cloudinary.delete([matches![0]]);
+        }
+
+        classInfo.gradeListUrl = req.cloudinaryResult.secure_url || req.cloudinaryResult.url;
+
+        const response = await axios.get(req.cloudinaryResult.secure_url || req.cloudinaryResult.url, { responseType: 'arraybuffer' });
+
+        const data = new Uint8Array(response.data);
+
+        const binaryString = data.reduce((acc, byte) => {
+            return acc + String.fromCharCode(byte);
+        }, '');
+
+        const workbook = XLSX.read(binaryString, { type: 'binary' });
+
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const header = jsonData[0] as string[];
+
+        const filteredData = jsonData.slice(1).filter((el: any) => el.length > 0);
+        
+        const availableHeader = header.map((colName) => {
+            if (colName === 'Total') return colName;
+            if (colName === 'Student ID') return 'student_id';
+
+            if (classInfo.gradeColumns.find((gradeCol) => gradeCol.name === colName)) {
+                return colName;
+            }
+        });
+
+        const gradeList = filteredData.map((row: any) => {
+            const student: any = {};
+
+            availableHeader.forEach((column: any, index: any) => {
+                if (column === 'student_id') {
+                    student[column] = row[index];
+                }
+                else {
+                    student.grade_name = availableHeader.filter((col) => col !== 'student_id');
+                    student.grade = [...(student.grade || []), {
+                        col: column,
+                        value: row[index]
+                    }];
+                }
+            });
+            
+            return student;
+        });
+
+        classInfo.gradeList = gradeList;
+
+        await classInfo.save();
+
+        const fullclassData = await this.getClassDataWithGradeListQuery(req.params.classID);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Upload grade list successfully',
+            // data: fullclassData.length ? fullclassData[0].gradeList : [],
+            data: fullclassData
+        });
+    }
 }
 
 export default new GradeController();

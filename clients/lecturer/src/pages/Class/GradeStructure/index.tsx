@@ -25,7 +25,6 @@ const GradeStructure: React.FC = () => {
 
     const dispatch = useAppDispatch();
 
-    
     interface GradeStructure {
         key: string;
         name: string;
@@ -103,6 +102,34 @@ const GradeStructure: React.FC = () => {
                             required: true,
                             message: 'Grade name is required',
                         },
+                        {
+                            validator: (_, value, callback) => {
+                                try {
+                                    if (value === 'Total') {
+                                        throw new Error('Grade name cannot be Total because it has been used to calculate the total grade');
+                                    }
+
+                                    let count = 0;
+                                    Object.values(form.getFieldsValue()).forEach((item: any) => {
+                                        if (item.name === value) {
+                                            count++;
+                                            if (count > 1) {
+                                                throw new Error('Grade name must be unique');
+                                            }
+                                        }
+                                    });
+
+                                    if (value.length > 30) {
+                                        throw new Error('Grade name must be less than 30 characters');
+                                    }
+                                    
+                                    return Promise.resolve();
+                                }
+                                catch (err: any) {
+                                    return Promise.reject(err);
+                                }
+                            }
+                        }
                     ],
                 },
                 renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='Enter grade name' /> : null,
@@ -176,12 +203,12 @@ const GradeStructure: React.FC = () => {
                 }
             })
             .then(res => {
-                dispatch(updateGradeComposition({
-                    classID: classID!,
-                    gradeCompositions: res.data.data,
-                }));
-
-                messageApi.success('Grade structure updated successfully');
+                messageApi.success('Grade structure updated successfully', 1, () => {
+                    dispatch(updateGradeComposition({
+                        classID: classID!,
+                        gradeCompositions: res.data.data,
+                    }));
+                });
             })
             .catch(err => {
                 messageApi.error('Failed to update grade structure');

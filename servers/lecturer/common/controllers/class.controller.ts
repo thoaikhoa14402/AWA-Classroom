@@ -98,6 +98,59 @@ class ClassController implements IController {
                         ]
                     },
                 },
+                {
+                    $lookup: {
+                        from: 'joinedclassinfos',
+                        let: { studentListIds: '$studentList.student_id' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $in: ['$studentID', '$$studentListIds']
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    user: 1,
+                                    class: 1,
+                                    joinAt: 1,
+                                    studentID: 1
+                                }
+                            }
+                        ],
+                        as: 'student_info'
+                    }
+                },
+                {
+                    $addFields: {
+                        "studentList": {
+                            $map: {
+                                input: "$studentList",
+                                as: "student",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$student",
+                                        {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$student_info",
+                                                        as: "matched",
+                                                        cond: {
+                                                            $eq: ["$$matched.studentID", "$$student.student_id"]
+                                                        }
+                                                    }
+                                                }, 0
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
                 { $limit: 1 }
             ]);
 

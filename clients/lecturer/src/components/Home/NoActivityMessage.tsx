@@ -30,7 +30,7 @@ const NoActivityMessage: React.FC = () => {
                 const classRes = res.data.data;
                 console.log(classRes);
                 
-                messageApi.success('Class created successfully!', 2, () => {
+                messageApi.success('Class created successfully!', 1.5, () => {
                     dispatch(addClass(classRes));
                     navigate(`/classes/feeds/${classRes.slug}`);
                 });

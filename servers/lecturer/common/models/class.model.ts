@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import JoinedClassInfoModel from './joinedClassInfo.model';
 import { IUser } from './user.model';
 import OTPGenerator from "../utils/otp-generator";
 
@@ -21,6 +22,27 @@ export interface IGradeColumn {
     order: number;
 };
 
+export interface IStudentList {
+    _id: mongoose.Types.ObjectId;
+    student_id: string;
+    full_name: string;
+    email: string;
+    user?: string;
+    studentID?: string;
+}
+
+export interface IGradeList {
+    _id: mongoose.Types.ObjectId;
+    student_id: string;
+    grade_name: string[];
+    grade: {
+        col: string;
+        value: number;
+    }[];
+    user?: string;
+    studentID?: string;
+}
+
 export interface IClass {
     _id?: mongoose.Types.ObjectId;
     id: string;
@@ -37,6 +59,10 @@ export interface IClass {
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
     gradeColumns: Array<IGradeColumn>;
+    studentList: Array<IStudentList>;
+    studentListUrl: string;
+    gradeList: Array<IGradeList>;
+    gradeListUrl: string;
 }
 
 const ClassSchema = new mongoose.Schema<IClass>(
@@ -168,6 +194,48 @@ const ClassSchema = new mongoose.Schema<IClass>(
             }],
             default: []
         },
+        studentListUrl: {
+            type: String,
+        },
+        studentList: {
+            type: [{
+                student_id: {
+                    type: String,
+                    ref: JoinedClassInfoModel,
+                    refID: 'studentID'
+                },
+                full_name: {
+                    type: String
+                },
+                email: {
+                    type: String
+                },
+            }],
+            default: []
+        },
+        gradeList: {
+            type: [{
+                student_id: {
+                    type: String,
+                    ref: JoinedClassInfoModel,
+                },
+                grade_name: [{
+                    type: String,
+                }],
+                grade: [{
+                    col: {
+                        type: String,
+                    },
+                    value: {
+                        type: Number,
+                    }
+                }],
+            }],
+            default: []
+        },
+        gradeListUrl: {
+            type: String,
+        }
     },
     {
         toJSON: {

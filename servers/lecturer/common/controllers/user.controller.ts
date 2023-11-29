@@ -10,6 +10,7 @@ import UserModel from "../models/user.model";
 import ResetPasswordDTO from "../dtos/reset-password.dto";
 import AppError from "../services/errors/app.error";
 import redis from "../redis";
+import cloudinary from "../cloudinary";
 
 /*
  USER CONTROLLER 
@@ -94,6 +95,13 @@ class UserController implements IController {
             avatar: req.cloudinaryResult.secure_url || req.cloudinaryResult.url
         });
 
+        const avatar = req.user!.avatar;
+
+        if (avatar?.includes('cloudinary')) {
+            const matches = RegExp(/avatars\/[a-zA-Z0-9]+/).exec(avatar);
+            await cloudinary.delete([matches![0]]);
+        }
+
         const redisClient = redis.getClient();
         await redisClient?.del(this.profileCacheKey(req));
 
@@ -118,7 +126,6 @@ class UserController implements IController {
     }
 
     private resetPassword = async (req: Request, res: Response, next: NextFunction) => {
-        
         const resetPassword = req.body as ResetPasswordDTO;
 
         const user = await UserModel.findById(req.user!.id).select("+password");
@@ -126,7 +133,6 @@ class UserController implements IController {
         const validPassword = await user?.correctPassword(resetPassword.currentPassword, user.password!);
 
         if (user && validPassword) { 
-
             user.password = resetPassword.newPassword;
             user.passwordChangedAt = Date.now() - 1000;
 
