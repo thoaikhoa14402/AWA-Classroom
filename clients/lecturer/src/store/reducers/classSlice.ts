@@ -18,6 +18,7 @@ export interface IGradeColumn {
     _id: string;
     name: string;
     scale: number;
+    published: boolean;
     order: number;
 };
 

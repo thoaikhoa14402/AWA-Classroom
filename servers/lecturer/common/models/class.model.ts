@@ -20,6 +20,7 @@ export interface IGradeColumn {
     name: string;
     scale: number;
     order: number;
+    published: boolean;
 };
 
 export interface IStudentList {
@@ -190,6 +191,10 @@ const ClassSchema = new mongoose.Schema<IClass>(
                 order: {
                     type: Number,
                     default: 0
+                },
+                published: {
+                    type: Boolean,
+                    default: false
                 }
             }],
             default: []

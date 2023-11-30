@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { ActionType, DragSortTable, ProColumns } from '@ant-design/pro-components';
 
-import { Button, Empty, Form, Input, message } from 'antd';
+import { Button, Checkbox, Empty, Form, Input, message } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faClose, faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useOutletContext, useParams } from 'react-router-dom';
@@ -29,6 +29,7 @@ const GradeStructure: React.FC = () => {
         key: string;
         name: string;
         scale: number;
+        published: boolean;
         index: number;
     }
     
@@ -39,6 +40,7 @@ const GradeStructure: React.FC = () => {
                     key: `${item._id}`,
                     name: item.name,
                     scale: item.scale,
+                    published: item.published,
                     index,
                 }
             });
@@ -155,6 +157,18 @@ const GradeStructure: React.FC = () => {
                 },
                 renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear type='number' autoComplete='off' className='!p-2 !px-3.5' placeholder='0%' onChange={handleChangePercent} /> : null,
             },
+            {
+                title: 'Published',
+                dataIndex: 'published',
+                className: 'drag-visible',
+                width: 50,
+                align: 'center',
+                formItemProps: {
+                    valuePropName: 'checked'
+                },
+                render: (_, record) => <Checkbox checked={record.published} />,
+                renderFormItem: (_, { record }) => <Checkbox defaultChecked={record.published} />,
+            }
         ];
 
         if (isEdit) {
@@ -183,6 +197,7 @@ const GradeStructure: React.FC = () => {
                 const newData: any = (Object.values(formData)).find((el: any) => el.action.key === data.key);
                 updatedData[index].name = newData?.name;
                 updatedData[index].scale = Number(newData?.scale);
+                updatedData[index].published = newData?.published;
 
                 return {
                     ...updatedData[index],
@@ -320,6 +335,7 @@ const GradeStructure: React.FC = () => {
                             key: `${dataSource.length + 1}`,
                             name: '',
                             scale: 0,
+                            published: false,
                             index: dataSource.length,
                         }
                         setDataSource(prev => [...prev, newRow]);
