@@ -67,14 +67,14 @@ const StudentList: React.FC = () => {
             icon: <FontAwesomeIcon icon={faDownload} />,
             className: "!px-4 !py-2.5 !text-md !gap-1",
             onClick: () => {
-                axios.get("https://res.cloudinary.com/daa7j5ohx/raw/upload/v1/templates/jlbowebvuyc8tytx0sgy.xlsx", {
+                axios.get("https://res.cloudinary.com/daa7j5ohx/raw/upload/v1/templates/gbpf1fmsw3fhcy4k9osi.xlsx", {
                     responseType: "blob",
                 }).then(res => {
                     const url = window.URL.createObjectURL(new Blob([res.data]));
                     const link = document.createElement('a');
                     
                     link.href = url;
-                    link.setAttribute('download', 'student_list_template.xlsx');
+                    link.setAttribute('download', 'student-list-template.xlsx');
                     
                     link.click();
                 }).catch(err => {
