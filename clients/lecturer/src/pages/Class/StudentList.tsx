@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, Dropdown, Empty, Form, Input, MenuProps, Upload, message } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faPlus, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import axios from 'axios';
 import authStorage from '~/utils/auth.storage';
@@ -25,6 +25,7 @@ const StudentList: React.FC = () => {
     const [isSearch, setIsSearch] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [removedList, setRemovedList] = useState<React.Key[]>([]);
+    const [addedList, setAddedList] = useState<React.Key[]>([]);
 
     interface StudentListStructure {
         key: string;
@@ -36,7 +37,9 @@ const StudentList: React.FC = () => {
     
     const data: StudentListStructure[] = useMemo(() => {
         if (details) {
-            const studentList = details?.studentList?.map((item, index) => {
+            const sortedList = details?.studentList?.sort((a, b) => (a.student_id < b.student_id) ? -1 : (a.student_id > b.student_id) ? 1 : 0);
+
+            const studentList = sortedList?.map((item, index) => {
                 return {
                     key: `${item._id}`,
                     student_id: item.student_id,
@@ -124,15 +127,16 @@ const StudentList: React.FC = () => {
     
     const handleRemove = (key: React.Key) => {
         setRemovedList(prev => [...prev, key]);
+        setAddedList(prev => prev.filter(el => el !== key));
         setDataSource(prev => prev.filter((item) => item.key !== key));
     }
 
     const handleEdit = () => {
         form.validateFields()
         .then((formData: any) => {
-            const updatedData = [...data].filter(el => !removedList.includes(el.key));
+            const updatedData: any[] = [...data, ...dataSource.filter(el => addedList.includes(el.key))].filter((el: any) => !removedList.includes(el.key));
 
-            const sortedNewData = updatedData.map((data, index) => {
+            const sortedNewData = updatedData.map((data: any, index) => {
                 const newData: any = (Object.values(formData)).find((el: any) => el.action.key === data.key);
 
                 if (newData) {
@@ -184,6 +188,8 @@ const StudentList: React.FC = () => {
         form.resetFields();
         setDataSource(data);
         setIsEdit(false);
+        setAddedList([]);
+        setRemovedList([]);
     }
 
     const columns: ProColumns[] = useMemo(() => {
@@ -218,6 +224,25 @@ const StudentList: React.FC = () => {
                             required: true,
                             message: 'Student ID is required',
                         },
+                        {
+                            validator: (_, value, callback) => {
+                                try {
+                                    let count = 0;
+                                    Object.values(form.getFieldsValue()).forEach((item: any) => {
+                                        if (item.student_id === value) {
+                                            count++;
+                                            if (count > 1) {
+                                                throw new Error('Student ID must be unique');
+                                            }
+                                        }
+                                    });
+                                    return Promise.resolve();
+                                }
+                                catch(err) {
+                                    return Promise.reject(err);
+                                }
+                            }
+                        }
                     ],
                 },
                 render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
@@ -284,6 +309,8 @@ const StudentList: React.FC = () => {
                 setDataSource(data.filter((el) => {
                     return el.student_id.includes(searchText);
                 }));
+                setAddedList([]);
+                setRemovedList([]);
             }
         }, 300);
 
@@ -334,7 +361,31 @@ const StudentList: React.FC = () => {
                         onChange={(e) => setSearchText(e.target.value)} 
                     />
                 </div> : null }
-                {dragableContext} 
+                {dragableContext}
+                { isEdit 
+                    ? 
+                    <Button 
+                        className='!w-1/4 !block !mx-auto !mt-4 !p-2.5 !h-auto !border-dashed !font-medium' 
+                        type='primary' 
+                        ghost 
+                        icon={<FontAwesomeIcon icon={faPlus} size='lg' />}
+                        onClick={() => {
+                            const newRow = {
+                                key: `${dataSource.length + 1}`,
+                                full_name: '',
+                                email: '',
+                                student_id: '',
+                                no: dataSource.length + 1,
+                                index: dataSource.length + 1,
+                            }
+                            setAddedList(prev => [...prev, newRow.key]);
+                            setDataSource(prev => [...prev, newRow]);
+                        }}
+                    >
+                        Add Composition
+                    </Button> 
+                    : null 
+                }
             </> : null }
             { 
                 !data?.length || isUpload ?

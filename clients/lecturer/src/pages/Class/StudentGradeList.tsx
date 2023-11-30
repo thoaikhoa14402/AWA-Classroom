@@ -27,7 +27,8 @@ const StudentGradeList: React.FC = () => {
 
     const data: any[] = useMemo(() => {
         if (details) {
-            const studentList = details?.gradeList?.map((item: any, index) => {
+            const sortedList = details?.gradeList?.sort((a, b) => (a.student_id < b.student_id) ? -1 : (a.student_id > b.student_id) ? 1 : 0);
+            const studentList = sortedList?.map((item: any, index) => {
                 const dataValue: any = {
                     key: `${item._id}`,
                     index,
