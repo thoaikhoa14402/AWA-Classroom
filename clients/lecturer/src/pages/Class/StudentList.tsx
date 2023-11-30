@@ -1,8 +1,8 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, Dropdown, Empty, Form, Input, MenuProps, Upload, message } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import axios from 'axios';
 import authStorage from '~/utils/auth.storage';
@@ -22,6 +22,9 @@ const StudentList: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isUpload, setIsUpload] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [searchText, setSearchText] = useState('');
+    const [removedList, setRemovedList] = useState<React.Key[]>([]);
 
     interface StudentListStructure {
         key: string;
@@ -120,20 +123,23 @@ const StudentList: React.FC = () => {
     };
     
     const handleRemove = (key: React.Key) => {
+        setRemovedList(prev => [...prev, key]);
         setDataSource(prev => prev.filter((item) => item.key !== key));
     }
 
     const handleEdit = () => {
         form.validateFields()
         .then((formData: any) => {
-            const updatedData = [...dataSource];
-            
+            const updatedData = [...data].filter(el => !removedList.includes(el.key));
+
             const sortedNewData = updatedData.map((data, index) => {
                 const newData: any = (Object.values(formData)).find((el: any) => el.action.key === data.key);
 
-                updatedData[index].student_id = newData?.student_id;
-                updatedData[index].full_name = newData?.full_name;
-                updatedData[index].email = newData?.email;
+                if (newData) {
+                    updatedData[index].student_id = newData?.student_id;
+                    updatedData[index].full_name = newData?.full_name;
+                    updatedData[index].email = newData?.email;
+                }
 
                 return {
                     ...updatedData[index]
@@ -272,12 +278,29 @@ const StudentList: React.FC = () => {
         );
     }, [isEdit, columns, dataSource, form, isLoading]);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (isSearch) {
+                setDataSource(data.filter((el) => {
+                    return el.student_id.includes(searchText);
+                }));
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchText, data, isSearch]);
+
     return (
         <div className='mt-2'>
             {holderContext}
             <div className='flex justify-between items-center'>
                 <h1 className='text-2xl font-medium mb-2'>Student List</h1>
                 <div className='flex gap-2'>
+                    { 
+                        data?.length && !isUpload
+                        ? <Button title="search" className='!border-none !shadow-none' icon={<FontAwesomeIcon icon={faSearch} />} onClick={() => setIsSearch(prev => !prev)} /> 
+                        : null
+                    }
                     { data?.length && !isUpload && isEdit 
                         ? 
                         <>
@@ -301,7 +324,18 @@ const StudentList: React.FC = () => {
                 </div>
             </div>
             <hr className='mb-2' />
-            { data?.length && !isUpload ? dragableContext : null }
+            { data?.length && !isUpload ? <>
+                { isSearch ? <div>
+                    <Input 
+                        type='search' 
+                        autoFocus 
+                        className='!p-2.5 !px-4 !border-t-transparent !border-l-transparent !border-r-transparent !rounded-none !mb-1 focus:!rounded-md' 
+                        placeholder='Search by student ID'
+                        onChange={(e) => setSearchText(e.target.value)} 
+                    />
+                </div> : null }
+                {dragableContext} 
+            </> : null }
             { 
                 !data?.length || isUpload ?
                     <Upload.Dragger disabled={isLoading} name="studentlist" customRequest={handleUploadFile}>

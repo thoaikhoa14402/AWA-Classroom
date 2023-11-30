@@ -39,6 +39,8 @@ class GradeController implements IController {
         this.router.put('/grade-list/:classID/upload', AuthController.protect, multercloud.single('gradelist'), multercloud.uploadCloud('gradelist'), catchAsync(this.putGradeListWithFile));
 
         this.router.put('/list/:classID?', DTOValidation.validate<GradeListDTO>(GradeListDTO), AuthController.protect, catchAsync(this.putGradeList));
+
+        this.router.post('/list/:classID/download', AuthController.protect, catchAsync(this.requestDownloadGradeList));
     }
 
     private getClassDataWithGradeListQuery = async (classID: string) => {
@@ -261,6 +263,47 @@ class GradeController implements IController {
             message: 'Upload grade list successfully',
             data: fullclassData.length ? fullclassData[0].gradeList : [],
         });
+    }
+
+    private requestDownloadGradeList = async (req: Request, res: Response, next: NextFunction) => {
+        const classID = req.body.classID;
+
+        if (!classID) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const classInfo = await ClassModel.findOne({ slug: classID });
+
+        if (!classInfo) {
+            return next(new AppError('Class not found!', 404));
+        }
+
+        const gradeCol = classInfo.gradeColumns.map((col) => col.name);
+        const gradeList = classInfo.gradeList.map((student) => {
+            const studentID = student.student_id;
+            const grade = student.grade.map((grade) => grade.value);
+
+            let gradeTotal = classInfo.gradeColumns.reduce((acc, gradeCol, index) => {
+                return acc + (grade[index] ?? 0) * (gradeCol.scale ?? 0) / 100;
+            }, 0);
+
+            if (isNaN(gradeTotal)) {
+                gradeTotal = 0;
+            }
+            
+            return [studentID, ...grade, gradeTotal];
+        });
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet([['Student ID', ...gradeCol, 'Total'], ...gradeList]);
+        XLSX.utils.book_append_sheet(wb, ws, 'Grade List');
+
+        const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+        const bufferStream = new PassThrough();
+        bufferStream.end(Buffer.from(buffer));
+
+        bufferStream.pipe(res);
     }
 }
 

@@ -122,9 +122,11 @@ class StudentListController implements IController {
                     student_id: student.student_id,
                     grade_name: classInfo.gradeColumns.map((gradeCol) => gradeCol.name),
                     grade: classInfo.gradeColumns.map((gradeCol) => {
+                        const gradeOfStudent = classInfo.gradeList.find((el) => el.student_id === student.student_id);
+
                         return {
                             col: gradeCol.name,
-                            value: ''
+                            value: gradeOfStudent ? gradeOfStudent.grade.find(el2 => el2.col === gradeCol.name)?.value ?? '' : ''
                         }
                     })
                 }
@@ -188,7 +190,6 @@ class StudentListController implements IController {
 
             header.forEach((column: string, index: any) => {
                 const key: any = column.toLowerCase().replace(/ /g, '_');
-                console.log(key);
 
                 if (key !== 'student_id' && key !== 'full_name' && key !== 'email') return;
                 student[key] = row[index];

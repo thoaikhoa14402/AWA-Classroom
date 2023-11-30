@@ -1,8 +1,8 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, Dropdown, Empty, Form, Input, MenuProps, Upload, message } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClose, faCloudArrowUp, faDownload, faEdit, faEllipsisV, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import axios from 'axios';
 import authStorage from '~/utils/auth.storage';
@@ -22,6 +22,8 @@ const StudentGradeList: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isUpload, setIsUpload] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [searchText, setSearchText] = useState('');
 
     const data: any[] = useMemo(() => {
         if (details) {
@@ -45,7 +47,7 @@ const StudentGradeList: React.FC = () => {
                         const grade = item.grade.find((grade: any) => grade.col === el.name);
                         const gradeScale = details.gradeColumns.find((grade: any) => grade.name === el.name)?.scale ?? 0;
 
-                        return acc + (grade ? grade.value * gradeScale / 100 : 0);
+                        return acc + (grade ? (grade.value ?? 0) * (gradeScale ?? 0) / 100 : 0);
                     }, 0);
 
                     item.grade.forEach((grade: any) => {
@@ -136,19 +138,27 @@ const StudentGradeList: React.FC = () => {
     const handleEdit = () => {
         form.validateFields()
         .then((formData: any) => {
-            const updatedData: any[] = [...dataSource];
+            const updatedData: any[] = [...data];
             
-            const sortedNewData = updatedData.map((data, index) => {
+            const sortedNewData = updatedData.map((data: any, index: any) => {
                 const newData: any = (Object.values(formData)).find((el: any) => el.student_id === data.student_id);
 
-                updatedData[index].student_id = newData?.student_id;
                 updatedData[index].grade_name = details.gradeColumns.map((el: any) => el.name);
                 updatedData[index].grade = details.gradeColumns.map((el: any) => {
-                    return {
+                    return (newData) ? {
                         col: el.name,
                         value: newData[el.name],
+                    } : {
+                        col: el.name,
+                        value: updatedData[index][el.name]
                     }
                 });
+
+                if (newData) {
+                    details.gradeColumns.forEach((el: any) => {
+                        updatedData[index][el.name] = newData[el.name];
+                    });
+                }
 
                 return {
                     ...updatedData[index]
@@ -249,7 +259,7 @@ const StudentGradeList: React.FC = () => {
         const col: ProColumns[] = cols ? [studentIdCol, ...cols, totalCol] : [];
 
         return col;
-    }, [isEdit]);
+    }, [data]);
 
     const dragableContext = useMemo(() => {
         const editableKeys = isEdit ? dataSource.map((item) => item.key) : [];
@@ -284,12 +294,48 @@ const StudentGradeList: React.FC = () => {
         );
     }, [isEdit, columns, dataSource, form, isLoading]);
 
+    const handleDownloadGradeList = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/grade/list/${classID}/download`, {
+            classID: classID,
+        }, {
+            headers: {
+                Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : '',
+            },
+            responseType: 'arraybuffer',
+        }).then(res => {
+            const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'grade-list.xlsx';
+            link.click();
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (isSearch) {
+                setDataSource(data.filter((el) => {
+                    return el.student_id.includes(searchText);
+                }));
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchText, data, isSearch]);
+
     return (
         <div className='mt-2'>
             {holderContext}
             <div className='flex justify-between items-center'>
                 <h1 className='text-2xl font-medium mb-2'>Student Grade List</h1>
                 <div className='flex gap-2'>
+                    { 
+                        data?.length && !isUpload
+                        ? <Button title="search" className='!border-none !shadow-none' icon={<FontAwesomeIcon icon={faSearch} />} onClick={() => setIsSearch(prev => !prev)} /> 
+                        : null
+                    }
                     { data?.length && !isUpload && isEdit 
                         ? 
                         <>
@@ -299,7 +345,7 @@ const StudentGradeList: React.FC = () => {
                         : 
                         data?.length && !isUpload ? <>
                             <Button title='download grade list' className='!border-none !shadow-none' icon={<FontAwesomeIcon size='lg' icon={faDownload} />} 
-                                onClick={() => {}}
+                                onClick={() => handleDownloadGradeList()}
                             />
                             <Button title="edit" className='!border-none !shadow-none' icon={<FontAwesomeIcon size='lg' icon={faEdit} />} onClick={() => {
                                 if (!isLoading) {
@@ -318,7 +364,18 @@ const StudentGradeList: React.FC = () => {
                 </div>
             </div>
             <hr className='mb-2' />
-            { data?.length && !isUpload ? dragableContext : null }
+            { data?.length && !isUpload ? <>
+                { isSearch ? <div>
+                    <Input 
+                        type='search' 
+                        autoFocus 
+                        className='!p-2.5 !px-4 !border-t-transparent !border-l-transparent !border-r-transparent !rounded-none !mb-1 focus:!rounded-md' 
+                        placeholder='Search by student ID'
+                        onChange={(e) => setSearchText(e.target.value)} 
+                    />
+                </div> : null }
+                {dragableContext} 
+            </> : null }
             { 
                 !data?.length || isUpload ?
                     <Upload.Dragger disabled={isLoading} name="studentlist" customRequest={handleUploadFile}>
