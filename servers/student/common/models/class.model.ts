@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import JoinedClassInfoModel from './joinedClassInfo.model';
 import { IUser } from './user.model';
 import OTPGenerator from "../utils/otp-generator";
 
@@ -13,6 +14,34 @@ export interface IClassPermission {
     assignment: ClassPermissionType;
     review: ClassPermissionType;
     comment: ClassPermissionType;
+}
+
+export interface IGradeColumn {
+    name: string;
+    scale: number;
+    order: number;
+    published: boolean;
+};
+
+export interface IStudentList {
+    _id: mongoose.Types.ObjectId;
+    student_id: string;
+    full_name: string;
+    email: string;
+    user?: string;
+    studentID?: string;
+}
+
+export interface IGradeList {
+    _id: mongoose.Types.ObjectId;
+    student_id: string;
+    grade_name: string[];
+    grade: {
+        col: string;
+        value: number;
+    }[];
+    user?: string;
+    studentID?: string;
 }
 
 export interface IClass {
@@ -30,6 +59,11 @@ export interface IClass {
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
+    gradeColumns: Array<IGradeColumn>;
+    studentList: Array<IStudentList>;
+    studentListUrl: string;
+    gradeList: Array<IGradeList>;
+    gradeListUrl: string;
 }
 
 const ClassSchema = new mongoose.Schema<IClass>(
@@ -143,6 +177,69 @@ const ClassSchema = new mongoose.Schema<IClass>(
                 enum: Object.values(ClassPermissionType),
                 default: ClassPermissionType.WRITE
             }
+        },
+        gradeColumns: {
+            type: [{
+                name: {
+                    type: String,
+                    required: [true, 'Grade column must have a name']
+                },
+                scale: {
+                    type: Number,
+                    required: [true, 'Grade column must have a scale']
+                },
+                order: {
+                    type: Number,
+                    default: 0
+                },
+                published: {
+                    type: Boolean,
+                    default: false
+                }
+            }],
+            default: []
+        },
+        studentListUrl: {
+            type: String,
+        },
+        studentList: {
+            type: [{
+                student_id: {
+                    type: String,
+                    ref: JoinedClassInfoModel,
+                    refID: 'studentID'
+                },
+                full_name: {
+                    type: String
+                },
+                email: {
+                    type: String
+                },
+            }],
+            default: []
+        },
+        gradeList: {
+            type: [{
+                student_id: {
+                    type: String,
+                    ref: JoinedClassInfoModel,
+                },
+                grade_name: [{
+                    type: String,
+                }],
+                grade: [{
+                    col: {
+                        type: String,
+                    },
+                    value: {
+                        type: Number,
+                    }
+                }],
+            }],
+            default: []
+        },
+        gradeListUrl: {
+            type: String,
         }
     },
     {

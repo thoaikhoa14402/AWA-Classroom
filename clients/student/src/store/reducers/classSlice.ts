@@ -14,6 +14,33 @@ export interface IClassPermission {
     comment: ClassPermissionType;
 }
 
+export interface IGradeColumn {
+    _id: string;
+    name: string;
+    scale: number;
+    published: boolean;
+    order: number;
+};
+
+export interface IStudentList {
+    user?: string;
+    _id: string;
+    student_id: string;
+    full_name: string;
+    email: string;
+}
+
+export interface IGradeList {
+    user?: string;
+    _id: string;
+    student_id: string;
+    grade_name: string[];
+    grade: {
+        col: string;
+        value: number;
+    }[];
+}
+
 export interface ClassType {
     _id: string;
     cid: string;
@@ -25,10 +52,13 @@ export interface ClassType {
     owner: UserType;
     inviteCode: string;
     slug: string;
+    studentID?: string;
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
-    studentID?: string;
+    gradeColumns: Array<IGradeColumn>;
+    studentList: Array<IStudentList>;
+    gradeList: Array<IGradeList>;
 }
 
 interface ClassState {

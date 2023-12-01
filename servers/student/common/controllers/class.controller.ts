@@ -53,6 +53,33 @@ class ClassController implements IController {
 
     private getClass = async (req: Request, res: Response, next: NextFunction) => { 
         if (req.body?.id) {
+            const joinedClassDetail = await JoinedClassInfoModel.aggregate([
+                {
+                    $lookup: {
+                        from: 'classes',
+                        localField: 'class',
+                        foreignField: '_id',
+                        as: 'class',
+                    },
+                },
+                {
+                    $unwind: '$class',
+                },
+                {
+                    $match: {
+                        'class.slug': req.body.id,
+                        user: new mongoose.Types.ObjectId(req.user?.id)
+                    },
+                },
+                {
+                    $limit: 1
+                }
+            ]);
+
+            if (joinedClassDetail.length === 0) {
+                return next(new AppError('No class found with that ID', 404));
+            }
+
             const classArr = await ClassModel.aggregate([
                 {
                     $lookup: {
@@ -82,8 +109,81 @@ class ClassController implements IController {
                 {
                     $match: {
                         slug: req.body.id,
-                        'students._id': new mongoose.Types.ObjectId(req.user?.id)
+                        'students._id': new mongoose.Types.ObjectId(req.user?.id),
                     },
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        slug: 1,
+                        description: 1,
+                        inviteCode: 1,
+                        banner: 1,
+                        cid: 1,
+                        owner: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            avatar: 1,
+                            phoneNumber: 1,
+                            firstname: 1,
+                            lastname: 1,
+                            role: 1,
+                            address: 1,
+                        },
+                        lecturers: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            avatar: 1,
+                            phoneNumber: 1,
+                            firstname: 1,
+                            lastname: 1,
+                            role: 1,
+                            address: 1,
+                        },
+                        students: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            avatar: 1,
+                            phoneNumber: 1,
+                            firstname: 1,
+                            lastname: 1,
+                            role: 1,
+                            address: 1,
+                        },
+                        gradeColumns: {
+                            $filter: {
+                                input: '$gradeColumns',
+                                as: 'gradeColumn',
+                                cond: {
+                                    $ne: ['$$gradeColumn', []]
+                                }
+                            }
+                        },
+                        gradeList: {
+                            $filter: {
+                                input: '$gradeList',
+                                as: 'grade',
+                                cond: {
+                                    $eq: ['$$grade.student_id', joinedClassDetail[0].studentID]
+                                }
+                            },
+                        },
+                        studentList: {
+                            student_id: 1,
+                            full_name: 1,
+                            email: 1,  
+                        },
+                        studentPermission: 1,
+                        lecturerPermission: 1,
+                        ownerPermission: 1,
+                        studentListUrl: 1,
+                        gradeListUrl: 1,
+                        createAt: 1,
+                    }
                 },
                 { $limit: 1 }
             ]);
@@ -92,6 +192,12 @@ class ClassController implements IController {
             
             if (!classInfo) {
                 return next(new AppError('No class found with that ID', 404));
+            }
+
+            if (classInfo.gradeList.length > 0) {
+                const filterCol = classInfo.gradeColumns.filter((el) => el.published === true);
+                classInfo.gradeList[0].grade_name = classInfo.gradeList[0].grade_name.filter((el: string) => filterCol.find((col) => col.name === el));
+                classInfo.gradeList[0].grade = classInfo.gradeList[0].grade.filter((el) => filterCol.find((col) => col.name === el.col));
             }
 
             const joinedClassInfo = await JoinedClassInfoModel.findOne({ user: req.user?.id, class: classInfo._id }).lean();

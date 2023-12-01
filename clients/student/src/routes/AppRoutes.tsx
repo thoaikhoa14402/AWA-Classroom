@@ -16,6 +16,7 @@ import RenewPasswordPage from "~/pages/RenewPassword";
 import ClassLayout from "~/layouts/ClassLayout";
 import Member from "~/pages/Class/Member";
 import Invite from "~/pages/Invite";
+import Grade from "~/pages/Class/Grade";
 
 const AppRoutes = () => {
     return (
@@ -29,7 +30,7 @@ const AppRoutes = () => {
                         <Route path="feeds/:classID?" element={<>FEEDS</>} />    
                         <Route path="works/:classID?" element={<>WORKS</>} />    
                         <Route path="members/:classID?" element={<Member />} />    
-                        <Route path="grades/:classID?" element={<>GRADES</>} />    
+                        <Route path="grades/:classID?" element={<Grade />} />    
                         <Route path="invite/:classID?" element={<Invite />} />    
                     </Route>
                     <Route path="/schedule" element={<>Schedule</>} />
