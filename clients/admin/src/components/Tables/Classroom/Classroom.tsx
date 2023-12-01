@@ -7,11 +7,12 @@ import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
 
 interface DataType {
-  slug: string;
+  _id: string;
   cid: string;
   name: string;
   numberOfStudents: number;
   owner: string;
+  slug: string;
 }
 
 type DataIndex = keyof DataType;
@@ -25,13 +26,13 @@ const ClassroomTable: React.FC = () => {
 
   
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/list`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/list`).then((response) => {
       if (response.status === 200) {
         setTimeout(() => { 
           setIsTableLoading(false);
-          if (response.data.lecturers.length === 0) {
+          if (response.data.classrooms.length === 0) {
             message.info({
-              content: 'No lecturers found!',
+              content: 'No class found!',
               style: {
                 fontFamily: 'Montserrat',
                 fontSize: 16,
@@ -48,7 +49,7 @@ const ClassroomTable: React.FC = () => {
             },
             duration: 1.2,
           });
-        setDataSource(response.data.lecturers);
+        setDataSource(response.data.classrooms);
         }, 800); 
        
       }
@@ -157,18 +158,18 @@ const ClassroomTable: React.FC = () => {
   const handleActionDelete = async (key: React.Key) => {
     setIsTableLoading(true);
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
+      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/${key}`);
       if (response.status === 200) {
         setTimeout(() => {
           setIsTableLoading(false);
           message.success({
-            content: 'This account was deleted successfully!',
+            content: 'This course was deleted successfully!',
             style: {
               fontFamily: 'Montserrat',
               fontSize: 16,
             }
           });
-        setDataSource(response.data.updatedLecturers);
+        setDataSource(response.data.updatedCourses);
         }, 1500);
       }
       else message.error({
@@ -182,47 +183,18 @@ const ClassroomTable: React.FC = () => {
     }
   };
 
-  // handle update lecturer's status
-  const handleActionUpdateStatus = async (key: React.Key) => {
-    setIsTableLoading(true);
-    try {
-      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
-      if (response.status === 200) {
-        setTimeout(() => {
-          setIsTableLoading(false);
-          message.success({
-            content: 'This account status was updated successfully!',
-            style: {
-              fontFamily: 'Montserrat',
-              fontSize: 16,
-            }
-          });
-        setDataSource(response.data.updatedLecturers);
-        }, 1500);
-      }
-      else message.error({
-        content: response.data.message,
-      })
-    } catch (err) {
-      console.log('err: ', err);
-      message.error({
-        content: 'Unexpected errors!'
-      })
-    }
-  }
-
   const columns: ColumnsType<DataType> = [
     {
-        title: 'ID',
+        title: 'Course ID',
         dataIndex: 'cid',
-        key: 'course_id',
+        key: 'cid',
         ellipsis: true,
         ...getColumnSearchProps('cid'),
         onCell: (record) => ({
             record,
             editable: true,
-            dataIndex: 'username',
-            title: 'Username',
+            dataIndex: 'name',
+            title: 'Course name',
           }),
         className: "!text-md",
 
@@ -230,16 +202,16 @@ const ClassroomTable: React.FC = () => {
     {
       title: 'Course Name',
       dataIndex: 'name',
-      key: 'course_name',
+      key: 'name',
       ellipsis: true,
       ...getColumnSearchProps('name'),
       className: "!text-md",
     },
     {
-        title: 'Number of students',
+        title: 'Students',
         dataIndex: 'numberOfStudents',
+        width: '11%',
         key: 'numberOfStudents',
-        width: '25%',
         className: "!text-md",
     },
     {
@@ -257,7 +229,7 @@ const ClassroomTable: React.FC = () => {
               <Space size="middle" >
                 <Button type = "primary" style = {{width: '75px'}}>View</Button>
                 {dataSource.length >= 1 ? (
-                  <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.slug)}
+                  <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record._id)}
                   >
                   <Button danger style = {{
                     width: '75px'
