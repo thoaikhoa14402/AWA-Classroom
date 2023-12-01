@@ -14,11 +14,7 @@ const Footer: React.FC = () => {
                         AWA Classroom
                     </h1>
                     <p className="font-sm text-justify text-sm">
-                        Nền tảng giáo dục hiện đại, với giao diện
-                        thân thiện giúp giáo viên quản lý lớp học một cách hiệu
-                        quả và tương tác tốt với học viên. Sự kết hợp giữa
-                        truyền thống và công nghệ tiên tiến mang đến trải nghiệm
-                        học tập độc đáo.
+                    The contemporary education platform features a user-friendly interface, empowering educators to effectively manage classrooms and foster seamless interaction with students. The harmonious blend of traditional methodologies and cutting-edge technology delivers a distinctive and enriching learning experience.
                     </p>
                 </div>
                 <div className="flex flex-col w-1/5 gap-5">
