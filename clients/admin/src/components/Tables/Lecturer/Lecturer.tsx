@@ -232,7 +232,6 @@ const LecturerTable: React.FC = () => {
       title: 'Full name',
       dataIndex: 'fullname',
       key: 'fullname',
-      width: "15%",
       ellipsis: true,
       ...getColumnSearchProps('fullname'),
       className: "!text-md",

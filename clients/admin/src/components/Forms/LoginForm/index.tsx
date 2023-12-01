@@ -65,7 +65,7 @@ const LoginForm: React.FC = () => {
           }));
 
           setTimeout(() => {
-            window.location.replace('/dashboard');
+            window.location.replace('/classroom-management');
           }, 2000)
         }
       } catch (err: any) {

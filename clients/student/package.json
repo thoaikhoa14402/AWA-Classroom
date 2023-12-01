@@ -4,6 +4,7 @@
   "author": "MinhNguyen",
   "private": true,
   "dependencies": {
+    "@ant-design/pro-components": "^2.6.43",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
