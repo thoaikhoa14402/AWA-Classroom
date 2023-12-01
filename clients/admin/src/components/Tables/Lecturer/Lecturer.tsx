@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message} from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message, Flex} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
@@ -50,7 +50,7 @@ const LecturerTable: React.FC = () => {
             duration: 1.2,
           });
         setDataSource(response.data.lecturers);
-        }, 1200); 
+        }, 800); 
        
       }
     }).catch((error: Response) => console.log('err:', error));
@@ -258,7 +258,7 @@ const LecturerTable: React.FC = () => {
         title: 'Status',
         dataIndex: 'active',
         key: 'active',
-        width: '11%',
+        width: '12%',
         filters: [
           { text: 'Active', value: 'active' },
           { text: 'Inactive', value: 'inactive' },
@@ -272,13 +272,13 @@ const LecturerTable: React.FC = () => {
         render: (_, record) => {
             return (
                 <Tag color= {record.active ? "green" : "orange" } style = {{
-                fontSize: 16,
-                minWidth: 80,
-                textAlign: 'center',
-                padding: 4,
-              }}>
+                  fontSize: 16,
+                  minWidth: 80,
+                  textAlign: 'center',
+                  padding: 4,
+                }}>
                 {record.active ? "Active" : "Inactive"}
-              </Tag>
+                </Tag>
             );
         }
     },
@@ -288,24 +288,24 @@ const LecturerTable: React.FC = () => {
         key: 'actions',
         width: "21%",
         render: (_, record) => (
-            <Space size="middle">
-              <Button
-                type="primary"
-                style={{
-                  width: '80px'
-                }}
-                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
-                onClick={() => handleActionUpdateStatus(record.id)}>         
-                {record.active ? 'Lock' : 'Unlock'}
-              </Button>
-              {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
-                >
-                <Button danger style = {{
-                  width: '80px'
-                }} className = "!flex !justify-center !items-center">Delete</Button>
-                </Popconfirm>
-        ) : null}
+              <Space size="middle">
+                <Button
+                  type="primary"
+                  style={{
+                    width: '80px'
+                  }}
+                  className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
+                  onClick={() => handleActionUpdateStatus(record.id)}>         
+                  {record.active ? 'Lock' : 'Unlock'}
+                </Button>
+                {dataSource.length >= 1 ? (
+                  <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
+                  >
+                  <Button danger style = {{
+                    width: '80px'
+                  }} className = "!flex !justify-center !items-center">Delete</Button>
+                  </Popconfirm>
+                ) : null}
             </Space>
           )
     },

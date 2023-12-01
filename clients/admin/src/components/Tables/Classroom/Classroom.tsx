@@ -1,23 +1,22 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message} from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message, Flex} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
 
 interface DataType {
-  id: string;
-  username: string;
-  fullname: string;
-  phonenumber: string;
-  active: boolean;
-  email: string;
+  slug: string;
+  cid: string;
+  name: string;
+  numberOfStudents: number;
+  owner: string;
 }
 
 type DataIndex = keyof DataType;
 
-const StudentTable: React.FC = () => {
+const ClassroomTable: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
@@ -26,13 +25,13 @@ const StudentTable: React.FC = () => {
 
   
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/list`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/list`).then((response) => {
       if (response.status === 200) {
         setTimeout(() => { 
           setIsTableLoading(false);
-          if (response.data.students.length === 0) {
+          if (response.data.lecturers.length === 0) {
             message.info({
-              content: 'No students found!',
+              content: 'No lecturers found!',
               style: {
                 fontFamily: 'Montserrat',
                 fontSize: 16,
@@ -49,7 +48,7 @@ const StudentTable: React.FC = () => {
             },
             duration: 1.2,
           });
-        setDataSource(response.data.students);
+        setDataSource(response.data.lecturers);
         }, 800); 
        
       }
@@ -158,7 +157,7 @@ const StudentTable: React.FC = () => {
   const handleActionDelete = async (key: React.Key) => {
     setIsTableLoading(true);
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
+      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
       if (response.status === 200) {
         setTimeout(() => {
           setIsTableLoading(false);
@@ -169,7 +168,7 @@ const StudentTable: React.FC = () => {
               fontSize: 16,
             }
           });
-        setDataSource(response.data.updatedStudents);
+        setDataSource(response.data.updatedLecturers);
         }, 1500);
       }
       else message.error({
@@ -183,11 +182,11 @@ const StudentTable: React.FC = () => {
     }
   };
 
-  // handle update student's status
+  // handle update lecturer's status
   const handleActionUpdateStatus = async (key: React.Key) => {
     setIsTableLoading(true);
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
+      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/lecturer/${key}`);
       if (response.status === 200) {
         setTimeout(() => {
           setIsTableLoading(false);
@@ -198,7 +197,7 @@ const StudentTable: React.FC = () => {
               fontSize: 16,
             }
           });
-        setDataSource(response.data.updatedStudents);
+        setDataSource(response.data.updatedLecturers);
         }, 1500);
       }
       else message.error({
@@ -214,11 +213,11 @@ const StudentTable: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-        title: 'Username',
-        dataIndex: 'username',
-        key: 'username',
+        title: 'ID',
+        dataIndex: 'cid',
+        key: 'course_id',
         ellipsis: true,
-        ...getColumnSearchProps('username'),
+        ...getColumnSearchProps('cid'),
         onCell: (record) => ({
             record,
             editable: true,
@@ -229,83 +228,42 @@ const StudentTable: React.FC = () => {
 
     },
     {
-      title: 'Full name',
-      dataIndex: 'fullname',
-      key: 'fullname',
-      width: "15%",
+      title: 'Course Name',
+      dataIndex: 'name',
+      key: 'course_name',
       ellipsis: true,
-      ...getColumnSearchProps('fullname'),
+      ...getColumnSearchProps('name'),
       className: "!text-md",
     },
     {
-        title: 'Phone',
-        dataIndex: 'phonenumber',
-        key: 'phonenumber',
-        width: "14%",
-        ...getColumnSearchProps('phonenumber'),
+        title: 'Number of students',
+        dataIndex: 'numberOfStudents',
+        key: 'numberOfStudents',
+        width: '25%',
         className: "!text-md",
-      },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-      width: '25%',
-      ellipsis: true,
-      ...getColumnSearchProps('email'),
-      className: "!text-md",
     },
     {
-        title: 'Status',
-        dataIndex: 'active',
-        key: 'active',
-        width: '11%',
-        filters: [
-          { text: 'Active', value: 'active' },
-          { text: 'Inactive', value: 'inactive' },
-        ],
-        onFilter: (value: any, record) => {
-          if (value === "active") return record.active === true;
-          else if (value === "inactive") return record.active === false;
-          return true;
-        },
-        // customize cell content
-        render: (_, record) => {
-            return (
-                <Tag color= {record.active ? "green" : "orange" } style = {{
-                fontSize: 16,
-                minWidth: 80,
-                textAlign: 'center',
-                padding: 4,
-              }}>
-                {record.active ? "Active" : "Inactive"}
-              </Tag>
-            );
-        }
+        title: 'Owner',
+        dataIndex: 'owner',
+        key: 'owner',
+        ...getColumnSearchProps('owner'),
     },
     {
         title: 'Actions',
         dataIndex: 'actions',
         key: 'actions',
-        width: "21%",
+        width: '20%',
         render: (_, record) => (
-            <Space size="middle">
-              <Button
-                type="primary"
-                style={{
-                  width: '80px'
-                }}
-                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
-                onClick={() => handleActionUpdateStatus(record.id)}>         
-                {record.active ? 'Lock' : 'Unlock'}
-              </Button>
-              {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
-                >
-                <Button danger style = {{
-                  width: '80px'
-                }} className = "!flex !justify-center !items-center">Delete</Button>
-                </Popconfirm>
-        ) : null}
+              <Space size="middle" >
+                <Button type = "primary" style = {{width: '75px'}}>View</Button>
+                {dataSource.length >= 1 ? (
+                  <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.slug)}
+                  >
+                  <Button danger style = {{
+                    width: '75px'
+                  }} className = "!flex !justify-center !items-center">Delete</Button>
+                  </Popconfirm>
+              ) : null}
             </Space>
           )
     },
@@ -313,7 +271,7 @@ const StudentTable: React.FC = () => {
 
   return <div>
     <Typography.Title level={3} style={{ margin: 0, color: "#00A551" }} className='!uppercase !mt-4 !mb-4'>
-       Student Management
+       Classroom Management
     </Typography.Title>
 
     <Table 
@@ -330,7 +288,7 @@ const StudentTable: React.FC = () => {
   </div>
 };
 
-export default StudentTable;
+export default ClassroomTable;
 
 
 // fake data
