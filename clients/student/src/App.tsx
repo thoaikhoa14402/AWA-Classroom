@@ -58,6 +58,10 @@ function App() {
       dispatch(setLoading(false));
       dispatch(setNotificationLoading(false));
     }
+
+    return () => {
+      dispatch(setLoading(false));
+    }
   }, []);
 
   useEffect(() => {

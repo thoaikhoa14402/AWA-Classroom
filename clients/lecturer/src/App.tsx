@@ -30,7 +30,7 @@ function App() {
         dispatch(setLoading(false));
       });
     }
-
+    
     return () => {
       dispatch(setLoading(false));
     }
