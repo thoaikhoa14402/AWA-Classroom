@@ -1,10 +1,11 @@
 import React, { FormEvent, ReactNode, useCallback, useMemo, useRef } from "react";
 import { NavLink, createSearchParams, useNavigate } from "react-router-dom";
 
-import {  faArrowRight, faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faBars, faCircle, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Menu, Dropdown, MenuProps, Divider } from "antd";
+import { Menu, Dropdown, MenuProps, Divider, Button, Avatar } from "antd";
 import { UserOutlined, LogoutOutlined, KeyOutlined } from "@ant-design/icons";
 
 import useAppSelector from "~/hooks/useAppSelector";
@@ -29,6 +30,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
     const navigate = useNavigate();
     const searchRef = useRef<HTMLInputElement>(null);
+
+    const notificationsList = useAppSelector(state => state.notifications.notifications);
 
     const handleSearch = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -80,6 +83,40 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         <Menu className="!shadow-md border border-slate-100 !w-full !rounded-md" items={items} />
     ), [items]);
 
+    const notifications: MenuProps['items'] = useMemo(() => (
+        notificationsList.map(el => (
+            {
+                key: el._id,
+                label: (
+                    <div className="flex gap-4 justify-start items-center py-1 w-full">
+                        <Avatar className="!h-auto" src={el.user.avatar} />
+                        <div className="flex flex-col w-full">
+                            <div className="flex items-center">
+                                <span className="text-primary font-semibold">{el.user.username}</span>
+                                <span className="flex ml-auto gap-3 items-center">
+                                    <small className="text-gray-500 font-medium text-xs">{el.formatedDate}</small>
+                                    { !el.readable ? <FontAwesomeIcon className="text-primary" style={{ fontSize: '10px' }} icon={faCircle} /> : null }
+                                </span>
+                            </div>
+                            <span className="text-gray-700">{el.message}</span>
+                        </div>
+                    </div>
+                ),
+                className: '!px-4 !py-3 !text-md !gap-1.5 !w-full',
+            }
+        ))
+    ), [notificationsList]);
+
+    const notificationRender = useCallback((_:ReactNode) => (
+        <Menu 
+            className="!shadow-md border border-slate-100 !rounded-md !flex !flex-col !gap-1"
+            items={notifications}
+            style={{ maxHeight: '400px', overflowY: 'auto', width: '450px' }}
+        />
+    ), [notifications]);
+
+    const readableNumber = useMemo(() => Math.min(notificationsList.filter(el => !el.readable).length, 99), [notificationsList]);
+
     return (
         <nav className="bg-white w-screen flex justify-center shadow-sm px-4 sticky top-0 z-10">
             <div
@@ -101,20 +138,33 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 </form>
                 { 
                     isLogin ? 
-                    <Dropdown menu={{items}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
-                        dropdownRender={menus}> 
-                        <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
-                            <span className="flex flex-col items-end lg:flex md:hidden sm:hidden">
-                                <span className="font-medium text-right">{profile?.username}</span>
-                                <small className="capitalize">{profile?.role}</small>
-                            </span>
-                            <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
-                                backgroundColor: color,
-                            }}>
-                                { profile?.avatar ? <img className="w-full" src={profile?.avatar} alt="avatar" /> : profile?.username[0] }
-                            </span>
-                        </button> 
-                    </Dropdown>
+                    <div className="flex items-center gap-2 mr-3">
+                        <Dropdown menu={{items}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
+                            dropdownRender={menus}> 
+                            <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
+                                <span className="flex flex-col items-end lg:flex md:hidden sm:hidden">
+                                    <span className="font-medium text-right">{profile?.username}</span>
+                                    <small className="capitalize">{profile?.role}</small>
+                                </span>
+                                <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
+                                    backgroundColor: color,
+                                }}>
+                                    { profile?.avatar ? <img className="w-full" src={profile?.avatar} alt="avatar" /> : profile?.username[0] }
+                                </span>
+                            </button> 
+                        </Dropdown>
+                        <Dropdown menu={{items: notifications}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
+                            dropdownRender={notificationRender}>
+                            <div className="!relative">
+                                <div 
+                                    className="w-6 h-6 absolute border flex justify-center items-center text-xs rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 z-10 bg-primary font-bold text-white border-none"
+                                    style={{ fontSize: 10 }}>
+                                    { readableNumber }
+                                </div>
+                                <Button className="!w-10 !h-10" icon={<FontAwesomeIcon icon={faBell} size="lg" />} />
+                            </div>
+                        </Dropdown>
+                    </div>
                     : 
                     <div className="flex gap-2 whitespace-nowrap">
                         <NavLink to='/auth/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Register</NavLink>

@@ -75,24 +75,6 @@ const StudentGradeList: React.FC = () => {
                 className: 'drag-visible',
                 width: 70,
                 align: 'center',
-                formItemProps: {
-                    rules: [
-                        {
-                            validator: async (_, value, callback) => {
-                                try {
-                                    if (value < 0 || value > 10) {
-                                        throw new Error('Grade must be between 0 and 10');
-                                    }
-
-                                    return Promise.resolve();
-                                }
-                                catch (err) {
-                                    return Promise.reject(err);
-                                }
-                            }
-                        },
-                    ],
-                },
                 render: (_, record) => <span className={record[el] === 0 ? 'text-red-500 font-semibold' : ''}>{record[el] ?? '-'}</span>,
             } as ProColumns;
         }) : [];

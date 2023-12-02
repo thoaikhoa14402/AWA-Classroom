@@ -2,9 +2,10 @@ import React, { FormEvent, ReactNode, useCallback, useMemo, useRef } from "react
 import { NavLink, createSearchParams, useNavigate } from "react-router-dom";
 
 import {  faArrowRight, faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Menu, Dropdown, MenuProps, Divider } from "antd";
+import { Menu, Dropdown, MenuProps, Divider, Button } from "antd";
 import { UserOutlined, LogoutOutlined, KeyOutlined } from "@ant-design/icons";
 
 import useAppSelector from "~/hooks/useAppSelector";
@@ -101,20 +102,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 </form>
                 { 
                     isLogin ? 
-                    <Dropdown menu={{items}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
-                        dropdownRender={menus}> 
-                        <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
-                            <span className="flex flex-col items-end lg:flex md:hidden sm:hidden">
-                                <span className="font-medium text-right">{profile?.username}</span>
-                                <small className="capitalize">{profile?.role}</small>
-                            </span>
-                            <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
-                                backgroundColor: color,
-                            }}>
-                                { profile?.avatar ? <img className="w-full" src={profile?.avatar} alt="avatar" /> : profile?.username[0] }
-                            </span>
-                        </button> 
-                    </Dropdown>
+                    <>
+                        <Button icon={<FontAwesomeIcon icon={faBell} />} />
+                        <Dropdown menu={{items}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
+                            dropdownRender={menus}> 
+                            <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
+                                <span className="flex flex-col items-end lg:flex md:hidden sm:hidden">
+                                    <span className="font-medium text-right">{profile?.username}</span>
+                                    <small className="capitalize">{profile?.role}</small>
+                                </span>
+                                <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
+                                    backgroundColor: color,
+                                }}>
+                                    { profile?.avatar ? <img className="w-full" src={profile?.avatar} alt="avatar" /> : profile?.username[0] }
+                                </span>
+                            </button> 
+                        </Dropdown>
+                    </>
                     : 
                     <div className="flex gap-2 whitespace-nowrap">
                         <NavLink to='/auth/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Register</NavLink>

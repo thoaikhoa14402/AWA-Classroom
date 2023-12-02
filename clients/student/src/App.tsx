@@ -1,16 +1,22 @@
 import axios from 'axios';
 import './App.module.css';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import AppRoutes from "~/routes/AppRoutes"
 import authStorage from './utils/auth.storage';
 import useAppDispatch from './hooks/useAppDispatch';
 import { setClasses, setLoading } from './store/reducers/classSlice';
+import { socket } from './utils/socket';
+import { Avatar, notification } from 'antd';
+import { pushNotification, setNotificationLoading, setNotifications } from './store/reducers/notifcationSlice';
 
 function App() {
+  const [api, contextHolder] = notification.useNotification();
+  
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const isConnect = useRef(false);
 
   useEffect(() => {
     if (authStorage.isLogin()) {
@@ -29,14 +35,62 @@ function App() {
       .finally(() => {
         dispatch(setLoading(false));
       });
+      
+      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/notifications`, {
+        headers: {
+          Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+        }
+      })
+      .then((res) => {
+        // console.log(res.data.data);
+        dispatch(setNotifications(res.data.data));
+        // dispatch(setClasses(classes));
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        dispatch(setNotificationLoading(false));
+      });
+    }
+
+    return () => {
+      dispatch(setLoading(false));
+      dispatch(setNotificationLoading(false));
     }
   }, []);
 
   useEffect(() => {
+    if (!isConnect.current && authStorage.isLogin()) {
+      isConnect.current = true;
+
+      socket.connect();
+      socket.emit('subscribe', {
+        user_id: authStorage.getUserProfile()._id
+      });
+
+      socket.on('notification', (data) => {
+        api.open({
+          message: <span className='text-primary font-semibold'>{data.username}</span>,
+          description: data.message,
+          icon: <Avatar src={data.avatar} />
+        });
+
+        dispatch(pushNotification(data.notification));
+      });
+    }
+    else if (!authStorage.isLogin()) {
+      socket.disconnect();
+      isConnect.current = false;
+    }
+
     window.scrollTo(0, 0);
   }, [location]);
 
-  return <AppRoutes />
+  return <>
+    {contextHolder}
+    <AppRoutes />
+  </>
 }
 
 

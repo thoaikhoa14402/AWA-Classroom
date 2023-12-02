@@ -9,11 +9,14 @@ import AppError from "../services/errors/app.error";
 import redis from "../redis";
 import GradeStructureDTO from "../dtos/grade-structure.dto";
 import ClassModel from "../models/class.model";
+import NotificationModel from "../models/notification.model";
 import XLSX from 'xlsx';
 import { PassThrough } from 'stream';
 import MulterCloudinaryUploader from "../multer";
 import cloudinary from "../cloudinary";
 import axios from "axios";
+import socketIO from '../socket';
+import getFormatDateTime from '../utils/date.format';
 
 /*
  USER CONTROLLER 
@@ -118,10 +121,42 @@ class GradeController implements IController {
             return next(new AppError('Class not found!', 404));
         }
 
+        const updatedComposition = classInfo.gradeColumns.filter(el => !el.published && gradeCompositionInfo.gradeCompositions.find(el2 => el2.published && el2.name === el.name));
+
         classInfo.gradeColumns = gradeCompositionInfo.gradeCompositions;
         
         const newClassData = await classInfo.save();
 
+        if (updatedComposition.length > 0) {
+            const publishedCompositions = updatedComposition.map(el => el.name).join(', ');
+            const createAt = getFormatDateTime();
+
+
+            const newNotification = new NotificationModel({
+                user: req.user?._id,
+                class: newClassData._id,
+                message: `${publishedCompositions} has published`,
+                formatedDate: createAt
+            });
+
+            const createdData = await newNotification.save();
+
+            const notification = await NotificationModel.findById(createdData._id).populate('user').lean();
+
+            const io = socketIO.getIO();
+            
+            io.sockets.in(gradeCompositionInfo.classID).emit('notification', {
+                username: req.user?.username,
+                avatar: req.user?.avatar,
+                createAt: notification?.createdAt,
+                message: `"${publishedCompositions}" has published`,
+                formatedDate: createAt,
+                notification: {
+                    ...notification
+                }
+            });
+        }
+        
         res.status(200).json({
             status: 'success',
             data: newClassData.gradeColumns
