@@ -25,7 +25,6 @@ class UserController implements IController {
 
         // extract 1 param example
         this.router.param('id', DTOValidation.extractParams(['id']));
-        
         // cache example
         // this.router.get('/:id', cacheMiddleware(UserController.profileCacheKey), catchAsync(this.getUser));
         
