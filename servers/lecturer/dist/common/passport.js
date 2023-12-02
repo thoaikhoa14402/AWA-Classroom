@@ -37,7 +37,12 @@ const jwtStrategy = new passport_jwt_1.Strategy(jwtOptions, (req, jwt_payload, d
             return done(null, user);
         }
         else {
-            return done(null, false);
+            if (jwt_payload.verification_code) { // if user create new account, and request verify their otp code
+                req.verification_code = jwt_payload.verification_code;
+                return done(null, jwt_payload.verification_code);
+            }
+            else
+                return done(null, false);
         }
     }).catch(err => {
         done(err, false);

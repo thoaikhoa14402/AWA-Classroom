@@ -9,23 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUserDTO = void 0;
+exports.GradeStructureDTO = void 0;
 const class_validator_1 = require("class-validator");
-class LoginUserDTO {
-    constructor(obj) {
-        Object.assign(this, obj);
-    }
+class GradeStructureDTO {
 }
-exports.LoginUserDTO = LoginUserDTO;
+exports.GradeStructureDTO = GradeStructureDTO;
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Username is not valid." }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Username is not valid." }),
+    (0, class_validator_1.IsString)({ message: "Class ID must be a string" }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Class ID not founded!" }),
     __metadata("design:type", String)
-], LoginUserDTO.prototype, "username", void 0);
+], GradeStructureDTO.prototype, "classID", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters.' }),
-    (0, class_validator_1.IsString)({ message: "Password is not valid." }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Password is not valid." }),
-    __metadata("design:type", String)
-], LoginUserDTO.prototype, "password", void 0);
-exports.default = LoginUserDTO;
+    (0, class_validator_1.IsArray)({ message: "Grade structure must have a grade compositions" }),
+    __metadata("design:type", Array)
+], GradeStructureDTO.prototype, "gradeCompositions", void 0);
+exports.default = GradeStructureDTO;

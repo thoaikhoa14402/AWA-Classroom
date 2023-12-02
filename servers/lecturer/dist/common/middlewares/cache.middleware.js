@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = __importDefault(require("../redis"));
 const app_error_1 = __importDefault(require("../services/errors/app.error"));
-const cacheMiddleware = (keyGetter) => {
+const cacheMiddleware = (keyGetter, callback) => {
     return (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const redisClient = redis_1.default.getClient();
@@ -22,8 +22,9 @@ const cacheMiddleware = (keyGetter) => {
             if (!key || !redisClient)
                 return next();
             const cachedResponse = yield (redisClient === null || redisClient === void 0 ? void 0 : redisClient.get(key));
-            if (cachedResponse)
-                response.send(JSON.parse(cachedResponse));
+            if (cachedResponse) {
+                return callback(request, response, next, JSON.parse(cachedResponse));
+            }
             return next();
         }
         catch (error) {

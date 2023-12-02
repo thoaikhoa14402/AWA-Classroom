@@ -15,8 +15,11 @@ class Cloudinary {
         this.upload = (file, options) => __awaiter(this, void 0, void 0, function* () {
             return yield cloudinary_1.v2.uploader.upload(file, options);
         });
-        this.delete = (publicId) => __awaiter(this, void 0, void 0, function* () {
+        this.destroy = (publicId) => __awaiter(this, void 0, void 0, function* () {
             return yield cloudinary_1.v2.uploader.destroy(publicId);
+        });
+        this.delete = (publicIds) => __awaiter(this, void 0, void 0, function* () {
+            return yield cloudinary_1.v2.api.delete_resources(publicIds, { type: 'upload', resource_type: 'raw' });
         });
         this.crop = (id, h, w) => {
             return cloudinary_1.v2.url(id, {

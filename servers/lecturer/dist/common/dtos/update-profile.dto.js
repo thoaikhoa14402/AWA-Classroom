@@ -17,25 +17,25 @@ class UpdateProfileDTO {
     }
 }
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Tên phải là chuỗi" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Tên không được bỏ trống" }),
+    (0, class_validator_1.IsString)({ message: "First-name must be a string." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "First-name must not be empty." }),
     __metadata("design:type", String)
 ], UpdateProfileDTO.prototype, "firstname", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Họ và tên đệm không được bỏ trống" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Họ và tên đệm không được bỏ trống" }),
+    (0, class_validator_1.IsString)({ message: "Last-name must be a string." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Last-name must not be empty." }),
     __metadata("design:type", String)
 ], UpdateProfileDTO.prototype, "lastname", void 0);
 __decorate([
-    (0, class_validator_1.IsEmail)({}, { message: "Email không hợp lệ" }),
-    (0, class_validator_1.IsString)({ message: "Email không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Email không được bỏ trống" }),
+    (0, class_validator_1.IsEmail)({}, { message: "Email is not valid." }),
+    (0, class_validator_1.IsString)({ message: "Email is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Email must not be empty." }),
     __metadata("design:type", String)
 ], UpdateProfileDTO.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Số điện thoại không tồn tại" }),
+    (0, class_validator_1.IsString)({ message: "Phone number is not valid." }),
     (0, class_validator_1.IsOptional)(),
-    (0, phone_1.IsPhoneNumber)({ message: "Số điện thoại không tồn tại" }),
+    (0, phone_1.IsPhoneNumber)({ message: "Phone number is not valid." }),
     __metadata("design:type", String)
 ], UpdateProfileDTO.prototype, "phoneNumber", void 0);
 exports.default = UpdateProfileDTO;
