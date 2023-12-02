@@ -1,4 +1,4 @@
-import { IClass } from './../../lecturer/common/models/class.model';
+import { IClass } from '../common/models/class.model';
 import { IUser } from '../common/models/user.model';
 import { UploadApiResponse } from 'cloudinary';
 import {Options as otpOptions}  from "../common/utils/otp-generator";

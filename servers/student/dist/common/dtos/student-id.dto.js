@@ -9,23 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUserDTO = void 0;
+exports.StudentIDDTO = void 0;
 const class_validator_1 = require("class-validator");
-class LoginUserDTO {
-    constructor(obj) {
-        Object.assign(this, obj);
-    }
+class StudentIDDTO {
 }
-exports.LoginUserDTO = LoginUserDTO;
+exports.StudentIDDTO = StudentIDDTO;
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Username is not valid." }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Username is not valid." }),
+    (0, class_validator_1.IsString)({ message: "Bad Request" }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Bad Request" }),
     __metadata("design:type", String)
-], LoginUserDTO.prototype, "username", void 0);
+], StudentIDDTO.prototype, "studentID", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters.' }),
-    (0, class_validator_1.IsString)({ message: "Password is not valid." }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Password is not valid." }),
+    (0, class_validator_1.IsString)({ message: "Bad Request" }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Bad Request" }),
     __metadata("design:type", String)
-], LoginUserDTO.prototype, "password", void 0);
-exports.default = LoginUserDTO;
+], StudentIDDTO.prototype, "id", void 0);
+exports.default = StudentIDDTO;
