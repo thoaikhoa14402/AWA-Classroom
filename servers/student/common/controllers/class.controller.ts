@@ -175,7 +175,8 @@ class ClassController implements IController {
                         studentList: {
                             student_id: 1,
                             full_name: 1,
-                            email: 1,  
+                            email: 1, 
+                            _id: 1
                         },
                         studentPermission: 1,
                         lecturerPermission: 1,
