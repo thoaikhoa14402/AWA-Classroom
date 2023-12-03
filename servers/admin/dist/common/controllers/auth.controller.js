@@ -37,8 +37,10 @@ class AuthController {
             const { username, password } = req.body;
             const user = yield user_model_1.default.findOne({ username: username }).select('+password');
             if (!user || !(yield user.correctPassword(password, user.password)) || !user.active) {
-                return next(new app_error_1.default('Tài khoản hoặc mật khẩu không chính xác', 401));
+                return next(new app_error_1.default('The username or password is incorrect!', 401));
             }
+            if (user.role !== 'admin')
+                next(new app_error_1.default('The username or password is incorrect!', 401));
             let clonedUser = JSON.parse(JSON.stringify(user));
             delete clonedUser.password;
             const accessToken = yield jwt_1.default.createToken({ _id: user.id }, { expiresIn: process.env.JWT_ACCESS_EXPIRES });
@@ -96,11 +98,13 @@ class AuthController {
                 // res.redirect only works with request from browser (<a href = ></a>, ...), and it does not contain 'origin' field
                 // res.redirect and can not be worked with Axios because Axios is HTTP client not browser, and can not redirect by itself.
                 // When using Axios, it will automatically add 'origin' field into request headers
-                if (user._id) {
+                if (user) {
+                    if (user.role !== 'admin')
+                        next(new app_error_1.default('Unauthorized', 401));
                     if (origin) { // from HTTP client 
-                        return res.status(200).json({ message: "Tài khoản đã được xác thực!" });
+                        return res.status(200).json({ message: "This account has been authenticated!" });
                     }
-                    return res.redirect(`${process.env.CLIENT_HOST}/home`);
+                    return res.redirect(`${process.env.CLIENT_HOST}/dashboard`);
                 }
                 next();
             })(req, res, next);
