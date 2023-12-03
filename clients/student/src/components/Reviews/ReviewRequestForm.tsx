@@ -42,6 +42,18 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
         label: el.col,
     })), [gradeCompositions]);
 
+    const validateExpecetedGrade = (e: any) => {
+        const value = e.target.value;
+        
+        if (value !== 'N/A') {
+            const grade = parseInt(value);
+
+            // if (grade >= currentGrade && grade <= 10) {
+
+            // }
+        }
+    }
+
     return (
         <div className='p-3 flex gap-8 items-start'>
             <div className='flex items-center gap-3'>
@@ -81,7 +93,11 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
                         }
                         <span className='flex items-center border !border-blue-400 px-4 rounded-md'>
                             <span className='!font-medium !text-lg text-blue-500'>Expected</span>
-                            <Input className='!h-auto !w-14 !bg-slate-100 !ml-3 !py-1 !text-center !text-lg !border-none !font-medium !ring-0 !outline-none !p-0' placeholder='N/A' />
+                            <Input 
+                                className='!h-auto !w-14 !bg-slate-100 !ml-3 !py-1 !text-center !text-lg !border-none !font-medium !ring-0 !outline-none !p-0' 
+                                placeholder='N/A'
+                                onChange={validateExpecetedGrade}
+                            />
                         </span>
                     </div>
                     <div className='flex gap-5'>
