@@ -1,4 +1,4 @@
-import { Button, Select } from 'antd';
+import { Button, Input, Select } from 'antd';
 import React, { useMemo, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import useAppSelector from '~/hooks/useAppSelector';
@@ -14,6 +14,7 @@ interface ReviewRequestFormProps {
 const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
 
     const userInfo = useAppSelector(state => state.user.profile);
+    const [currentGrade, setCurrentGrade] = React.useState<number | string>('N/A');
 
     const editorRef = useRef<any>(null);
     
@@ -24,6 +25,7 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
     };
 
     const onChange = (value: string) => {
+        setCurrentGrade(details.gradeList[0]?.grade.find((el: any) => el.col === value)?.value ?? '');
         console.log(`selected ${value}`);
     };
       
@@ -34,15 +36,11 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
     const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-    const gradeCompositions = useMemo(() => details.gradeList[0]?.grade, [details]);
+    const gradeCompositions = useMemo(() => details.gradeList[0]?.grade ?? [], [details]);
     const gradeCompositionNames = useMemo(() => gradeCompositions.map((el: any) => ({
         value: el.col,
         label: el.col,
     })), [gradeCompositions]);
-
-    // console.log(gradeCompositionNames); 
-    // console.log(gradeCompositions); 
-    console.log(details.gradeList); 
 
     return (
         <div className='p-3 flex gap-8 items-start'>
@@ -56,18 +54,40 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
                 </div>
             </div>
             <div className='flex-1 flex flex-col gap-3'>
-                <div className='flex items-center'>
-                    <Select
-                        className='!w-35 !py-4 !h-auto'
-                        popupMatchSelectWidth={false}
-                        showSearch
-                        placeholder="Select a grade composition"
-                        optionFilterProp="children"
-                        onChange={onChange}
-                        onSearch={onSearch}
-                        filterOption={filterOption}
-                        options={gradeCompositionNames}
-                    />
+                <div className='flex items-stretch justify-between'>
+                    <div className='flex gap-5'>
+                        <Select
+                            className='!w-35 !h-auto'
+                            style={{
+                                minWidth: 150
+                            }}
+                            popupMatchSelectWidth={false}
+                            showSearch
+                            placeholder="Select a grade composition"
+                            optionFilterProp="children"
+                            onChange={onChange}
+                            onSearch={onSearch}
+                            filterOption={filterOption}
+                            options={gradeCompositionNames}
+                        />
+                        { currentGrade 
+                            ? 
+                            <div className='flex items-center bg-primary text-white px-5 rounded-md'>
+                                <span className='font-semibold'>
+                                    Review Grade: { currentGrade }
+                                </span>
+                            </div>
+                            : null
+                        }
+                        <span className='flex items-center border !border-blue-400 px-4 rounded-md'>
+                            <span className='!font-medium !text-lg text-blue-500'>Expected</span>
+                            <Input className='!h-auto !w-14 !bg-slate-100 !ml-3 !py-1 !text-center !text-lg !border-none !font-medium !ring-0 !outline-none !p-0' placeholder='N/A' />
+                        </span>
+                    </div>
+                    <div className='flex gap-5'>
+                        <span className='flex'>
+                        </span>
+                    </div>
                     <Button onClick={log} type='primary' className='!py-3 !px-4 !h-auto !font-medium' icon={<FontAwesomeIcon icon={faBullhorn} />}>Open Request</Button>
                 </div>
                 <Editor
