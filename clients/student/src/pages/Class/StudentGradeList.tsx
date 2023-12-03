@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
 
-import { Empty } from 'antd';
+import { Button, Empty } from 'antd';
 import { NavLink, useOutletContext } from 'react-router-dom';
 import { ClassType } from '~/store/reducers/classSlice';
 import { EditableProTable, ProColumns } from '@ant-design/pro-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const StudentGradeList: React.FC = () => {
     const [details] = useOutletContext<[ClassType]>();
@@ -107,6 +109,7 @@ const StudentGradeList: React.FC = () => {
         <div className='mt-2'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-2xl font-medium mb-2'>Student Grade List</h1>
+                <Button className='!p-2 !px-5 !h-auto !font-medium !my-1' icon={<FontAwesomeIcon icon={faPlus} />} type='primary' ghost>Grade Review</Button> 
             </div>
             <hr className='mb-2' />
             { data?.length ? <>

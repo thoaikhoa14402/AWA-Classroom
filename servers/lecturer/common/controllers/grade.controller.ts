@@ -131,17 +131,17 @@ class GradeController implements IController {
             const publishedCompositions = updatedComposition.map(el => el.name).join(', ');
             const createAt = getFormatDateTime();
 
-
             const newNotification = new NotificationModel({
                 user: req.user?._id,
                 class: newClassData._id,
-                message: `${publishedCompositions} has published`,
+                message: `has published "${publishedCompositions}" composition.`,
+                navigation: `/classes/grades/${newClassData?.slug}`,
                 formatedDate: createAt
             });
 
             const createdData = await newNotification.save();
 
-            const notification = await NotificationModel.findById(createdData._id).populate('user').lean();
+            const notification = await NotificationModel.findById(createdData._id).populate('user class').lean();
 
             const io = socketIO.getIO();
             
@@ -149,8 +149,9 @@ class GradeController implements IController {
                 username: req.user?.username,
                 avatar: req.user?.avatar,
                 createAt: notification?.createdAt,
-                message: `"${publishedCompositions}" has published`,
-                formatedDate: createAt,
+                message: notification?.message,
+                navigation: notification?.navigation,
+                formatedDate: notification?.formatedDate,
                 notification: {
                     ...notification
                 }

@@ -17,6 +17,7 @@ import ClassLayout from "~/layouts/ClassLayout";
 import Member from "~/pages/Class/Member";
 import Invite from "~/pages/Invite";
 import Grade from "~/pages/Class/Grade";
+import ReviewRequest from "~/pages/Class/ReviewRequest";
 
 const AppRoutes = () => {
     return (
@@ -32,6 +33,7 @@ const AppRoutes = () => {
                         <Route path="members/:classID?" element={<Member />} />    
                         <Route path="grades/:classID?" element={<Grade />} />    
                         <Route path="invite/:classID?" element={<Invite />} />    
+                        <Route path="reviews/:classID?" element={<ReviewRequest />} />    
                     </Route>
                     <Route path="/schedule" element={<>Schedule</>} />
                     <Route path="/settings" element={<>Settings</>} />
@@ -56,7 +58,7 @@ const AppRoutes = () => {
                     <Route path = "forgot-password" element = {<ForgotPasswordPage/>}/>
                 </Route>
             </Route>
-            <Route path="*" element={<Navigate to="/" />}  />
+            <Route path="*" element={<Navigate to="/" replace />}  />
         </Routes>
     );
 };

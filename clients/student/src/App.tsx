@@ -2,14 +2,14 @@ import axios from 'axios';
 import './App.module.css';
 
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AppRoutes from "~/routes/AppRoutes"
 import authStorage from './utils/auth.storage';
 import useAppDispatch from './hooks/useAppDispatch';
 import { setClasses, setLoading } from './store/reducers/classSlice';
 import { socket } from './utils/socket';
 import { Avatar, notification } from 'antd';
-import { pushNotification, setNotificationLoading, setNotifications } from './store/reducers/notifcationSlice';
+import { pushNotification, readNotification, setNotificationLoading, setNotifications } from './store/reducers/notifcationSlice';
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -17,6 +17,8 @@ function App() {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const isConnect = useRef(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authStorage.isLogin()) {
@@ -58,10 +60,6 @@ function App() {
       dispatch(setLoading(false));
       dispatch(setNotificationLoading(false));
     }
-
-    return () => {
-      dispatch(setLoading(false));
-    }
   }, []);
 
   useEffect(() => {
@@ -75,15 +73,25 @@ function App() {
 
       socket.on('notification', (data) => {
         api.open({
-          message: <span className='text-primary font-semibold'>{data.username}</span>,
-          description: data.message,
-          icon: <Avatar src={data.avatar} />
+          message:
+            <span className='text-gray-600 font-semibold flex flex-col text-sm gap-1'>
+              <span>{data.notification.class.cid} - {data.notification.class.name}</span>
+            </span>,
+          description: <span>
+            <span className='text-primary font-semibold'>{data.username}</span>&nbsp;
+            {data.message}
+          </span>,
+          icon: <Avatar src={data.avatar} />,
+          onClick: () => {
+            navigate(data.navigation);
+          },
+          className: "hover:!cursor-pointer"
         });
 
         dispatch(pushNotification(data.notification));
       });
     }
-    else if (!authStorage.isLogin()) {
+    else if (!authStorage.isLogin() || !socket.active) {
       socket.disconnect();
       isConnect.current = false;
     }

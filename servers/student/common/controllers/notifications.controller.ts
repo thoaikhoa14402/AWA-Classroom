@@ -5,6 +5,7 @@ import { AuthController } from ".";
 import NotificationModel from "../models/notification.model";
 import mongoose from "mongoose";
 import ClassModel from "../models/class.model";
+import AppError from "../services/errors/app.error";
 
 /*
  NOTIFICATION CONTROLLER
@@ -25,7 +26,9 @@ class NotificationController implements IController {
         
         const notification = await NotificationModel.find({ 
             class: { $in: classIds },
-        }).populate('user').sort('-createAt').lean();
+        }).populate('user class').sort({
+            createdAt: -1
+        }).lean();
 
         res.status(200).json({
             status: 'success',

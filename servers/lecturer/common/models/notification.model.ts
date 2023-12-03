@@ -8,6 +8,7 @@ export interface INotification {
     user: IUser;
     class: IClass;
     message: string;
+    navigation: string;
     createdAt: Date;
     formatedDate: string;
     readable: boolean;
@@ -26,6 +27,9 @@ const NotificationSchema = new mongoose.Schema<INotification>(
             required: [true, 'Class required']
         },
         message: {
+            type: String,
+        },
+        navigation: {
             type: String,
         },
         createdAt: {
