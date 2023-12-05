@@ -75,7 +75,7 @@ class AuthController implements IController {
 
         if (user.role !== 'student') next(new AppError('The username or password is incorrect', 401));
 
-        if (user && !user.active) { // if this account is created, but not activated yet
+        if (user && !user.verify) { // if this account is created, but not activated yet
             const otpCode = new OTPGenerator().generate();
             const verificationToken = await JsonWebToken.createToken({username: req.body.username, email: req.body.email, verification_code: otpCode}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
             const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
@@ -160,7 +160,7 @@ class AuthController implements IController {
         if (userRegistrationInfo.verification_code === req.verification_code) {
             const updatedUser = await UserModel.findOneAndUpdate(
                 { username: req.body.username}, // Tìm người dùng dựa trên username
-                { active: true }, // Update trường active thành true
+                { verify: true }, // Update trường active thành true
                 { new: true } // Tùy chọn này trả về đối tượng đã được cập nhật
             );
             const accessToken = await JsonWebToken.createToken({_id: updatedUser?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})

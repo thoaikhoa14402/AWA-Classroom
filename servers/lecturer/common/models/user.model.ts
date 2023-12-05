@@ -18,6 +18,7 @@ export interface IUser {
     phoneNumber?: string;
     address?: string;
     active?: boolean;
+    verify?: boolean;
     role?: string;
 }
 export interface IUserMethods {
@@ -44,6 +45,10 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         },
         email: { type: String},
         active: {
+            type: Boolean,
+            default: true
+        },
+        verify: {
             type: Boolean,
             default: false
         },
