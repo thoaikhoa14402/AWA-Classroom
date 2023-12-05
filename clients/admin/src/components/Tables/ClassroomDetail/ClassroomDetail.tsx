@@ -19,12 +19,14 @@ type DataIndex = keyof DataType;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
-  dataIndex: string;
+  // dataIndex: string;
+  dataIndex: keyof DataType;
   title: any;
   inputType: 'number' | 'text';
   record: DataType;
   index: number;
   children: React.ReactNode;
+  dataSource: DataType[]; // Thêm dataSource vào props
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -35,6 +37,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   index,
   children,
+  dataSource, 
   ...restProps
 }) => {
   const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
@@ -51,6 +54,34 @@ const EditableCell: React.FC<EditableCellProps> = ({
           //     message: `Please Input ${title}!`,
           //   },
           // ]}
+          rules = {
+          [
+            {
+              validator: async (_, value) => {
+                // Kiểm tra nếu dữ liệu đã tồn tại
+                console.log('dataIndex: ', dataIndex);
+                console.log('value: ', value);
+                console.log('data source: ', dataSource);
+                dataSource.map((item) => {
+                  if (item[dataIndex] === value) {
+                    console.log('item duplicated: ', item);
+                  }
+                  return item
+                })
+                
+                if (value && dataSource.some(item =>  {
+                  console.log('item[dataIndex]: ', item);
+                  return item[dataIndex] === value
+                })) {
+                  throw new Error(`${title.split(" ")[1]} already exists!`);
+                }
+                // if (value) {
+                //   throw new Error(`${title.split(" ")[1]} already exists!`);
+                // }
+              },
+            },
+          ]
+          }
         >
           {inputNode}
         </Form.Item>
@@ -65,7 +96,7 @@ const ClassroomDetailTable: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
-  // const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
+  const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
   // const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [dataSource, setDataSource] = useState<DataType[]>([
       {
@@ -294,7 +325,7 @@ const ClassroomDetailTable: React.FC = () => {
   const edit = (record: Partial<DataType> & { key: React.Key }) => {
     console.log('record: ', record);
     // form.setFieldsValue({ ...record });
-    form.setFieldsValue({ username: '1', fullname: '2', phonenumber: '3', active: '4', email: '5', ...record });
+    form.setFieldsValue({ id: '',studentID: '', username: '', email: '',role: '', ...record });
     setEditingKey(record.id as string) ;
   };
 
@@ -303,11 +334,13 @@ const ClassroomDetailTable: React.FC = () => {
   };
 
   const save = async (key: React.Key) => {
+    setIsTableLoading(true);
     try {
       const row = (await form.validateFields()) as DataType;
+      console.log('row: ', row);
       const newData = [...dataSource];
       const index = newData.findIndex((item) => key === item.id);
-      if (index > -1) {
+      if (index > -1) { // update data
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
@@ -315,7 +348,21 @@ const ClassroomDetailTable: React.FC = () => {
         });
         setDataSource(newData);
         setEditingKey('');
-      } else {
+        // call api to get response
+        // if response status code == 200 then
+        setTimeout(() => {
+          message.success({
+            content: 'New Student ID assigned to this user successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+          setDataSource(newData);
+          // setDataSource(response.data.updatedClassroomDetails);
+          setIsTableLoading(false);
+        }, 1500);
+      } else { // add new data
         newData.push(row);
         setDataSource(newData);
         setEditingKey('');
@@ -324,37 +371,48 @@ const ClassroomDetailTable: React.FC = () => {
       console.log('Validate Failed:', errInfo);
     }
   };
-  // useEffect(() => {
-  //   axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/list`).then((response) => {
-  //     if (response.status === 200) {
-  //       setTimeout(() => { 
-  //         setIsTableLoading(false);
-  //         if (response.data.students.length === 0) {
-  //           message.info({
-  //             content: 'No students found!',
-  //             style: {
-  //               fontFamily: 'Montserrat',
-  //               fontSize: 16,
-  //             },
-  //             duration: 1.2,
-  //           })
-  //           return;
-  //         }
-  //         message.success({
-  //           content: 'Data was loaded successfully!',
-  //           style: {
-  //             fontFamily: 'Montserrat',
-  //             fontSize: 16,
-  //           },
-  //           duration: 1.2,
-  //         });
-  //       setDataSource(response.data.students);
-  //       }, 800); 
+  useEffect(() => {
+    // axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/list`).then((response) => {
+    //   if (response.status === 200) {
+    //     setTimeout(() => { 
+    //       setIsTableLoading(false);
+    //       if (response.data.students.length === 0) {
+    //         message.info({
+    //           content: 'No students found!',
+    //           style: {
+    //             fontFamily: 'Montserrat',
+    //             fontSize: 16,
+    //           },
+    //           duration: 1.2,
+    //         })
+    //         return;
+    //       }
+    //       message.success({
+    //         content: 'Data was loaded successfully!',
+    //         style: {
+    //           fontFamily: 'Montserrat',
+    //           fontSize: 16,
+    //         },
+    //         duration: 1.2,
+    //       });
+    //     setDataSource(response.data.students);
+    //     }, 800); 
        
-  //     }
-  //   }).catch((error: Response) => console.log('err:', error));
-
-  // }, [])
+    //   }
+    // }).catch((error: Response) => console.log('err:', error));
+    setTimeout(() => {
+      setIsTableLoading(false);
+      message.success({
+      content: 'Data was loaded successfully!',
+      style: {
+        fontFamily: 'Montserrat',
+        fontSize: 16,
+      },
+      duration: 1.2,
+    });
+      setDataSource(dataSource);
+    }, 800)
+  }, [])
 
   // search item in column
   const handleSearch = (
@@ -454,69 +512,40 @@ const ClassroomDetailTable: React.FC = () => {
   });
 
   // Delete a row (new data item)
-  // const handleActionDelete = async (key: React.Key) => {
-  //   setIsTableLoading(true);
-  //   try {
-  //     const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
-  //     if (response.status === 200) {
-  //       setTimeout(() => {
-  //         setIsTableLoading(false);
-  //         message.success({
-  //           content: 'This account was deleted successfully!',
-  //           style: {
-  //             fontFamily: 'Montserrat',
-  //             fontSize: 16,
-  //           }
-  //         });
-  //       setDataSource(response.data.updatedStudents);
-  //       }, 1500);
-  //     }
-  //     else message.error({
-  //       content: response.data.message,
-  //     })
-  //   } catch (err) {
-  //     console.log('err: ', err);
-  //     message.error({
-  //       content: 'Unexpected errors!'
-  //     })
-  //   }
-  // };
-
-  // handle update student's status
-  // const handleActionUpdateStatus = async (key: React.Key) => {
-  //   setIsTableLoading(true);
-  //   try {
-  //     const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
-  //     if (response.status === 200) {
-  //       setTimeout(() => {
-  //         setIsTableLoading(false);
-  //         message.success({
-  //           content: 'This account status was updated successfully!',
-  //           style: {
-  //             fontFamily: 'Montserrat',
-  //             fontSize: 16,
-  //           }
-  //         });
-  //       setDataSource(response.data.updatedStudents);
-  //       }, 1500);
-  //     }
-  //     else message.error({
-  //       content: response.data.message,
-  //     })
-  //   } catch (err) {
-  //     console.log('err: ', err);
-  //     message.error({
-  //       content: 'Unexpected errors!'
-  //     })
-  //   }
-  // }
+  const handleActionDelete = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      //const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
+      // if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This account was deleted successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        // setDataSource(response.data.updatedStudents);
+        }, 1500);
+      // }
+      // else message.error({
+      //   content: response.data.message,
+      // })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
+  };
 
   const columns = [
     {
       title: 'Student ID',
       dataIndex: 'studentID',
       key: 'studentID',
-      ellipsis: true,
+      // ellipsis: true,
       editable: true,
       ...getColumnSearchProps('studentID'),
       onCell: (record: DataType) => ({
@@ -564,7 +593,7 @@ const ClassroomDetailTable: React.FC = () => {
         // customize cell content
         render: (_: any, record: DataType) => {
             return (
-                <Tag color= {record.role === "student" ? "green" : "orange" } style = {{
+                <Tag color= {record.role === "student" ? "green" : "blue" } style = {{
                 fontSize: 16,
                 minWidth: 80,
                 textAlign: 'center',
@@ -626,8 +655,8 @@ const ClassroomDetailTable: React.FC = () => {
                 Edit
               </Button>
               {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() =>{}}>
-                <Button danger style = {{
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}>
+                <Button type = "primary" danger style = {{
                   width: '80px'
                 }} className = "!flex !justify-center !items-center">Delete</Button>
                 </Popconfirm>
@@ -651,6 +680,7 @@ const ClassroomDetailTable: React.FC = () => {
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
+        dataSource, // truyền dataSource xuống EditableCell
       }),
     };
   });
@@ -671,7 +701,7 @@ const ClassroomDetailTable: React.FC = () => {
         dataSource={dataSource} 
         columns = {mergedColumns}
         rowClassName="editable-row"
-        // loading = {isTableLoading}
+        loading = {isTableLoading}
         pagination={{
         total: dataSource.length,
         pageSize: 7,

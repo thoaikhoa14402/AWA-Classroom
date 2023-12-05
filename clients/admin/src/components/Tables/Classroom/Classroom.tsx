@@ -231,7 +231,7 @@ const ClassroomTable: React.FC = () => {
                 {dataSource.length >= 1 ? (
                   <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record._id)}
                   >
-                  <Button danger style = {{
+                  <Button type = "primary" danger style = {{
                     width: '75px'
                   }} className = "!flex !justify-center !items-center">Delete</Button>
                   </Popconfirm>

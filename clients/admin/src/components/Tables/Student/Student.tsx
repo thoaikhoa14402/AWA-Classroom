@@ -271,12 +271,12 @@ const StudentTable: React.FC = () => {
         // customize cell content
         render: (_, record) => {
             return (
-                <Tag color= {record.active ? "green" : "orange" } style = {{
+                <Tag color= {record.active ? "green" : "default" } style = {{
                 fontSize: 16,
                 minWidth: 80,
                 textAlign: 'center',
                 padding: 4,
-              }}>
+              }} className = {!record.active ? '!text-gray-400' : ''}>
                 {record.active ? "Active" : "Inactive"}
               </Tag>
             );
@@ -290,24 +290,26 @@ const StudentTable: React.FC = () => {
         render: (_, record) => (
             <Space size="middle">
               <Button
-                type="primary"
                 style={{
                   width: '80px'
                 }}
-                className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
+                type = "primary"
+                // className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
+                className={record.active ? "!bg-gray-400 !hover:bg-gray-700 !border-transparent !text-white !flex !justify-center !items-center !shadow" : '!flex !justify-center !items-center'}
+                
                 onClick={() => handleActionUpdateStatus(record.id)}>         
                 {record.active ? 'Lock' : 'Unlock'}
               </Button>
               {dataSource.length >= 1 ? (
                 <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
                 >
-                <Button danger style = {{
+                <Button type = 'primary' danger style = {{
                   width: '80px'
                 }} className = "!flex !justify-center !items-center">Delete</Button>
                 </Popconfirm>
         ) : null}
             </Space>
-          )
+        )
     },
   ];
 
