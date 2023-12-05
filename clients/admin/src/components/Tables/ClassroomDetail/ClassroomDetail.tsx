@@ -1,5 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message, InputNumber, Form} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
@@ -7,8 +8,8 @@ import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
 
 interface DataType {
-  id: string;
-  studentID: string;
+  _id: string;
+  studentID?: string;
   username: string;
   email: string;
   role: string;
@@ -40,7 +41,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   dataSource, 
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = inputType === 'number' ? <InputNumber /> : <Input allowClear/>;
 
   return (
     <td {...restProps}>
@@ -48,36 +49,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
         <Form.Item
           name={dataIndex}
           style={{ margin: 0 }}
-          // rules={[
-          //   {
-          //     required: true,
-          //     message: `Please Input ${title}!`,
-          //   },
-          // ]}
           rules = {
           [
             {
               validator: async (_, value) => {
                 // Kiểm tra nếu dữ liệu đã tồn tại
-                console.log('dataIndex: ', dataIndex);
-                console.log('value: ', value);
-                console.log('data source: ', dataSource);
-                dataSource.map((item) => {
-                  if (item[dataIndex] === value) {
-                    console.log('item duplicated: ', item);
-                  }
-                  return item
-                })
-                
                 if (value && dataSource.some(item =>  {
-                  console.log('item[dataIndex]: ', item);
                   return item[dataIndex] === value
                 })) {
                   throw new Error(`${title.split(" ")[1]} already exists!`);
                 }
-                // if (value) {
-                //   throw new Error(`${title.split(" ")[1]} already exists!`);
-                // }
               },
             },
           ]
@@ -93,240 +74,24 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const ClassroomDetailTable: React.FC = () => {
+  const {slug} = useParams();
   const [searchText, setSearchText] = useState<string>('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const searchInput = useRef<InputRef>(null);
   const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
-  // const [dataSource, setDataSource] = useState<DataType[]>([]);
-  const [dataSource, setDataSource] = useState<DataType[]>([
-      {
-        id: '1',
-        studentID: '20127043',
-        username: 'thoaikhoa14403',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '2',
-        studentID: '20127045',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '3',
-        studentID: '20127045',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'lecturer',
-      },
-      {
-        id: '4',
-        studentID: '20127046',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'lecturer',
-      },
-      {
-        id: '5',
-        studentID: '20127047',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '6',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '7',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'lecturer',
-      },
-      {
-        id: '8',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '9',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '10',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '11',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '12',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '13',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '14',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '15',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '16',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '17',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '18',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '19',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '20',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '21',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '22',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '23',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '24',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '25',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '26',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '27',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '28',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '29',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '30',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-      {
-        id: '30',
-        studentID: '20127048',
-        username: 'thoaikhoa14402',
-        email: 'nguyenthoaidangkhoa@gmail.com',
-        role: 'student',
-      },
-  ]);
-
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
+  const [classTitle, setClassTitle] = useState<any>({
+    cid: '',
+    name: '',
+  })
+ 
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState<string>('');
-  const isEditing = (record: DataType) => record.id === editingKey;
+  const isEditing = (record: DataType) => record._id === editingKey;
 
   const edit = (record: Partial<DataType> & { key: React.Key }) => {
-    console.log('record: ', record);
-    // form.setFieldsValue({ ...record });
     form.setFieldsValue({ id: '',studentID: '', username: '', email: '',role: '', ...record });
-    setEditingKey(record.id as string) ;
+    setEditingKey(record._id as string) ;
   };
 
   const cancel = () => {
@@ -337,9 +102,8 @@ const ClassroomDetailTable: React.FC = () => {
     setIsTableLoading(true);
     try {
       const row = (await form.validateFields()) as DataType;
-      console.log('row: ', row);
       const newData = [...dataSource];
-      const index = newData.findIndex((item) => key === item.id);
+      const index = newData.findIndex((item) => key === item._id);
       if (index > -1) { // update data
         const item = newData[index];
         newData.splice(index, 1, {
@@ -349,19 +113,37 @@ const ClassroomDetailTable: React.FC = () => {
         setDataSource(newData);
         setEditingKey('');
         // call api to get response
-        // if response status code == 200 then
-        setTimeout(() => {
-          message.success({
-            content: 'New Student ID assigned to this user successfully!',
-            style: {
-              fontFamily: 'Montserrat',
-              fontSize: 16,
-            }
+        try {
+          const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/${slug}/student/${key}`, {
+            student_id: row.studentID,
           });
-          setDataSource(newData);
-          // setDataSource(response.data.updatedClassroomDetails);
-          setIsTableLoading(false);
-        }, 1500);
+          if (response.status === 200) {
+            setTimeout(() => {
+              setIsTableLoading(false);
+              message.success({
+                content: 'New Student ID assigned to this user successfully!',
+                style: {
+                  fontFamily: 'Montserrat',
+                  fontSize: 16,
+                }
+              });
+              setDataSource(response.data.detailedClassroom.map((user: any) => {
+                return {
+                  ...user,
+                  studentID: user.studentID ? user.studentID : '-'
+                }
+              }));
+            }, 1500);
+          }
+          else message.error({
+            content: response.data.message,
+          })
+        } catch (err) {
+          console.log('err: ', err);
+          message.error({
+            content: 'Unexpected errors!'
+          })
+        }
       } else { // add new data
         newData.push(row);
         setDataSource(newData);
@@ -372,46 +154,43 @@ const ClassroomDetailTable: React.FC = () => {
     }
   };
   useEffect(() => {
-    // axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/list`).then((response) => {
-    //   if (response.status === 200) {
-    //     setTimeout(() => { 
-    //       setIsTableLoading(false);
-    //       if (response.data.students.length === 0) {
-    //         message.info({
-    //           content: 'No students found!',
-    //           style: {
-    //             fontFamily: 'Montserrat',
-    //             fontSize: 16,
-    //           },
-    //           duration: 1.2,
-    //         })
-    //         return;
-    //       }
-    //       message.success({
-    //         content: 'Data was loaded successfully!',
-    //         style: {
-    //           fontFamily: 'Montserrat',
-    //           fontSize: 16,
-    //         },
-    //         duration: 1.2,
-    //       });
-    //     setDataSource(response.data.students);
-    //     }, 800); 
+    axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/${slug}`).then((response) => {
+      if (response.status === 200) {
+        setTimeout(() => { 
+          setIsTableLoading(false);
+          if (response.data.detailedClassroom.length === 0) {
+            message.info({
+              content: 'No students found!',
+              style: {
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+              },
+              duration: 1.2,
+            })
+            return;
+          }
+          message.success({
+            content: 'Data was loaded successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            },
+            duration: 1.2,
+          });
+        setClassTitle({
+          cid: response.data.cid,
+          name: response.data.name,
+        })
+        setDataSource(response.data.detailedClassroom.map((user: any) => {
+          return {
+            ...user,
+            studentID: user.studentID ? user.studentID : '-'
+          }
+        }));
+        }, 800); 
        
-    //   }
-    // }).catch((error: Response) => console.log('err:', error));
-    setTimeout(() => {
-      setIsTableLoading(false);
-      message.success({
-      content: 'Data was loaded successfully!',
-      style: {
-        fontFamily: 'Montserrat',
-        fontSize: 16,
-      },
-      duration: 1.2,
-    });
-      setDataSource(dataSource);
-    }, 800)
+      }
+    }).catch((error: Response) => console.log('err:', error));
   }, [])
 
   // search item in column
@@ -488,11 +267,11 @@ const ClassroomDetailTable: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined className = {filtered ? "!text-primary" : ''}/>
     ),
-    onFilter: (value, record) =>
+    onFilter: (value, record) => 
       record[dataIndex]
-        .toString()
+        ?.toString()
         .toLowerCase()
-        .includes((value as string).toLowerCase()),
+        .includes((value as string).toLowerCase())??false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -515,8 +294,8 @@ const ClassroomDetailTable: React.FC = () => {
   const handleActionDelete = async (key: React.Key) => {
     setIsTableLoading(true);
     try {
-      //const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/student/${key}`);
-      // if (response.status === 200) {
+      const response = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/${slug}/student/${key}`);
+      if (response.status === 200) {
         setTimeout(() => {
           setIsTableLoading(false);
           message.success({
@@ -526,12 +305,17 @@ const ClassroomDetailTable: React.FC = () => {
               fontSize: 16,
             }
           });
-        // setDataSource(response.data.updatedStudents);
+          setDataSource(response.data.detailedClassroom.map((user: any) => {
+            return {
+              ...user,
+              studentID: user.studentID ? user.studentID : '-'
+            }
+          }));
         }, 1500);
-      // }
-      // else message.error({
-      //   content: response.data.message,
-      // })
+      }
+      else message.error({
+        content: response.data.message,
+      })
     } catch (err) {
       console.log('err: ', err);
       message.error({
@@ -545,7 +329,7 @@ const ClassroomDetailTable: React.FC = () => {
       title: 'Student ID',
       dataIndex: 'studentID',
       key: 'studentID',
-      // ellipsis: true,
+      ellipsis: true,
       editable: true,
       ...getColumnSearchProps('studentID'),
       onCell: (record: DataType) => ({
@@ -609,32 +393,11 @@ const ClassroomDetailTable: React.FC = () => {
         dataIndex: 'actions',
         key: 'actions',
         width: "21%",
-        // render: (_, record) => (
-        //     <Space size="middle">
-        //       <Button
-        //         type="primary"
-        //         style={{
-        //           width: '80px'
-        //         }}
-        //         className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
-        //         onClick={() => handleActionUpdateStatus(record.id)}>         
-        //         {record.active ? 'Lock' : 'Unlock'}
-        //       </Button>
-        //       {dataSource.length >= 1 ? (
-        //         <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}
-        //         >
-        //         <Button danger style = {{
-        //           width: '80px'
-        //         }} className = "!flex !justify-center !items-center">Delete</Button>
-        //         </Popconfirm>
-        // ) : null}
-        //     </Space>
-        // )
         render: (_: any, record: DataType) => {
           const editable = isEditing(record);
           return editable ? (
             <Space size = "middle">
-              <Button type = "primary" onClick={() => save(record.id)} style={{width: '80px'}}>
+              <Button type = "primary" onClick={() => save(record._id)} style={{width: '80px'}}>
                 Save
               </Button>
               <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
@@ -642,21 +405,19 @@ const ClassroomDetailTable: React.FC = () => {
               </Popconfirm>
             </Space>
           ) : (
-            // <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record as any)}>
-            //   Edit
-            // </Typography.Link>
             <Space size="middle">
-               <Button
+              <Button
+                disabled = {record.role === 'lecturer' ? true : false}
                 style={{
                   width: '80px'
                 }}
-                className={"!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center"}
+                className={record.role === 'student' ? `!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center` : ''}
                 onClick={() => edit(record as any)}>         
                 Edit
               </Button>
               {dataSource.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record.id)}>
-                <Button type = "primary" danger style = {{
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record._id)}>
+                <Button disabled = {record.role === 'lecturer' ? true : false} type = "primary"  danger style = {{
                   width: '80px'
                 }} className = "!flex !justify-center !items-center">Delete</Button>
                 </Popconfirm>
@@ -676,7 +437,6 @@ const ClassroomDetailTable: React.FC = () => {
       onCell: (record: any) => ({
         record,
         inputType: 'text',
-        // inputType: col.dataIndex === 'age' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -687,7 +447,7 @@ const ClassroomDetailTable: React.FC = () => {
 
   return <div>
     <Typography.Title level={3} style={{ margin: 0, color: "#00A551" }} className='!uppercase !mt-4 !mb-4'>
-      Classroom Detail Management
+      {classTitle.cid !== '' ?  `${classTitle.cid} - ${classTitle.name}`: 'Classroom Detail Management'}
     </Typography.Title>
     <Form form={form} component={false}>
       <Table 
