@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, MenuProps, message } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, Navigate, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NoClassMessage } from '~/components/Class';
 import useAppSelector from '~/hooks/useAppSelector';
 import { ClassType, addClass } from '~/store/reducers/classSlice';
@@ -13,12 +13,14 @@ import ClassCard from '~/components/Class/ClassCard';
 import useJoinModal from '~/hooks/useJoinModal';
 import useAppDispatch from '~/hooks/useAppDispatch';
 import useStudentIDModal from '~/hooks/useStudentIDModal';
+import { setReviewLoading, setReviews } from '~/store/reducers/reviewSlice';
 
 const ClassLayout: React.FC = () => {
     const params = useParams();
     const classID = params.classID;
 
     const classInfo = useAppSelector(state => state.classes);
+    const reviewInfo = useAppSelector(state => state.reviews);
 
     const navigate = useNavigate();
 
@@ -56,6 +58,7 @@ const ClassLayout: React.FC = () => {
     
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
+    const isReviewLoading = reviewInfo.isLoading;
     
     const items: MenuProps["items"] = [
         {
@@ -123,12 +126,29 @@ const ClassLayout: React.FC = () => {
             .finally(() => {
                 setIsDetailLoading(false);
             });
+
+            dispatch(setReviewLoading(true));
+            axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/review/${classID}`, {
+                headers: {
+                    Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                }
+            })
+            .then(res => {
+                dispatch(setReviews(res.data.data.reviews));
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                dispatch(setReviewLoading(false));
+            });
         } 
         else {
             setClassDetail(undefined);
             setIsDetailLoading(false);
+            dispatch(setReviewLoading(false));
         }
-    }, [classID, classInfo.classes]);
+    }, [classID, classInfo.classes, dispatch]);
 
     useEffect(() => {
         if (classDetail) {
@@ -138,12 +158,18 @@ const ClassLayout: React.FC = () => {
         }
     }, [classDetail]);
 
+    const location = useLocation();
+
+    if (!classID && location.pathname !== '/classes') {
+        return <Navigate to='/classes' replace />;
+    }
+
     return (
         <>
             {contextHolder}
             {ModalContext}
             {
-                (!isLoading && !isDetailLoading)
+                (!isLoading && !isDetailLoading && !isReviewLoading)
                 ? isInvite && !isJoined.current ? <Outlet /> 
                 : isInvite && isJoined ? 'You are joined'                    
                     : classes.length 

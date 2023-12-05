@@ -16,6 +16,7 @@ import InviteClassDTO from '../dtos/invite-class.dto';
 import Jwt from '../utils/jwt';
 import JoinClassDTO from '../dtos/join-class';
 import mongoose from 'mongoose';
+import JoinedClassInfoModel from '../models/joinedClassInfo.model';
 
 /*
  CLASS CONTROLLER 
@@ -40,7 +41,29 @@ class ClassController implements IController {
 
         this.router.post('/invite/:id', DTOValidation.validate<InviteClassDTO>(InviteClassDTO), AuthController.protect, this.ownerProtect, catchAsync(this.sendInvitedMessage));
         this.router.post('/join/:id', DTOValidation.validate<JoinClassDTO>(JoinClassDTO), AuthController.protect, this.invitedProtect, catchAsync(this.joinClass));
+    
+        this.router.delete('/:id?', AuthController.protect, this.ownerProtect, catchAsync(this.deleteClass));
     }
+
+    private deleteClass = async (req: Request, res: Response, next: NextFunction) => {
+        const classInfo: IClass | null = await ClassModel.findOne({ slug: req.params.id }).lean();
+        
+        if (!classInfo) {
+            return next(new AppError('No class found with that ID', 404));
+        }
+
+        await JoinedClassInfoModel.deleteMany({ class: classInfo._id });
+        await ClassModel.deleteOne({ slug: req.body.id });
+
+        const redisClient = redis.getClient();
+        await redisClient?.del(this.classCacheKey(req));
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Delete class successfully',
+            data: {}
+        });
+    };
 
     private classCacheRes = async (req: Request, res: Response, next: NextFunction, data: any) => {
         if (req.body.id)
@@ -213,13 +236,23 @@ class ClassController implements IController {
                 return next(new AppError('No class found with that ID', 404));
             }
 
+            const students = await JoinedClassInfoModel.find({ class: classInfo._id, user: {
+                $in: classInfo.students.map((student) => student._id)
+            } }).populate('user').lean();
+
             const redisClient = redis.getClient();
             await redisClient?.setEx(this.classCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(classInfo));
             
             return res.status(200).json({
                 status: 'success',
                 message: 'Get class successfully',
-                data: classInfo
+                data: {
+                    ...classInfo,
+                    students: [...students.map((student) => ({
+                        ...student.user,
+                        studentID: student.studentID
+                    }))]
+                }
             });
         }
         

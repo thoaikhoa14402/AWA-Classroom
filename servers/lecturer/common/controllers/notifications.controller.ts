@@ -21,7 +21,11 @@ class NotificationController implements IController {
     }
 
     private getAllNotifications = async (req: Request, res: Response, next: NextFunction) => {
-        const classes = await ClassModel.find({ students: new mongoose.Types.ObjectId(req.user?._id) }).lean();
+        const classes = await ClassModel.find({ $or: [
+            { lecturers: new mongoose.Types.ObjectId(req.user?._id) },
+            { owner: new mongoose.Types.ObjectId(req.user?._id) },
+        ] }).lean();
+
         const classIds = classes.map((item) => item._id);
         
         const notification = await NotificationModel.find({ 

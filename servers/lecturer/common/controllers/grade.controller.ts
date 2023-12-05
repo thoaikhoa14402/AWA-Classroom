@@ -136,7 +136,8 @@ class GradeController implements IController {
                 class: newClassData._id,
                 message: `has published "${publishedCompositions}" composition.`,
                 navigation: `/classes/grades/${newClassData?.slug}`,
-                formatedDate: createAt
+                formatedDate: createAt,
+                receiver: [...newClassData.students, ...newClassData.lecturers]
             });
 
             const createdData = await newNotification.save();

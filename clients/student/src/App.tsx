@@ -9,7 +9,7 @@ import useAppDispatch from './hooks/useAppDispatch';
 import { setClasses, setLoading } from './store/reducers/classSlice';
 import { socket } from './utils/socket';
 import { Avatar, notification } from 'antd';
-import { pushNotification, readNotification, setNotificationLoading, setNotifications } from './store/reducers/notifcationSlice';
+import { pushNotification, setNotificationLoading, setNotifications } from './store/reducers/notifcationSlice';
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -44,9 +44,7 @@ function App() {
         }
       })
       .then((res) => {
-        // console.log(res.data.data);
         dispatch(setNotifications(res.data.data));
-        // dispatch(setClasses(classes));
       })
       .catch(err => {
         console.log(err);
@@ -63,6 +61,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (socket.active && socket.connected && authStorage.isLogin()) {
+      socket.emit('subscribe', {
+        user_id: authStorage.getUserProfile()._id
+      });
+    }
+    
     if (!isConnect.current && authStorage.isLogin()) {
       isConnect.current = true;
 

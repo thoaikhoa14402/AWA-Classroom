@@ -47,7 +47,7 @@ export interface ClassType {
     name: string;
     banner?: string;
     createAt: Date;
-    students: Array<UserType>;
+    students: Array<UserType & { studentID: string }>;
     lecturers: Array<UserType>;
     owner: UserType;
     inviteCode: string;

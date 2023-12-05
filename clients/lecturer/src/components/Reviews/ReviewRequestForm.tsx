@@ -37,12 +37,7 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
         const reason = editorRef.current.getContent();
         const expected = Number(expectedGrade);
         const grade = Number(currentGrade);
-        const student_id = details.studentID;
         const composition = gradeComposition;
-
-        if (!student_id) {
-            return messageApi.error('Please note that your student ID has not been submitted yet !');
-        }
 
         if (!classID || reason === '' || isNaN(expected) || isNaN(grade) || composition === '') {
             return messageApi.error('Please fill in all fields to open a review request !');
@@ -107,7 +102,7 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
                     </div>
                     <div className='flex flex-col'>
                         <div className='font-medium'>{userInfo?.username}</div>
-                        <small className='capitalize'>{details.studentID}</small>
+                        <small className='capitalize'>{userInfo?.role}</small>
                     </div>
                 </div>
                 <div className='flex-1 flex flex-col gap-3'>

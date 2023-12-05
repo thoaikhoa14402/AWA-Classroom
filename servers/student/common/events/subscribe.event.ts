@@ -42,7 +42,14 @@ class SubscribeEvent implements IEvent {
             { $unwind: '$owner' },
             {
                 $match: {
-                    'students._id': new mongoose.Types.ObjectId(message.user_id),
+                    $or: [
+                        {
+                            'lecturers._id': new mongoose.Types.ObjectId(message.user_id),
+                        },
+                        {
+                            'owner._id': new mongoose.Types.ObjectId(message.user_id),
+                        }
+                    ]
                 },
             },
         ]);

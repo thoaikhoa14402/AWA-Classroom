@@ -18,6 +18,8 @@ import Member from "~/pages/Class/Member";
 import Invite from "~/pages/Invite";
 import Grade from "~/pages/Class/Grade";
 import ReviewRequest from "~/pages/Class/ReviewRequest";
+import ReviewDetails from "~/pages/Class/ReviewDetails";
+import ProfileUser from "~/pages/ProfileUser";
 
 const AppRoutes = () => {
     return (
@@ -34,12 +36,14 @@ const AppRoutes = () => {
                         <Route path="grades/:classID?" element={<Grade />} />    
                         <Route path="invite/:classID?" element={<Invite />} />    
                         <Route path="reviews/:classID?" element={<ReviewRequest />} />    
+                        <Route path="reviews/:classID/view/:reviewID?" element={<ReviewDetails />} />    
                     </Route>
                     <Route path="/schedule" element={<>Schedule</>} />
                     <Route path="/settings" element={<>Settings</>} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/user/profile" element={<Profile />} />
                     <Route path="/user/reset-password" element={<ResetPassword />} />
+                    <Route path="/user/:id" element={<ProfileUser />} />
                 </Route>
             </Route>
             {/* Authentication routes */}
