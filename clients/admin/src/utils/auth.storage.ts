@@ -19,6 +19,9 @@ const authStorage = {
     },  
     isLogin() {
         return !!this.getUserProfile() && !!this.getAccessToken();
+    },
+    isSocial() {
+        return this.isLogin() && (this.getUserProfile().googleID || this.getUserProfile().facebookID || this.getUserProfile().githubID);
     }
 }
 
