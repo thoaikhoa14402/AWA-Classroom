@@ -193,9 +193,16 @@ class ClassController implements IController {
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: {
-                                        $in: ['$studentID', '$$studentListIds']
-                                    }
+                                    $and: [
+                                        {
+                                            $expr: {
+                                                $in: ['$studentID', '$$studentListIds']
+                                            }
+                                        },
+                                        {
+                                            class: new mongoose.Types.ObjectId(joinedClassDetail[0].class._id)
+                                        }
+                                    ]
                                 }
                             },
                             {

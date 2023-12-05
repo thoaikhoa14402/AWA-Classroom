@@ -82,6 +82,12 @@ class ClassController implements IController {
 
     private getClass = async (req: Request, res: Response, next: NextFunction) => { 
         if (req.body?.id) {
+            const classInfoId = await ClassModel.findOne({ slug: req.body.id }).lean();
+
+            if (!classInfoId) {
+                return next(new AppError('No class found with that ID', 404));
+            }
+
             const classArr = await ClassModel.aggregate([
                 {
                     $lookup: {
@@ -128,9 +134,16 @@ class ClassController implements IController {
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: {
-                                        $in: ['$studentID', '$$studentListIds']
-                                    }
+                                    $and: [
+                                        {
+                                            $expr: {
+                                                $in: ['$studentID', '$$studentListIds']
+                                            }
+                                        },
+                                        {
+                                            class: new mongoose.Types.ObjectId(classInfoId._id)
+                                        }
+                                    ]
                                 }
                             },
                             {
@@ -181,9 +194,16 @@ class ClassController implements IController {
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: {
-                                        $in: ['$studentID', '$$gradeListIds']
-                                    }
+                                    $and: [
+                                        {
+                                            $expr: {
+                                                $in: ['$studentID', '$$gradeListIds']
+                                            }
+                                        },
+                                        {
+                                            class: new mongoose.Types.ObjectId(classInfoId._id)
+                                        }
+                                    ]
                                 }
                             },
                             {

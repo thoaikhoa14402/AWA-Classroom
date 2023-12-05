@@ -17,6 +17,7 @@ import cloudinary from "../cloudinary";
 import axios from "axios";
 import socketIO from '../socket';
 import getFormatDateTime from '../utils/date.format';
+import mongoose from 'mongoose';
 
 /*
  USER CONTROLLER 
@@ -47,6 +48,12 @@ class GradeController implements IController {
     }
 
     private getClassDataWithGradeListQuery = async (classID: string) => {
+        const classInfoId = await ClassModel.findOne({ slug: classID }).select('_id').lean();
+
+        if (!classInfoId) {
+            return [];
+        }
+
         return await ClassModel.aggregate([
             {
                 $lookup: {
@@ -55,9 +62,16 @@ class GradeController implements IController {
                     pipeline: [
                         {
                             $match: {
-                                $expr: {
-                                    $in: ['$studentID', '$$gradeListIds']
-                                }
+                                $and: [
+                                    {
+                                        $expr: {
+                                            $in: ['$studentID', '$$gradeListIds']
+                                        }
+                                    },
+                                    {
+                                        class: new mongoose.Types.ObjectId(classInfoId._id)
+                                    }
+                                ]
                             }
                         },
                         {
