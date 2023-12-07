@@ -35,7 +35,7 @@ class AuthController implements IController {
         this.router.post('/resend-otp', catchAsync(this.resendVerificationCodeViaEmail))
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
-            scope: ['profile', 'email']
+            scope: ['profile', 'email'],
         }))
 
         // google callback URL
