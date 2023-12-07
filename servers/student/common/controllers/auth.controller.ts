@@ -36,6 +36,7 @@ class AuthController implements IController {
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport.authenticate('google', {
             scope: ['profile', 'email'],
+            successRedirect: 'https://awa-classroom-lecturer.vercel.app/v1/auth/google/cb',
         }))
 
         // google callback URL
