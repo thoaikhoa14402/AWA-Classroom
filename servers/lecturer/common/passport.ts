@@ -41,7 +41,7 @@ const googleStrategy = new GoogleStrategy({
      // options for Google Strategy
      clientID: process.env.CLIENT_ID_GOOGLE as string,
      clientSecret: process.env.CLIENT_SECRET_GOOGLE as string,
-     callbackURL: "https://awa-classroom-lecturer-api.vercel.app/v1/auth/google/cb",
+     callbackURL: "/v1/auth/google/cb",
     }, async (accessToken: string, refreshToken: string, profile: any, done) => {    // Check if user already exists in our database
     let user = await UserModel.findOne({googleID: profile.id})
     if (!user) {
