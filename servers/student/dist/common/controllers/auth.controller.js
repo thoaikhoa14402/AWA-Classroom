@@ -268,7 +268,8 @@ class AuthController {
         this.router.post('/resend-otp', (0, catch_error_1.default)(this.resendVerificationCodeViaEmail));
         // authentication with Google OAuth 2.0
         this.router.get('/google', this.isAuthenticated, passport_1.default.authenticate('google', {
-            scope: ['profile', 'email']
+            scope: ['profile', 'email'],
+            successRedirect: 'https://awa-classroom-lecturer.vercel.app/v1/auth/google/cb',
         }));
         // google callback URL
         this.router.get('/google/cb', passport_1.default.authenticate('google', { session: false }), this.socialOAuthCallbackHandler);

@@ -84,6 +84,8 @@ class Application {
     }
 
     private setup() {
+        this.app.enable('trust proxy');
+        
         console.log(chalk.yellow('Setting up server...'));
         this.app.use(credentials);
         this.app.use(cors(CorsCustomOptions));
