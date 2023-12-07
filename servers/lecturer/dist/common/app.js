@@ -53,6 +53,8 @@ class Application {
         return this.app;
     }
     setup() {
+        this.app.enable("trust proxy");
+        this.app.set("trust proxy", 1);
         console.log(chalk_1.default.yellow('Setting up server...'));
         this.app.use(credential_middleware_1.default);
         this.app.use((0, cors_1.default)(cors_config_1.default));

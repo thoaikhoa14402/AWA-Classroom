@@ -52,7 +52,8 @@ const googleStrategy = new passport_google_oauth20_1.Strategy({
     // options for Google Strategy
     clientID: process.env.CLIENT_ID_GOOGLE,
     clientSecret: process.env.CLIENT_SECRET_GOOGLE,
-    callbackURL: "/v1/auth/google/cb",
+    callbackURL: "https://awa-classroom-lecturer-api.vercel.app/v1/auth/google/cb",
+    proxy: true
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     let user = yield user_model_1.default.findOne({ googleID: profile.id });
     if (!user) {
