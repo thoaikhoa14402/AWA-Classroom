@@ -202,9 +202,9 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
                             height: 250,
                             menubar: false,
                             plugins:
-                                "mentions anchor autolink charmap codesample emoticons link lists searchreplace table visualblocks wordcount checklist casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents typography inlinecss",
+                                "anchor autolink charmap codesample emoticons link lists searchreplace table visualblocks wordcount casechange advtemplate advtable advcode editimage tableofcontents",
                             toolbar:
-                                "blocks fontsize | bold italic underline strikethrough | link image media table | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+                                "blocks fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
                             tinycomments_mode: "embedded",
                             content_style:
                                 "body { font-family: Arial, sans-serif; font-size:14px }",
