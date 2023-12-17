@@ -52,8 +52,8 @@ const googleStrategy = new passport_google_oauth20_1.Strategy({
     // options for Google Strategy
     clientID: process.env.CLIENT_ID_GOOGLE,
     clientSecret: process.env.CLIENT_SECRET_GOOGLE,
-    callbackURL: "https://awa-classroom-student-api.vercel.app/v1/auth/google/cb",
-    proxy: true,
+    callbackURL: "/v1/auth/google/cb",
+    proxy: true
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     let user = yield user_model_1.default.findOne({ googleID: profile.id });
     if (!user) {
@@ -74,7 +74,7 @@ const facebookStrategy = new passport_facebook_1.Strategy({
     clientSecret: process.env.CLIENT_SECRET_FACEBOOK,
     callbackURL: "/v1/auth/facebook/cb",
     profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos'],
-    proxy: true,
+    proxy: true
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     let user = yield user_model_1.default.findOne({ facebookID: profile.id });
     if (!user) {

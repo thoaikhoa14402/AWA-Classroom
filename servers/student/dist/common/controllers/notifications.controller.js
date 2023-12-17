@@ -27,12 +27,15 @@ class NotificationController {
         this.path = "/notifications";
         this.router = (0, express_1.Router)();
         this.getAllNotifications = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _a, _b;
             const classes = yield class_model_1.default.find({ students: new mongoose_1.default.Types.ObjectId((_a = req.user) === null || _a === void 0 ? void 0 : _a._id) }).lean();
             const classIds = classes.map((item) => item._id);
             const notification = yield notification_model_1.default.find({
                 class: { $in: classIds },
-            }).populate('user').sort('-createAt').lean();
+                receiver: new mongoose_1.default.Types.ObjectId((_b = req.user) === null || _b === void 0 ? void 0 : _b._id),
+            }).populate('user class').sort({
+                createdAt: -1
+            }).lean();
             res.status(200).json({
                 status: 'success',
                 data: notification

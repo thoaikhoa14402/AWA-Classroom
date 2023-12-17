@@ -206,6 +206,66 @@ class ClassController {
                             createAt: 1,
                         }
                     },
+                    {
+                        $lookup: {
+                            from: 'joinedclassinfos',
+                            let: { studentListIds: '$studentList.student_id' },
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $and: [
+                                            {
+                                                $expr: {
+                                                    $in: ['$studentID', '$$studentListIds']
+                                                }
+                                            },
+                                            {
+                                                class: new mongoose_1.default.Types.ObjectId(joinedClassDetail[0].class._id)
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        user: 1,
+                                        class: 1,
+                                        joinAt: 1,
+                                        studentID: 1
+                                    }
+                                }
+                            ],
+                            as: 'student_info'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            "studentList": {
+                                $map: {
+                                    input: "$studentList",
+                                    as: "student",
+                                    in: {
+                                        $mergeObjects: [
+                                            "$$student",
+                                            {
+                                                $arrayElemAt: [
+                                                    {
+                                                        $filter: {
+                                                            input: "$student_info",
+                                                            as: "matched",
+                                                            cond: {
+                                                                $eq: ["$$matched.studentID", "$$student.student_id"]
+                                                            }
+                                                        }
+                                                    }, 0
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
                     { $limit: 1 }
                 ]);
                 const classInfo = classArr.length > 0 ? classArr[0] : null;
@@ -218,12 +278,15 @@ class ClassController {
                     classInfo.gradeList[0].grade = classInfo.gradeList[0].grade.filter((el) => filterCol.find((col) => col.name === el.col));
                 }
                 const joinedClassInfo = yield joinedClassInfo_model_1.default.findOne({ user: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id, class: classInfo._id }).lean();
+                const students = yield joinedClassInfo_model_1.default.find({ class: classInfo._id, user: {
+                        $in: classInfo.students.map((student) => student._id)
+                    } }).populate('user').lean();
                 const redisClient = redis_1.default.getClient();
                 yield (redisClient === null || redisClient === void 0 ? void 0 : redisClient.setEx(this.classCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(classInfo)));
                 return res.status(200).json({
                     status: 'success',
                     message: 'Get class successfully',
-                    data: Object.assign(Object.assign({}, classInfo), { studentID: (_e = joinedClassInfo === null || joinedClassInfo === void 0 ? void 0 : joinedClassInfo.studentID) !== null && _e !== void 0 ? _e : '' })
+                    data: Object.assign(Object.assign({}, classInfo), { studentID: (_e = joinedClassInfo === null || joinedClassInfo === void 0 ? void 0 : joinedClassInfo.studentID) !== null && _e !== void 0 ? _e : '', students: [...students.map((student) => (Object.assign(Object.assign({}, student.user), { studentID: student.studentID })))] })
                 });
             }
             const classArr = yield class_model_1.default.aggregate([
