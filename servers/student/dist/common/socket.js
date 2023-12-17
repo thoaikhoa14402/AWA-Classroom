@@ -15,7 +15,7 @@ class SocketIO {
     }
     init(httpServer, options) {
         var _a;
-        return (_a = this.io) !== null && _a !== void 0 ? _a : (this.io = new socket_io_1.Server(httpServer, Object.assign({ cors: cors_config_1.default }, options)));
+        return (_a = this.io) !== null && _a !== void 0 ? _a : (this.io = new socket_io_1.Server(httpServer, Object.assign({ cors: cors_config_1.default, transports: ['polling', 'websocket'], allowEIO3: true }, options)));
     }
     getIO() {
         if (!this.io) {
