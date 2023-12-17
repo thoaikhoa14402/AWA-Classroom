@@ -28,6 +28,7 @@ const cloudinary_1 = __importDefault(require("../cloudinary"));
 const axios_1 = __importDefault(require("axios"));
 const socket_1 = __importDefault(require("../socket"));
 const date_format_1 = __importDefault(require("../utils/date.format"));
+const mongoose_1 = __importDefault(require("mongoose"));
 /*
  USER CONTROLLER
 1. GET COMPOSITION
@@ -40,6 +41,10 @@ class GradeController {
         this.path = "/grade";
         this.router = (0, express_1.Router)();
         this.getClassDataWithGradeListQuery = (classID) => __awaiter(this, void 0, void 0, function* () {
+            const classInfoId = yield class_model_1.default.findOne({ slug: classID }).select('_id').lean();
+            if (!classInfoId) {
+                return [];
+            }
             return yield class_model_1.default.aggregate([
                 {
                     $lookup: {
@@ -48,9 +53,16 @@ class GradeController {
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: {
-                                        $in: ['$studentID', '$$gradeListIds']
-                                    }
+                                    $and: [
+                                        {
+                                            $expr: {
+                                                $in: ['$studentID', '$$gradeListIds']
+                                            }
+                                        },
+                                        {
+                                            class: new mongoose_1.default.Types.ObjectId(classInfoId._id)
+                                        }
+                                    ]
                                 }
                             },
                             {
@@ -120,18 +132,21 @@ class GradeController {
                 const newNotification = new notification_model_1.default({
                     user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
                     class: newClassData._id,
-                    message: `${publishedCompositions} has published`,
-                    formatedDate: createAt
+                    message: `has published "${publishedCompositions}" composition.`,
+                    navigation: `/classes/grades/${newClassData === null || newClassData === void 0 ? void 0 : newClassData.slug}`,
+                    formatedDate: createAt,
+                    receiver: [...newClassData.students, ...newClassData.lecturers]
                 });
                 const createdData = yield newNotification.save();
-                const notification = yield notification_model_1.default.findById(createdData._id).populate('user').lean();
+                const notification = yield notification_model_1.default.findById(createdData._id).populate('user class').lean();
                 const io = socket_1.default.getIO();
                 io.sockets.in(gradeCompositionInfo.classID).emit('notification', {
                     username: (_b = req.user) === null || _b === void 0 ? void 0 : _b.username,
                     avatar: (_c = req.user) === null || _c === void 0 ? void 0 : _c.avatar,
                     createAt: notification === null || notification === void 0 ? void 0 : notification.createdAt,
-                    message: `"${publishedCompositions}" has published`,
-                    formatedDate: createAt,
+                    message: notification === null || notification === void 0 ? void 0 : notification.message,
+                    navigation: notification === null || notification === void 0 ? void 0 : notification.navigation,
+                    formatedDate: notification === null || notification === void 0 ? void 0 : notification.formatedDate,
                     notification: Object.assign({}, notification)
                 });
             }

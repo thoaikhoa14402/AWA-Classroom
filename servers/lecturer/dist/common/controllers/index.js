@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StudentListController = exports.GradeController = exports.ClassController = exports.UserProfile = exports.AuthController = void 0;
+exports.ReviewController = exports.NotificationController = exports.StudentListController = exports.GradeController = exports.ClassController = exports.UserProfile = exports.AuthController = void 0;
 // export { default as UserController } from "./user.example.controller";
 var auth_controller_1 = require("./auth.controller");
 Object.defineProperty(exports, "AuthController", { enumerable: true, get: function () { return __importDefault(auth_controller_1).default; } });
@@ -15,3 +15,7 @@ var grade_controller_1 = require("./grade.controller");
 Object.defineProperty(exports, "GradeController", { enumerable: true, get: function () { return __importDefault(grade_controller_1).default; } });
 var student_list_controller_1 = require("./student-list.controller");
 Object.defineProperty(exports, "StudentListController", { enumerable: true, get: function () { return __importDefault(student_list_controller_1).default; } });
+var notifications_controller_1 = require("./notifications.controller");
+Object.defineProperty(exports, "NotificationController", { enumerable: true, get: function () { return __importDefault(notifications_controller_1).default; } });
+var review_controller_1 = require("./review.controller");
+Object.defineProperty(exports, "ReviewController", { enumerable: true, get: function () { return __importDefault(review_controller_1).default; } });

@@ -32,6 +32,10 @@ const UserSchema = new mongoose_1.default.Schema({
     email: { type: String },
     active: {
         type: Boolean,
+        default: true
+    },
+    verify: {
+        type: Boolean,
         default: false
     },
     passwordChangedAt: { type: Number },

@@ -51,6 +51,7 @@ const invite_class_dto_1 = __importDefault(require("../dtos/invite-class.dto"));
 const jwt_1 = __importDefault(require("../utils/jwt"));
 const join_class_1 = __importDefault(require("../dtos/join-class"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const joinedClassInfo_model_1 = __importDefault(require("../models/joinedClassInfo.model"));
 /*
  CLASS CONTROLLER
 1. CREATE CLASS
@@ -64,6 +65,21 @@ class ClassController {
     constructor() {
         this.path = "/classes";
         this.router = (0, express_1.Router)();
+        this.deleteClass = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            const classInfo = yield class_model_1.default.findOne({ slug: req.params.id }).lean();
+            if (!classInfo) {
+                return next(new app_error_1.default('No class found with that ID', 404));
+            }
+            yield joinedClassInfo_model_1.default.deleteMany({ class: classInfo._id });
+            yield class_model_1.default.deleteOne({ slug: req.body.id });
+            const redisClient = redis_1.default.getClient();
+            yield (redisClient === null || redisClient === void 0 ? void 0 : redisClient.del(this.classCacheKey(req)));
+            res.status(200).json({
+                status: 'success',
+                message: 'Delete class successfully',
+                data: {}
+            });
+        });
         this.classCacheRes = (req, res, next, data) => __awaiter(this, void 0, void 0, function* () {
             if (req.body.id)
                 return res.status(200).json({
@@ -80,6 +96,10 @@ class ClassController {
         this.getClass = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e;
             if ((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) {
+                const classInfoId = yield class_model_1.default.findOne({ slug: req.body.id }).lean();
+                if (!classInfoId) {
+                    return next(new app_error_1.default('No class found with that ID', 404));
+                }
                 const classArr = yield class_model_1.default.aggregate([
                     {
                         $lookup: {
@@ -126,9 +146,16 @@ class ClassController {
                             pipeline: [
                                 {
                                     $match: {
-                                        $expr: {
-                                            $in: ['$studentID', '$$studentListIds']
-                                        }
+                                        $and: [
+                                            {
+                                                $expr: {
+                                                    $in: ['$studentID', '$$studentListIds']
+                                                }
+                                            },
+                                            {
+                                                class: new mongoose_1.default.Types.ObjectId(classInfoId._id)
+                                            }
+                                        ]
                                     }
                                 },
                                 {
@@ -179,9 +206,16 @@ class ClassController {
                             pipeline: [
                                 {
                                     $match: {
-                                        $expr: {
-                                            $in: ['$studentID', '$$gradeListIds']
-                                        }
+                                        $and: [
+                                            {
+                                                $expr: {
+                                                    $in: ['$studentID', '$$gradeListIds']
+                                                }
+                                            },
+                                            {
+                                                class: new mongoose_1.default.Types.ObjectId(classInfoId._id)
+                                            }
+                                        ]
                                     }
                                 },
                                 {
@@ -231,12 +265,15 @@ class ClassController {
                 if (!classInfo) {
                     return next(new app_error_1.default('No class found with that ID', 404));
                 }
+                const students = yield joinedClassInfo_model_1.default.find({ class: classInfo._id, user: {
+                        $in: classInfo.students.map((student) => student._id)
+                    } }).populate('user').lean();
                 const redisClient = redis_1.default.getClient();
                 yield (redisClient === null || redisClient === void 0 ? void 0 : redisClient.setEx(this.classCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(classInfo)));
                 return res.status(200).json({
                     status: 'success',
                     message: 'Get class successfully',
-                    data: classInfo
+                    data: Object.assign(Object.assign({}, classInfo), { students: [...students.map((student) => (Object.assign(Object.assign({}, student.user), { studentID: student.studentID })))] })
                 });
             }
             const classArr = yield class_model_1.default.aggregate([
@@ -411,6 +448,7 @@ class ClassController {
         this.router.get('/:id?', _1.AuthController.protect, (0, catch_error_1.default)(this.getClass));
         this.router.post('/invite/:id', validation_middleware_1.default.validate(invite_class_dto_1.default), _1.AuthController.protect, this.ownerProtect, (0, catch_error_1.default)(this.sendInvitedMessage));
         this.router.post('/join/:id', validation_middleware_1.default.validate(join_class_1.default), _1.AuthController.protect, this.invitedProtect, (0, catch_error_1.default)(this.joinClass));
+        this.router.delete('/:id?', _1.AuthController.protect, this.ownerProtect, (0, catch_error_1.default)(this.deleteClass));
     }
 }
 exports.default = new ClassController();

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const class_model_1 = __importDefault(require("../models/class.model"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const review_model_1 = __importDefault(require("../models/review.model"));
 class SubscribeEvent {
     constructor() {
         this.event = 'subscribe';
@@ -55,8 +56,14 @@ class SubscribeEvent {
             ]);
             const classesInfo = classArr;
             const allClassSlug = classesInfo.map((classInfo) => classInfo.slug).filter(slug => !socket.rooms.has(slug));
-            if (allClassSlug.length > 0) {
-                socket.join(allClassSlug);
+            const allClassId = classesInfo.map((classInfo) => classInfo._id).filter((ids) => !socket.rooms.has(ids.toString()));
+            const allReview = yield review_model_1.default.find({ class: { $in: allClassId } }).select('_id').lean();
+            const stringAllReview = allReview.map((review) => review._id.toString()).filter((ids) => !socket.rooms.has(ids));
+            if (allClassSlug.length > 0 && allReview.length > 0) {
+                socket.join([...allClassSlug, ...stringAllReview]);
+            }
+            else if (allClassSlug.length > 0) {
+                socket.join([...allClassSlug]);
             }
         });
     }

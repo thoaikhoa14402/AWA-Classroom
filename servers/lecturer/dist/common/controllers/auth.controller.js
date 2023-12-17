@@ -70,7 +70,7 @@ class AuthController {
             }
             if (user.role !== 'lecturer')
                 next(new app_error_1.default('The username or password is incorrect', 401));
-            if (user && !user.active) { // if this account is created, but not activated yet
+            if (user && !user.verify) { // if this account is created, but not activated yet
                 const otpCode = new otp_generator_1.default().generate();
                 const verificationToken = yield jwt_1.default.createToken({ username: req.body.username, email: req.body.email, verification_code: otpCode }, { expiresIn: process.env.JWT_ACCESS_EXPIRES });
                 const source = fs.readFileSync(path.join(__dirname, '../../templates/otpVerificationMailer/index.html'), 'utf8').toString();
@@ -140,7 +140,7 @@ class AuthController {
             const userRegistrationInfo = req.body;
             if (userRegistrationInfo.verification_code === req.verification_code) {
                 const updatedUser = yield user_model_1.default.findOneAndUpdate({ username: req.body.username }, // Tìm người dùng dựa trên username
-                { active: true }, // Update trường active thành true
+                { verify: true }, // Update trường active thành true
                 { new: true } // Tùy chọn này trả về đối tượng đã được cập nhật
                 );
                 const accessToken = yield jwt_1.default.createToken({ _id: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.id }, { expiresIn: process.env.JWT_ACCESS_EXPIRES });

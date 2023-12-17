@@ -18,6 +18,13 @@ const NotificationSchema = new mongoose_1.default.Schema({
     message: {
         type: String,
     },
+    navigation: {
+        type: String,
+    },
+    receiver: {
+        type: [mongoose_1.default.Types.ObjectId],
+        ref: 'User',
+    },
     createdAt: {
         type: Date,
         default: Date.now()
