@@ -3,6 +3,7 @@ import IEvent from "../interfaces/event";
 import catchAsync from "../utils/catch.error";
 import ClassModel, { IClass } from "../models/class.model";
 import mongoose from "mongoose";
+import ReviewModel from "../models/review.model";
 
 class SubscribeEvent implements IEvent {
     public readonly event: string = 'subscribe';
@@ -49,9 +50,15 @@ class SubscribeEvent implements IEvent {
         const classesInfo: IClass[] = classArr;
 
         const allClassSlug = classesInfo.map((classInfo) => classInfo.slug).filter(slug => !socket.rooms.has(slug));
+        const allClassId = classesInfo.map((classInfo) => classInfo._id).filter((ids: any) => !socket.rooms.has(ids.toString()));
 
-        if (allClassSlug.length > 0) {
-            socket.join(allClassSlug);
+        const allReview = await ReviewModel.find({ class: { $in: allClassId } }).select('_id').lean();
+        const stringAllReview = allReview.map((review) => review._id.toString()).filter((ids: any) => !socket.rooms.has(ids));
+
+        if (allClassSlug.length > 0 && allReview.length > 0) {
+            socket.join([...allClassSlug, ...stringAllReview]);
+        } else if (allClassSlug.length > 0) {
+            socket.join([...allClassSlug]);
         }
     }
 }

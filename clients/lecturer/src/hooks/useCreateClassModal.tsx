@@ -50,6 +50,7 @@ const useCreateClassModal = ({ handleCreate, handleCancel }: useCreateClassModal
             onCancel={handleCancelModal}
             closable={false}
             okText="Create"
+            cancelText="Cancel"
             cancelButtonProps={{ disabled: loading, className: "!px-4 !py-2 !w-auto !h-auto !font-medium", danger: true, type: "primary" }}
             okButtonProps={{ className: "!px-4 !py-2 !w-auto !h-auto !font-medium mr-1" }}
             maskClosable={!loading}>

@@ -84,10 +84,9 @@ class Application {
     }
 
     private setup() {
-        this.app.enable("trust proxy");
-        this.app.set("trust proxy", 1);
+        this.app.enable('trust proxy');
 
-        console.log(chalk.yellow('Setting up server...'));        
+        console.log(chalk.yellow('Setting up server...'));
         this.app.use(credentials);
         this.app.use(cors(CorsCustomOptions));
         this.app.use(cloudinary.config(this.cloudinaryConnection));

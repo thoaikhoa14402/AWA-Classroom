@@ -17,6 +17,7 @@ import cloudinary from "../cloudinary";
 import axios from "axios";
 import socketIO from '../socket';
 import getFormatDateTime from '../utils/date.format';
+import mongoose from 'mongoose';
 
 /*
  USER CONTROLLER 
@@ -47,6 +48,12 @@ class GradeController implements IController {
     }
 
     private getClassDataWithGradeListQuery = async (classID: string) => {
+        const classInfoId = await ClassModel.findOne({ slug: classID }).select('_id').lean();
+
+        if (!classInfoId) {
+            return [];
+        }
+
         return await ClassModel.aggregate([
             {
                 $lookup: {
@@ -55,9 +62,16 @@ class GradeController implements IController {
                     pipeline: [
                         {
                             $match: {
-                                $expr: {
-                                    $in: ['$studentID', '$$gradeListIds']
-                                }
+                                $and: [
+                                    {
+                                        $expr: {
+                                            $in: ['$studentID', '$$gradeListIds']
+                                        }
+                                    },
+                                    {
+                                        class: new mongoose.Types.ObjectId(classInfoId._id)
+                                    }
+                                ]
                             }
                         },
                         {
@@ -131,17 +145,18 @@ class GradeController implements IController {
             const publishedCompositions = updatedComposition.map(el => el.name).join(', ');
             const createAt = getFormatDateTime();
 
-
             const newNotification = new NotificationModel({
                 user: req.user?._id,
                 class: newClassData._id,
-                message: `${publishedCompositions} has published`,
-                formatedDate: createAt
+                message: `has published "${publishedCompositions}" composition.`,
+                navigation: `/classes/grades/${newClassData?.slug}`,
+                formatedDate: createAt,
+                receiver: [...newClassData.students, ...newClassData.lecturers]
             });
 
             const createdData = await newNotification.save();
 
-            const notification = await NotificationModel.findById(createdData._id).populate('user').lean();
+            const notification = await NotificationModel.findById(createdData._id).populate('user class').lean();
 
             const io = socketIO.getIO();
             
@@ -149,8 +164,9 @@ class GradeController implements IController {
                 username: req.user?.username,
                 avatar: req.user?.avatar,
                 createAt: notification?.createdAt,
-                message: `"${publishedCompositions}" has published`,
-                formatedDate: createAt,
+                message: notification?.message,
+                navigation: notification?.navigation,
+                formatedDate: notification?.formatedDate,
                 notification: {
                     ...notification
                 }

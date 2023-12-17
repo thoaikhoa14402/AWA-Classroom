@@ -1,26 +1,29 @@
-import { faCheck, faClone, faEllipsis, faPlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClone, faEllipsis, faPlus, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, MenuProps, Typography, message } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, Navigate, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NoClassMessage } from '~/components/Class';
 import useAppDispatch from '~/hooks/useAppDispatch';
 import useAppSelector from '~/hooks/useAppSelector';
 import useCreateClassModal from '~/hooks/useCreateClassModal';
-import { ClassType, addClass } from '~/store/reducers/classSlice';
+import { ClassType, addClass, removeClass as RemoveClassSlice } from '~/store/reducers/classSlice';
 import authStorage from '~/utils/auth.storage';
 import { ReactComponent as LoadingIndicator } from '~/assets/svg/loading-indicator.svg'; 
 import ClassCard from '~/components/Class/ClassCard';
+import { setReviewLoading, setReviews } from '~/store/reducers/reviewSlice';
 
 const ClassLayout: React.FC = () => {
     const params = useParams();
     const classID = params.classID;
 
     const classInfo = useAppSelector(state => state.classes);
+    const reviewInfo = useAppSelector(state => state.reviews);
     
     const classes = classInfo.classes;
     const isLoading = classInfo.isLoading;
+    const isReviewLoading = reviewInfo.isLoading;
     
     const dispatch = useAppDispatch();
 
@@ -101,21 +104,71 @@ const ClassLayout: React.FC = () => {
             .finally(() => {
                 setIsDetailLoading(false);
             });
+
+            dispatch(setReviewLoading(true));
+            axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/review/${classID}`, {
+                headers: {
+                    Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                }
+            })
+            .then(res => {
+                dispatch(setReviews(res.data.data.reviews));
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                dispatch(setReviewLoading(false));
+            });
         } 
         else {
             setClassDetail(undefined);
             setIsDetailLoading(false);
+            dispatch(setReviewLoading(false));
         }
-    }, [classID, classInfo.classes]);
+        
+        return () => {
+            dispatch(setReviewLoading(false));
+            setIsDetailLoading(false);
+        }
+    }, [classID, classInfo.classes, dispatch]);
+
+    const location = useLocation();
+
+    const removeClass = () => {
+        if (classID) {
+            axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/v1/classes/${classID}`, {
+                headers: {
+                    Authorization: authStorage.isLogin() ? `Bearer ${authStorage.getAccessToken()}` : ''
+                }
+            })
+            .then(res => {
+                messageApi.success('Class deleted successfully!', 1.5, () => {
+                    dispatch(RemoveClassSlice(classID));
+                    navigate('/classes');
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                messageApi.error('Class deleted failed !. Only owner can delete this class !');
+            });
+        }
+    }
+
+    if (!classID && location.pathname !== '/classes') {
+        return <Navigate to='/classes' replace />;
+    }
 
     return (
         <>
             { contextHolder }
             { ModalContext }
             {
-                (!isLoading && !isDetailLoading)
-                ? isInvite && !isJoined.current ? <Outlet /> 
-                : isInvite && isJoined ? 'You are joined'                    
+                (!isLoading && !isDetailLoading && !isReviewLoading)
+                ? isInvite && !isJoined.current 
+                    ? <Outlet /> 
+                    : isInvite && isJoined 
+                    ? 'You are joined'                    
                     : classes.length 
                     ? 
                     <>
@@ -131,6 +184,7 @@ const ClassLayout: React.FC = () => {
                                         <NavLink to={`/classes/works/${classID}`} style={({ isActive }) => (isActive) ? { color: '#00A551', border: '4px solid transparent', borderBottomColor: '#00A551' } : { border: '4px solid transparent', borderBottomColor: 'transparent' }} className='!shadow-none hover:!text-hover-dark !font-medium !transition-all !duration-150 p-1.5'>Classwork</NavLink>
                                         <NavLink to={`/classes/members/${classID}`} style={({ isActive }) => (isActive) ? { color: '#00A551', border: '4px solid transparent', borderBottomColor: '#00A551' } : { border: '4px solid transparent', borderBottomColor: 'transparent' }} className='!shadow-none hover:!text-hover-dark !font-medium !transition-all !duration-150 p-1.5'>Members</NavLink>
                                         <NavLink to={`/classes/grades/${classID}`} style={({ isActive }) => (isActive) ? { color: '#00A551', border: '4px solid transparent', borderBottomColor: '#00A551' } : { border: '4px solid transparent', borderBottomColor: 'transparent' }} className='!shadow-none hover:!text-hover-dark !font-medium !transition-all !duration-150 p-1.5'>Grade</NavLink>
+                                        <NavLink to={`/classes/reviews/${classID}`} style={({ isActive }) => (isActive) ? { color: '#00A551', border: '4px solid transparent', borderBottomColor: '#00A551' } : { border: '4px solid transparent', borderBottomColor: 'transparent' }} className='!shadow-none hover:!text-hover-dark !font-medium !transition-all !duration-150 p-1.5'>Review Requests</NavLink>
                                     </div>
                                 </>
                                 : ''
@@ -153,8 +207,8 @@ const ClassLayout: React.FC = () => {
                             <>
                                 <div className='flex w-full my-5'>
                                     <div className='relative w-full'>
-                                        <div className='absolute left-0 top-0 !z-1 m-5 !text-white flex flex-col gap-1'>
-                                            <Button className='!w-auto !h-auto !px-5 !py-2.5 !text-hover-dark !rounded-md !text-sm !font-medium !border-none !shadow-none' icon={<FontAwesomeIcon icon={faUserPlus} />}>Invite</Button>
+                                        <div className='absolute right-0 top-0 !z-1 m-5 !text-white flex flex-col gap-1'>
+                                            <Button className='!w-auto !h-auto !px-5 !py-2.5 !rounded-md !text-sm !font-medium !border-none !shadow-none' icon={<FontAwesomeIcon icon={faTrash} />} danger onClick={removeClass}>Delete</Button>
                                         </div>
                                         <div className='absolute left-0 bottom-0 !z-1 m-5 !text-white flex flex-col gap-1'>
                                             <div className='font-medium'>Class code:</div>

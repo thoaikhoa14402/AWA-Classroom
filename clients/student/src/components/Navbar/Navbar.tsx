@@ -15,6 +15,8 @@ import classes from './Navbar.module.css';
 import authStorage from "~/utils/auth.storage";
 import { clearUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
+import { socket } from "~/utils/socket";
+import { readNotification } from "~/store/reducers/notifcationSlice";
 
 interface NavbarProps {
     toggleSidebar: (option?: string | boolean) => void
@@ -89,33 +91,45 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 key: el._id,
                 label: (
                     <div className="flex gap-4 justify-start items-center py-1 w-full">
-                        <Avatar className="!h-auto" src={el.user.avatar} />
-                        <div className="flex flex-col w-full">
-                            <div className="flex items-center">
-                                <span className="text-primary font-semibold">{el.user.username}</span>
+                        <Avatar size={'large'} className="!h-auto" src={el.user.avatar} />
+                        <div className="flex flex-col w-full gap-2">
+                            <div className="flex items-start">
+                                <span className='text-gray-600 font-medium flex flex-col text-sm'>
+                                    <span className="text-xs">{el.class.cid}</span>
+                                    <span className="text-sm">{el.class.name}</span>
+                                </span>
                                 <span className="flex ml-auto gap-3 items-center">
                                     <small className="text-gray-500 font-medium text-xs">{el.formatedDate}</small>
-                                    { !el.readable ? <FontAwesomeIcon className="text-primary" style={{ fontSize: '10px' }} icon={faCircle} /> : null }
+                                    { !el.readable ? <FontAwesomeIcon className="text-primary opacity-70" style={{ fontSize: '8px' }} icon={faCircle} /> : null }
                                 </span>
                             </div>
-                            <span className="text-gray-700">{el.message}</span>
+                            <span className="text-sm">
+                                <span className="text-primary font-semibold">{el.user.username}</span>&nbsp;
+                                <span className="text-gray-700 w-full">{el.message}</span>
+                            </span>
                         </div>
                     </div>
                 ),
                 className: '!px-4 !py-3 !text-md !gap-1.5 !w-full',
+                onClick: () => { 
+                    socket.emit('read-notification', { notification_id: el._id });
+                    if (!el.readable) 
+                        dispatch(readNotification(el._id));
+                    navigate(el.navigation); 
+                }
             }
         ))
-    ), [notificationsList]);
+    ), [notificationsList, navigate, dispatch]);
+
+    const readableNumber = useMemo(() => Math.min(notificationsList.filter(el => !el.readable).length, 99), [notificationsList]);
 
     const notificationRender = useCallback((_:ReactNode) => (
-        <Menu 
+        notifications.length ? <Menu 
             className="!shadow-md border border-slate-100 !rounded-md !flex !flex-col !gap-1"
             items={notifications}
             style={{ maxHeight: '400px', overflowY: 'auto', width: '450px' }}
-        />
+        /> : <></>
     ), [notifications]);
-
-    const readableNumber = useMemo(() => Math.min(notificationsList.filter(el => !el.readable).length, 99), [notificationsList]);
 
     return (
         <nav className="bg-white w-screen flex justify-center shadow-sm px-4 sticky top-0 z-10">
@@ -138,7 +152,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 </form>
                 { 
                     isLogin ? 
-                    <div className="flex items-center gap-2 mr-3">
+                    <div className="flex items-center gap-4">
+                        <Dropdown menu={{items: notifications}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
+                            dropdownRender={notificationRender}>
+                            <div className="!relative">
+                            {
+                                readableNumber > 0 
+                                ? 
+                                <div 
+                                    className="w-6 h-6 absolute border flex justify-center items-center text-xs rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 z-10 bg-primary font-bold text-white border-none"
+                                    style={{ fontSize: 10 }}>
+                                    { readableNumber }
+                                </div>
+                                : null
+                            }
+                            <Button className="!w-10 !h-10" icon={<FontAwesomeIcon icon={faBell} size="lg" />} />
+                            </div>
+                        </Dropdown>
                         <Dropdown menu={{items}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
                             dropdownRender={menus}> 
                             <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
@@ -152,17 +182,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                                     { profile?.avatar ? <img className="w-full" src={profile?.avatar} alt="avatar" /> : profile?.username[0] }
                                 </span>
                             </button> 
-                        </Dropdown>
-                        <Dropdown menu={{items: notifications}} trigger={['click']} getPopupContainer={trigger => trigger.parentElement!}
-                            dropdownRender={notificationRender}>
-                            <div className="!relative">
-                                <div 
-                                    className="w-6 h-6 absolute border flex justify-center items-center text-xs rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 z-10 bg-primary font-bold text-white border-none"
-                                    style={{ fontSize: 10 }}>
-                                    { readableNumber }
-                                </div>
-                                <Button className="!w-10 !h-10" icon={<FontAwesomeIcon icon={faBell} size="lg" />} />
-                            </div>
                         </Dropdown>
                     </div>
                     : 

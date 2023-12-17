@@ -49,6 +49,7 @@ const useJoinModal = ({ handleCreate, handleCancel }: joinModalProps) => {
             onCancel={handleCancelModal}
             closable={false}
             okText="Join"
+            cancelText="Cancel"
             cancelButtonProps={{ disabled: loading, className: "!px-4 !py-2 !w-auto !h-auto !font-medium !mr-2", type: "primary", danger: true }}
             okButtonProps={{ className: "!px-4 !py-2 !w-auto !h-auto !font-medium !m-0", type: "primary" }}
             maskClosable={!loading}>

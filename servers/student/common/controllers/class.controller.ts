@@ -186,6 +186,66 @@ class ClassController implements IController {
                         createAt: 1,
                     }
                 },
+                {
+                    $lookup: {
+                        from: 'joinedclassinfos',
+                        let: { studentListIds: '$studentList.student_id' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $and: [
+                                        {
+                                            $expr: {
+                                                $in: ['$studentID', '$$studentListIds']
+                                            }
+                                        },
+                                        {
+                                            class: new mongoose.Types.ObjectId(joinedClassDetail[0].class._id)
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    user: 1,
+                                    class: 1,
+                                    joinAt: 1,
+                                    studentID: 1
+                                }
+                            }
+                        ],
+                        as: 'student_info'
+                    }
+                },
+                {
+                    $addFields: {
+                        "studentList": {
+                            $map: {
+                                input: "$studentList",
+                                as: "student",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$student",
+                                        {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$student_info",
+                                                        as: "matched",
+                                                        cond: {
+                                                            $eq: ["$$matched.studentID", "$$student.student_id"]
+                                                        }
+                                                    }
+                                                }, 0
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
                 { $limit: 1 }
             ]);
 
@@ -203,6 +263,10 @@ class ClassController implements IController {
 
             const joinedClassInfo = await JoinedClassInfoModel.findOne({ user: req.user?.id, class: classInfo._id }).lean();
 
+            const students = await JoinedClassInfoModel.find({ class: classInfo._id, user: {
+                $in: classInfo.students.map((student) => student._id)
+            } }).populate('user').lean();
+
             const redisClient = redis.getClient();
             await redisClient?.setEx(this.classCacheKey(req), Number(process.env.REDIS_CACHE_EXPIRES), JSON.stringify(classInfo));
             
@@ -211,7 +275,11 @@ class ClassController implements IController {
                 message: 'Get class successfully',
                 data: {
                     ...classInfo,
-                    studentID: joinedClassInfo?.studentID ?? ''
+                    studentID: joinedClassInfo?.studentID ?? '',
+                    students: [...students.map((student) => ({
+                        ...student.user,
+                        studentID: student.studentID
+                    }))]
                 }
             });
         }

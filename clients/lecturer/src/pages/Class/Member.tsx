@@ -89,12 +89,17 @@ const Member: React.FC = () => {
                 <div className='flex flex-col my-6 mt-2 gap-2'>
                     { details.students.length > 0
                         ? details.students.map((student) => (
-                            <div key={student._id} className='flex justify-start items-center gap-6 py-2.5 px-5 hover:bg-slate-100 rounded-md cursor-pointer'>
+                        <div key={student._id} className='flex justify-start items-center gap-6 py-2.5 px-5 hover:bg-slate-100 rounded-md cursor-pointer'>
                             <img src={student.avatar} alt={student.username} className='w-14 h-14 rounded-full border object-cover overflow-hidden' />
-                            <p>
-                                {student.username} {(!student.lastname && !student.firstname) ? '' : `(${(student.lastname || '')} ${(student.firstname || '')})`}
-                                { student._id === user?._id ? <> - <span className="font-semibold text-primary">You</span></> : '' }
-                            </p>
+                            <div className='flex'>
+                                <div className='flex flex-col'>
+                                    <span>
+                                        {student.username} {(!student.lastname && !student.firstname) ? '' : `(${(student.lastname || '')} ${(student.firstname || '')})`}
+                                    </span>
+                                    <small className='text-gray-500'>{ student.studentID }</small>
+                                </div>
+                                { student._id === user?._id ? <>&nbsp; - &nbsp;<span className="font-semibold text-primary">You</span></> : '' }
+                            </div>
                             { student.email && student._id !== user?._id ? <Button className='!ml-auto' icon={<FontAwesomeIcon icon={faEnvelope} />} /> : null }
                         </div>
                         ))

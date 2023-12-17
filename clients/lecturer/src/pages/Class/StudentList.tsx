@@ -245,7 +245,7 @@ const StudentList: React.FC = () => {
                         }
                     ],
                 },
-                render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
+                render: (_, record) => (record.user) ? <NavLink to={`/user/${record.user}`} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
                 renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='Enter grade name' /> : null,
             },
             {
@@ -253,7 +253,7 @@ const StudentList: React.FC = () => {
                 dataIndex: 'full_name',
                 className: 'drag-visible',
                 width: 370,
-                renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='0%' /> : null,
+                renderFormItem: (_, { isEditable }) => isEditable ? <Input allowClear autoComplete='off' className='!p-2 !px-3.5' placeholder='Enter fullname' /> : null,
             },
             {
                 title: 'Email',

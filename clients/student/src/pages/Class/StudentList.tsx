@@ -59,7 +59,7 @@ const StudentList: React.FC = () => {
                 dataIndex: 'student_id',
                 className: 'drag-visible !px-3.5',
                 width: 170,
-                render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
+                render: (_, record) => (record.user) ? <NavLink to={`/user/${record.user}`} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
             },
             {
                 title: 'Full name',

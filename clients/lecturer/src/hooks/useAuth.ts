@@ -1,12 +1,19 @@
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import authStorage from '~/utils/auth.storage';
+import useAppDispatch from './useAppDispatch';
+import { clearUserProfile } from '~/store/reducers/userSlice';
+import { useSearchParams } from 'react-router-dom';
 
 export default function useAuth() {
     const isAuthenticated = useRef(authStorage.isLogin());
     const [isFetching, setIsFetching] = useState(true);
 
     isAuthenticated.current = authStorage.isLogin();
+
+    const dispatch = useAppDispatch();
+
+    const [searchParams, _] = useSearchParams();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -22,10 +29,15 @@ export default function useAuth() {
                 isAuthenticated.current = true;
             }
         }).catch((err) => {
-            isAuthenticated.current = false;
-            console.log('error: ', err)
-            if (err.message && err.message === "canceled") {
-                isAuthenticated.current = authStorage.isLogin();
+            if (!searchParams.get('u_id')) {
+                console.log('error: ', err)
+                if (err.message && err.message === "canceled") {
+                    isAuthenticated.current = authStorage.isLogin();
+                }
+                else {
+                    dispatch(clearUserProfile());
+                    isAuthenticated.current = false;
+                }
             }
         }).finally(() => {
             setIsFetching(false);

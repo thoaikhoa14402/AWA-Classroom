@@ -57,7 +57,7 @@ const Member: React.FC = () => {
                                     <span>
                                         {student.username} {(!student.lastname && !student.firstname) ? '' : `(${(student.lastname || '')} ${(student.firstname || '')})`}
                                     </span>
-                                    <small className='text-gray-500'>{ student._id === user?._id ? details.studentID : ''}</small>
+                                    <small className='text-gray-500'>{ student._id === user?._id ? details.studentID : student.studentID}</small>
                                 </div>
                                 { student._id === user?._id ? <>&nbsp; - &nbsp;<span className="font-semibold text-primary">You</span></> : '' }
                             </div>

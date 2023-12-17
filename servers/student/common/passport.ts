@@ -41,8 +41,8 @@ const googleStrategy = new GoogleStrategy({
      // options for Google Strategy
      clientID: process.env.CLIENT_ID_GOOGLE as string,
      clientSecret: process.env.CLIENT_SECRET_GOOGLE as string,
-     callbackURL: "https://awa-classroom-student-api.vercel.app/v1/auth/google/cb",
-     proxy: true,
+     callbackURL: "/v1/auth/google/cb",
+     proxy: true
     }, async (accessToken: string, refreshToken: string, profile: any, done) => {    // Check if user already exists in our database
     let user = await UserModel.findOne({googleID: profile.id})
     if (!user) {
@@ -64,7 +64,7 @@ const facebookStrategy = new FacebookStrategy({
     clientSecret: process.env.CLIENT_SECRET_FACEBOOK as string,
     callbackURL: "/v1/auth/facebook/cb",
     profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos'],
-    proxy: true,
+    proxy: true
 }, async (accessToken: string, refreshToken: string, profile: any, done) => {
     let user = await UserModel.findOne({facebookID: profile.id})
     if (!user) {
