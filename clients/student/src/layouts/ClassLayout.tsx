@@ -148,6 +148,11 @@ const ClassLayout: React.FC = () => {
             setIsDetailLoading(false);
             dispatch(setReviewLoading(false));
         }
+
+        return () => {
+            dispatch(setReviewLoading(false));
+            setIsDetailLoading(false);
+        }
     }, [classID, classInfo.classes, dispatch]);
 
     useEffect(() => {

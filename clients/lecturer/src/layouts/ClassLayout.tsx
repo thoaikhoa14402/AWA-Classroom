@@ -126,6 +126,11 @@ const ClassLayout: React.FC = () => {
             setIsDetailLoading(false);
             dispatch(setReviewLoading(false));
         }
+        
+        return () => {
+            dispatch(setReviewLoading(false));
+            setIsDetailLoading(false);
+        }
     }, [classID, classInfo.classes, dispatch]);
 
     const location = useLocation();
@@ -160,8 +165,10 @@ const ClassLayout: React.FC = () => {
             { ModalContext }
             {
                 (!isLoading && !isDetailLoading && !isReviewLoading)
-                ? isInvite && !isJoined.current ? <Outlet /> 
-                : isInvite && isJoined ? 'You are joined'                    
+                ? isInvite && !isJoined.current 
+                    ? <Outlet /> 
+                    : isInvite && isJoined 
+                    ? 'You are joined'                    
                     : classes.length 
                     ? 
                     <>
