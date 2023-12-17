@@ -196,19 +196,16 @@ const ReviewRequestForm: React.FC<ReviewRequestFormProps> = ({ details }) => {
                         </Button>
                     </div>
                     <Editor
-                        apiKey="8f04qq8qzvwiezrbvgk61dd59ejncsww11olmcqhng8k7fsa"
-                        onInit={(evt, editor) => (editorRef.current = editor)}
+                        apiKey='8f04qq8qzvwiezrbvgk61dd59ejncsww11olmcqhng8k7fsa'
+                        onInit={(evt, editor) => editorRef.current = editor}
                         init={{
                             height: 250,
                             menubar: false,
-                            plugins:
-                                "anchor autolink charmap codesample emoticons link lists searchreplace table visualblocks wordcount casechange advtemplate advtable advcode editimage tableofcontents",
-                            toolbar:
-                                "blocks fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-                            tinycomments_mode: "embedded",
-                            content_style:
-                                "body { font-family: Arial, sans-serif; font-size:14px }",
-                            placeholder: "Enter your reason...",
+                            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                            toolbar: 'blocks fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                            tinycomments_mode: 'embedded',
+                            content_style: 'body { font-family: Arial, sans-serif; font-size:14px }',
+                            placeholder: 'Enter your reason...',
                         }}
                     />
                 </div>

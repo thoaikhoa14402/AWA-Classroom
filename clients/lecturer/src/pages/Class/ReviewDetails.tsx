@@ -259,7 +259,7 @@ const ReviewDetails: React.FC = () => {
                             init={{
                                 height: 250,
                                 menubar: false,
-                                plugins: 'tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste typography inlinecss',
+                                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
                                 toolbar: 'blocks fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
                                 tinycomments_mode: 'embedded',
                                 content_style: 'body { font-family: Arial, sans-serif; font-size:14px }',
