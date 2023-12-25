@@ -19,6 +19,7 @@ import Grade from "~/pages/Class/Grade";
 import ReviewRequest from "~/pages/Class/ReviewRequest";
 import ReviewDetails from "~/pages/Class/ReviewDetails";
 import ProfileUser from "~/pages/ProfileUser";
+import Feed from "~/pages/Class/Feed";
 
 const AppRoutes = () => {
     return (
@@ -28,7 +29,7 @@ const AppRoutes = () => {
                 <Route element={<BaseLayout />}>
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/classes" element={<ClassLayout />}>
-                        <Route path="feeds/:classID?" element={<>FEEDS</>} />    
+                        <Route path="feeds/:classID?" element={<Feed />} />
                         <Route path="works/:classID?" element={<>WORKS</>} />    
                         <Route path="members/:classID?" element={<Member />} />    
                         <Route path="grades/:classID?" element={<Grade />} />    
