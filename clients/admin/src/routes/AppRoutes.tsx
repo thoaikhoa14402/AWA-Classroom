@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import BaseLayout from "~/layouts/BaseLayout";
 import AuthLayout from "~/layouts/AuthLayout";
-import Classes from "~/pages/Classes";
 import LoginPage from "~/pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardPage from "~/pages/Dashboard";

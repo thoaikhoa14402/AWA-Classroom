@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { DragSortTable, ProColumns } from '@ant-design/pro-components';
-
-import { Button, Checkbox, Empty } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Empty } from 'antd';
 import { useOutletContext } from 'react-router-dom';
 import { ClassType } from '~/store/reducers/classSlice';
 

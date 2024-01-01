@@ -1,12 +1,10 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import { NavLink, useNavigate } from "react-router-dom";
+import { Button, Form, Input,Typography, message } from 'antd';
+import { useNavigate } from "react-router-dom";
 import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
-import useAppSelector from "~/hooks/useAppSelector";
 import styles from "./ForgotPasswordForm.module.css"
 import axios from "axios";
-import authStorage from "~/utils/auth.storage";
 
 const {Title} = Typography;
 
@@ -16,7 +14,6 @@ const ForgotPasswordForm: React.FC = () => {
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const userRegisterProfile = useAppSelector((state) => state.userRegister.profile);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);

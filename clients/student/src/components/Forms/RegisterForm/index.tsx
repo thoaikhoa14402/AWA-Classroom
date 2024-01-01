@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import { NavLink, useNavigate } from "react-router-dom";
+import { Button, Form, Input,Typography, Flex, message } from 'antd';
+import { useNavigate } from "react-router-dom";
 import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./RegisterForm.module.css"

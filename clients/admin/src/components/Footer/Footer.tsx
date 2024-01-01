@@ -1,8 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopyright } from "@fortawesome/free-regular-svg-icons";
-
-import classes from "./Footer.module.css";
 import { NavLink } from "react-router-dom";
 
 const Footer: React.FC = () => {

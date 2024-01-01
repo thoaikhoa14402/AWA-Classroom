@@ -1,10 +1,6 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
-import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
-import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import { Button, Checkbox, Form, Input,Typography, Flex, message } from 'antd';
+import { setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./LoginForm.module.css"
 import axios from "axios";
@@ -14,7 +10,6 @@ const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();

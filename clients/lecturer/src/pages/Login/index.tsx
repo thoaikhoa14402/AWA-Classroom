@@ -1,14 +1,12 @@
 import React, {useEffect} from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
-import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import { useLocation } from 'react-router-dom';
+import { setUserProfile } from "~/store/reducers/userSlice";
 import {message} from 'antd'
 import LoginForm from "~/components/Forms/LoginForm";
 import axios from "axios";
 import useAppDispatch from "~/hooks/useAppDispatch";
-import authStorage from "~/utils/auth.storage";
 
 const LoginPage: React.FC = () => {
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const location = useLocation();
     const [messageApi, contextHolder] = message.useMessage();

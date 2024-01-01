@@ -1,19 +1,16 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import { NavLink, useNavigate } from "react-router-dom";
-import { UserRegisterProfile, clearUserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
+import { Button, Form, Input, Typography, message } from 'antd';
+import { clearUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import useAppSelector from "~/hooks/useAppSelector";
 import styles from "./RenewPasswordForm.module.css"
 import axios from "axios";
-import authStorage from "~/utils/auth.storage";
 import { setUserProfile } from "~/store/reducers/userSlice";
 
 const {Title} = Typography;
 
 const RenewPasswordForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
