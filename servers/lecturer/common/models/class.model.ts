@@ -56,6 +56,7 @@ export interface IClass {
     owner: IUser;
     inviteCode: string;
     slug: string;
+    active: boolean;
     studentPermission: IClassPermission;
     lecturerPermission: IClassPermission;
     ownerPermission: IClassPermission;
@@ -111,6 +112,10 @@ const ClassSchema = new mongoose.Schema<IClass>(
                 specialChars: false,
                 digits: false,
             }, 15).generate()
+        },
+        active: {
+            type: Boolean,
+            default: true
         },
         studentPermission: {
             annoucement: {

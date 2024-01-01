@@ -117,7 +117,7 @@ class ClassController implements IController {
                 {
                     $match: {
                         $and: [
-                            { slug: req.body.id },
+                            { slug: req.body.id, active: true },
                             {
                                 $or: [
                                     { 'lecturers._id': new mongoose.Types.ObjectId(req.user?.id) },
@@ -304,9 +304,16 @@ class ClassController implements IController {
             { $unwind: '$owner' },
             {
                 $match: {
-                    $or: [
-                        { 'lecturers._id': new mongoose.Types.ObjectId(req.user?.id) },
-                        { 'owner._id': new mongoose.Types.ObjectId(req.user?.id) }
+                    $and: [
+                        {
+                            active: true,
+                        },
+                        {
+                            $or: [
+                                { 'lecturers._id': new mongoose.Types.ObjectId(req.user?.id) },
+                                { 'owner._id': new mongoose.Types.ObjectId(req.user?.id) }
+                            ]
+                        }
                     ]
                 },
             },
@@ -347,7 +354,7 @@ class ClassController implements IController {
     };
     
     private ownerProtect = async (req: Request, res: Response, next: NextFunction) => {
-        const classInfo: IClass | null = await ClassModel.findOne({ slug: req.body.id, owner: req.user?.id }).lean();
+        const classInfo: IClass | null = await ClassModel.findOne({ slug: req.body.id, owner: req.user?.id, active: true }).lean();
         
         if (!classInfo) {
             return next(new AppError('No class found with that ID', 404));

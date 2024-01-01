@@ -1,13 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { AuthController } from ".";
 import IController from "../interfaces/controller";
 import { IClass } from "../models/class.model"
 import catchAsync from "../utils/catch.error";
-import UserModel from "../models/user.model";
 import ClassModel from "../models/class.model";
 import JoinedClassInfoModel from "../models/joinedClassInfo.model"
-import mongoose from "mongoose";
-import { resolveSoa } from "dns";
 import AppError from "../services/errors/app.error";
 
 class ClassroomController implements IController {
@@ -18,6 +14,7 @@ class ClassroomController implements IController {
         // general
         this.router.get('/list', catchAsync(this.getAll));
         this.router.delete('/:id', catchAsync(this.deleteById));
+        this.router.patch('/:id', catchAsync(this.updateActiveStatus));
         // detailed classroom
         this.router.get('/:slug', catchAsync(this.getDetailedClass));
         this.router.delete('/:slug/student/:id', catchAsync(this.deleteStudentFromClass));
@@ -25,7 +22,7 @@ class ClassroomController implements IController {
     }
 
     private getAll = async (req: Request, res: Response, next: NextFunction) => { 
-        const classrooms = await ClassModel.find().select('cid name students owner slug').populate('owner');
+        const classrooms = await ClassModel.find().select('cid name students owner slug active').populate('owner');
         const classroomsResp = classrooms.map((classroom: IClass) => ({
             _id: classroom._id,
             cid: classroom.cid,
@@ -33,6 +30,7 @@ class ClassroomController implements IController {
             numberOfStudents: classroom.students.length,
             owner: classroom.owner.username,
             slug: classroom.slug,
+            active: classroom.active
         }))
         return res.status(200).json({
             message: 'success',
@@ -43,7 +41,7 @@ class ClassroomController implements IController {
     private deleteById = async (req: Request, res: Response, next: NextFunction) => {
         await ClassModel.findByIdAndDelete(req.params.id);
         await JoinedClassInfoModel.deleteOne({class: req.params.id})
-        const classrooms = await ClassModel.find().select('cid name students owner slug').populate('owner');
+        const classrooms = await ClassModel.find().select('cid name students owner slug active').populate('owner');
         const updatedCourses = classrooms.map((classroom: IClass) => ({
             _id: classroom._id,
             cid: classroom.cid,
@@ -51,11 +49,22 @@ class ClassroomController implements IController {
             numberOfStudents: classroom.students.length,
             owner: classroom.owner.username,
             slug: classroom.slug,
+            active: classroom.active
         }))
         return res.status(200).json({
             message: 'success',
             updatedCourses: updatedCourses
         })
+    }
+
+    private updateActiveStatus = async (req: Request, res: Response, next: NextFunction) => { 
+        const foundedClassroom = await ClassModel.findById(req.params.id);
+        if (foundedClassroom) {
+            foundedClassroom.active = !(foundedClassroom.active)
+        }
+        await foundedClassroom?.save();
+
+        return this.getAll(req, res, next);
     }
 
     private getDetailedClass = async (req: Request, res: Response, next: NextFunction) => {

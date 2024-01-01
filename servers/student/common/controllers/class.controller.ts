@@ -109,6 +109,7 @@ class ClassController implements IController {
                 {
                     $match: {
                         slug: req.body.id,
+                        active: true,
                         'students._id': new mongoose.Types.ObjectId(req.user?.id),
                     },
                 },
@@ -312,7 +313,8 @@ class ClassController implements IController {
             { $unwind: '$owner' },
             {
                 $match: {
-                    'students._id': new mongoose.Types.ObjectId(req.user?.id)
+                    'students._id': new mongoose.Types.ObjectId(req.user?.id),
+                    active: true,
                 },
             },
         ]);
