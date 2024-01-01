@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, message} from 'antd';
+import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, message, Tag} from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
@@ -14,6 +14,7 @@ interface DataType {
   numberOfStudents: number;
   owner: string;
   slug: string;
+  active: boolean;
 }
 
 type DataIndex = keyof DataType;
@@ -184,6 +185,34 @@ const ClassroomTable: React.FC = () => {
     }
   };
 
+  const handleActionUpdateStatus = async (key: React.Key) => {
+    setIsTableLoading(true);
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_HOST}/v1/classroom/${key}`);
+      if (response.status === 200) {
+        setTimeout(() => {
+          setIsTableLoading(false);
+          message.success({
+            content: 'This classroom status was updated successfully!',
+            style: {
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+            }
+          });
+        setDataSource(response.data.classrooms);
+        }, 1500);
+      }
+      else message.error({
+        content: response.data.message,
+      })
+    } catch (err) {
+      console.log('err: ', err);
+      message.error({
+        content: 'Unexpected errors!'
+      })
+    }
+  }
+
   const columns: ColumnsType<DataType> = [
     {
         title: 'Course ID',
@@ -198,7 +227,6 @@ const ClassroomTable: React.FC = () => {
             title: 'Course name',
           }),
         className: "!text-md",
-
     },
     {
       title: 'Course Name',
@@ -222,19 +250,64 @@ const ClassroomTable: React.FC = () => {
         ...getColumnSearchProps('owner'),
     },
     {
+        title: 'Status',
+        dataIndex: 'active',
+        key: 'active',
+        width: '11%',
+        filters: [
+          { text: 'Active', value: 'active' },
+          { text: 'Inactive', value: 'inactive' },
+        ],
+        onFilter: (value: any, record) => {
+          if (value === "active") return record.active === true;
+          else if (value === "inactive") return record.active === false;
+          return true;
+        },
+        // customize cell content
+        render: (_, record) => {
+            return (
+                <Tag color= {record.active ? "green" : "default" } style = {{
+                fontSize: 16,
+                minWidth: 80,
+                textAlign: 'center',
+                padding: 4,
+              }} className = {!record.active ? '!text-gray-400' : ''}>
+                {record.active ? "Active" : "Inactive"}
+              </Tag>
+            );
+        }
+    },
+    {
         title: 'Actions',
         dataIndex: 'actions',
         key: 'actions',
         width: '20%',
         render: (_, record) => (
               <Space size="middle" >
-                <Button type = "primary" style = {{width: '75px'}} onClick={() => navigate(`/classroom-management/${record.slug}`)}>View</Button>
+                <Button
+                  style={{
+                    width: '80px'
+                  }}
+                  type = "primary"
+                  // className={record.active ? "!bg-orange-500 !hover:bg-orange-700 !border-transparent !text-white !flex !justify-center !items-center" : '!flex !justify-center !items-center'}
+                  className={record.active ? "!bg-gray-400 !hover:bg-gray-700 !border-transparent !text-white !flex !justify-center !items-center !shadow" : '!flex !justify-center !items-center'}
+                  
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleActionUpdateStatus(record._id);
+                  }}>         
+                  {record.active ? 'Lock' : 'Unlock'}
+                </Button>
                 {dataSource.length >= 1 ? (
-                  <Popconfirm title="Sure to delete?" onConfirm={() => handleActionDelete(record._id)}
+                  <Popconfirm title="Sure to delete?" onConfirm={(e) => {
+                    e?.stopPropagation();
+                    handleActionDelete(record._id);
+                  }}
+                  onCancel={(e) => e?.stopPropagation()}
                   >
                   <Button type = "primary" danger style = {{
                     width: '75px'
-                  }} className = "!flex !justify-center !items-center">Delete</Button>
+                  }} className = "!flex !justify-center !items-center" onClick={(e) => e.stopPropagation()}>Delete</Button>
                   </Popconfirm>
               ) : null}
             </Space>
@@ -250,7 +323,13 @@ const ClassroomTable: React.FC = () => {
     <Table 
       className = "myTable"
       bordered = {true}
-      columns={columns} dataSource={dataSource} 
+      columns={columns} dataSource={dataSource}
+      rowClassName={(record, index) => "!cursor-pointer"}
+      onRow={(row, index) => {
+        return {
+          onClick: () => { navigate(`/classroom-management/${row.slug}`) },
+        };
+      }} 
       loading = {isTableLoading}
       pagination={{
       total: dataSource.length,
