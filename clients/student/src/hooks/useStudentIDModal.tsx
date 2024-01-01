@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { faIdBadge, faIdCard, faIdCardAlt, faIdCardClip, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faIdCardClip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form, Input, Modal } from "antd";
 

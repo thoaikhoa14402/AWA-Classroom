@@ -1,4 +1,4 @@
-import { faCheck, faClone, faEllipsis, faPlus, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClone, faEllipsis, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, MenuProps, Typography, message } from 'antd';
 import axios from 'axios';

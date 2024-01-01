@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import { NavLink, useNavigate } from "react-router-dom";
+import { Button, Form, Input,Typography, message } from 'antd';
+import { useNavigate } from "react-router-dom";
 import {setUserRegisterProfile, clearUserRegisterProfile, UserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import { setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./OTPVerificationForm.module.css"
 import axios from "axios";
-import authStorage from "~/utils/auth.storage";
 import useAppSelector from "~/hooks/useAppSelector";
 
 const {Title} = Typography;

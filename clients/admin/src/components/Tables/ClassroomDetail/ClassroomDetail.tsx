@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import { Button, Input, Popconfirm, Space, Table, InputRef, Typography, Tag, message, InputNumber, Form} from 'antd';
-import type { ColumnType, ColumnsType } from 'antd/es/table';
+import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import axios from "axios";
 
