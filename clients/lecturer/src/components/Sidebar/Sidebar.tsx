@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
     return (
         <aside
             className={`sticky inset-mbsize lg:inset-desksize sm:inset-desksize items-start flex flex-col border-r w-20 gap-2 whitespace-nowrap overflow-hidden px-4 py-5 border-r-gray-100 h-screen transition-all ease-in-out duration-300${
-                props.open ? " !w-2/3 lg:!w-1/4 2xl:!w-1/5 md:!w-1/3 sm:!w-1/2 shadow-md " + classes['cshadow'] : ""
+                props.open ? " !w-2/3 lg:!w-1/5 2xl:!w-1/5 md:!w-1/3 sm:!w-1/2 shadow-md " + classes['cshadow'] : ""
             }`}>
             <NavLink
                 style={({ isActive }) => (isActive ? {backgroundColor: '#00A551', borderRadius: '0.5rem', color: 'white', fontWeight: '500'} : {})}

@@ -213,7 +213,7 @@ const StudentGradeList: React.FC = () => {
             dataIndex: 'student_id',
             className: 'drag-visible !px-3.5',
             width: 70,
-            render: (_, record) => (record.user) ? <NavLink to={''} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
+            render: (_, record) => (record.user) ? <NavLink to={`/user/${record.user}`} className='!text-primary !underline !underline-offset-2'>{record.student_id}</NavLink> : record.student_id,
             renderFormItem: (_, { isEditable, record }) => isEditable ? <span className='flex items-center justify-center'><span>{record.student_id}</span><Input className='!p-0 !m-0 !invisible' /></span> : null,
         };
 
