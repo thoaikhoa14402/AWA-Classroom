@@ -74,19 +74,6 @@ UserSchema.virtual('fullname').get(function() {
     return `${this.firstname ?? ''} ${this.lastname ?? ''} `;
 })
 
-UserSchema.pre('save', async function (next): Promise<void> {
-    if (!this.isModified('password') || !this.password) return next();
-	const salt = await bcrypt.genSalt((process.env.SALT_ROUNDS as unknown as number) || 12);
-	this.password = await bcrypt.hash(this.password, salt);
-	next();
-});
-
-UserSchema.pre('save', function (next) {
-    if (!this.isModified('password') || this.isNew) return next();
-    this.passwordChangedAt = Date.now() - 1000;
-    next();
-});
-
 UserSchema.methods.correctPassword = async function (candidatePassword: string, userPassword: string) {
     return await bcrypt.compare(candidatePassword, userPassword);
 };

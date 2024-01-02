@@ -1,11 +1,11 @@
 import * as fs from 'fs'
 import mongoose from 'mongoose';
-import UserModel from '../../common/models/user.model';
-import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+import UserModel from './models/user.model';
+
+const MONGO_URI = 'mongodb+srv://thoaikhoa1442002:khoa1442002@awa-2023.mxpzkjz.mongodb.net/AWA_2023?retryWrites=true&w=majority'
 
 mongoose
-  .connect(process.env.MONGO_URI as string)
+  .connect(MONGO_URI as string)
   .then(() => console.log('Connected to database successfully'));
 
 // READ JSON FILE
@@ -23,7 +23,9 @@ const modifiedUsers = users.map((user: any) => ({
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    await UserModel.create(modifiedUsers);
+    for (const user of modifiedUsers) {
+      await UserModel.create(user);
+    }
     console.log('Loaded data successfully!');
   } catch (err) {
     console.log(err);
@@ -42,8 +44,8 @@ const deleteData = async () => {
   process.exit();
 };
 
-if (process.argv[2] === '--import') {
+if (process.argv[2] === '--import-users') {
   importData();
-} else if (process.argv[2] === '--delete') {
+} else if (process.argv[2] === '--delete-users') {
   deleteData();
 }
