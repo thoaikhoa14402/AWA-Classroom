@@ -131,11 +131,15 @@ const StudentTable: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined className = {filtered ? "!text-primary" : ''}/>
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
+    onFilter: (value, record) => {
+      if (record[dataIndex]) {
+        return record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes((value as string).toLowerCase()),
+        .includes((value as string).toLowerCase())
+      }
+      return false;
+    },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);

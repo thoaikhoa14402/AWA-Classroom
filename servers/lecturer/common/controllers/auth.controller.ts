@@ -69,7 +69,7 @@ class AuthController implements IController {
         const {username, password} = req.body
         const user = await UserModel.findOne({ username: username }).select('+password');
 
-        if (!user || !(await user.correctPassword(password, user.password!))) {
+        if (!user || !(await user.correctPassword(password, user.password!)) || !user.active) {
             return next(new AppError('The username or password is incorrect!', 401));
         }
 
@@ -221,7 +221,8 @@ class AuthController implements IController {
     /// > PROTECT
     public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
-            if (!req.verification_code && user.role !== 'lecturer') next(new AppError('The username or password is incorrect', 401));
+            if (!req.verification_code && user.role !== 'lecturer') next(new AppError('The username or password is incorrect', 401)); // restrict user when activating account if conditions are not valid
+            if (!user.active) next(new AppError('The username or password is incorrect', 401)); // restrict user when account was banned by admin
             if (info instanceof Error) return next(info);
             next();
         })(req, res, next);
@@ -244,7 +245,7 @@ class AuthController implements IController {
             
             if (user) {
                 if (user.role !== 'lecturer') next(new AppError('Unauthorized', 401));
-
+                if (!user.active) next(new AppError('The username or password is incorrect', 401)); // if user is not active (banned by admin)
                 if (origin) { // from HTTP client 
                     return res.status(200).json({ message: "This account has been authenticated!" })
                 }
