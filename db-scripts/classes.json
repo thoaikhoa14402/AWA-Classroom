@@ -1,0 +1,569 @@
+[{
+  "_id": {
+    "$oid": "6566fc7dbd86eac22a75002d"
+  },
+  "cid": "AWA-6719",
+  "name": "Mobile developement",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2023-11-29T08:54:00.972Z"
+  },
+  "students": [
+    {
+      "$oid": "6552167a9648eca1a2e0162a"
+    },
+    {
+      "$oid": "6593e332750cbbe0964af2eb"
+    },
+    {
+      "$oid": "65606b76f3579d3314480dd5"
+    }
+  ],
+  "lecturers": [
+    {
+      "$oid": "6560e15a6cfebb659ba08033"
+    },
+    {
+      "$oid": "656f56c6b64ebbe2bee32e16"
+    }
+  ],
+  "owner": {
+    "$oid": "655b11e280ed254c303d34b7"
+  },
+  "inviteCode": "IXGRNBQ",
+  "slug": "IOwIhGEgoWLfYBl",
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [
+    {
+      "name": "Final",
+      "scale": 40,
+      "order": 0,
+      "published": false,
+      "_id": {
+        "$oid": "6571b0984e870a734099086d"
+      }
+    },
+    {
+      "name": "Lab 1",
+      "scale": 20,
+      "order": 1,
+      "published": true,
+      "_id": {
+        "$oid": "6571b0984e870a734099086e"
+      }
+    },
+    {
+      "name": "Lab 2",
+      "scale": 20,
+      "order": 2,
+      "published": false,
+      "_id": {
+        "$oid": "6571b0984e870a734099086f"
+      }
+    }
+  ],
+  "studentList": [
+    {
+      "student_id": "20127039",
+      "full_name": "Huy Nguyễn",
+      "email": "huynguyen@hcmus.edu.vn",
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0b7"
+      }
+    },
+    {
+      "student_id": "20127051",
+      "full_name": "Nguyễn Minh",
+      "email": "minhnguyen@hcmus.edu.vn",
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0b8"
+      }
+    },
+    {
+      "student_id": "20127525",
+      "full_name": "Khang Dinh",
+      "email": "khangdinh@hcmus.edu.vn",
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0b9"
+      }
+    }
+  ],
+  "__v": 36,
+  "gradeList": [
+    {
+      "student_id": "20127039",
+      "grade_name": [
+        "Final",
+        "Lab 1",
+        "Lab 2"
+      ],
+      "grade": [
+        {
+          "col": "Final",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0bb"
+          }
+        },
+        {
+          "col": "Lab 1",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0bc"
+          }
+        },
+        {
+          "col": "Lab 2",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0bd"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0ba"
+      }
+    },
+    {
+      "student_id": "20127051",
+      "grade_name": [
+        "Final",
+        "Lab 1",
+        "Lab 2"
+      ],
+      "grade": [
+        {
+          "col": "Final",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0bf"
+          }
+        },
+        {
+          "col": "Lab 1",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0c0"
+          }
+        },
+        {
+          "col": "Lab 2",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0c1"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0be"
+      }
+    },
+    {
+      "student_id": "20127525",
+      "grade_name": [
+        "Final",
+        "Lab 1",
+        "Lab 2"
+      ],
+      "grade": [
+        {
+          "col": "Final",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0c3"
+          }
+        },
+        {
+          "col": "Lab 1",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0c4"
+          }
+        },
+        {
+          "col": "Lab 2",
+          "value": null,
+          "_id": {
+            "$oid": "6593e7197eac6e38cb23d0c5"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6593e7197eac6e38cb23d0c2"
+      }
+    }
+  ],
+  "studentListUrl": "https://res.cloudinary.com/daa7j5ohx/raw/upload/v1704191173/studentlist/qwmqsurn7wte6e76yhfl",
+  "gradeListUrl": "https://res.cloudinary.com/daa7j5ohx/raw/upload/v1701949415/gradelist/df1zowq7vv663n42xaz0",
+  "active": true
+},
+{
+  "_id": {
+    "$oid": "6592bb8775a226de40f490e0"
+  },
+  "cid": "AWA-50",
+  "name": "UI/UX Design",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2024-01-01T13:14:36.632Z"
+  },
+  "students": [
+    {
+      "$oid": "65508b509ed10e214b3c0c74"
+    }
+  ],
+  "lecturers": [],
+  "owner": {
+    "$oid": "655b11e280ed254c303d34b7"
+  },
+  "inviteCode": "QVUERJC",
+  "slug": "yiItVGEuSjuQJvU",
+  "active": true,
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [
+    {
+      "name": "HW1",
+      "scale": 5,
+      "order": 0,
+      "published": true,
+      "_id": {
+        "$oid": "6592c17e08d5c3c271014d53"
+      }
+    },
+    {
+      "name": "HW2",
+      "scale": 5,
+      "order": 1,
+      "published": true,
+      "_id": {
+        "$oid": "6592c17e08d5c3c271014d54"
+      }
+    }
+  ],
+  "studentList": [
+    {
+      "student_id": "20127043",
+      "full_name": "Khoa Nguyen",
+      "email": "nguyenthoaidangkhoa@gmail.com",
+      "_id": {
+        "$oid": "6592bfbc08d5c3c271014bed"
+      }
+    },
+    {
+      "student_id": "20127050",
+      "full_name": "Duc Minh",
+      "email": "ndminh@gmail.com",
+      "_id": {
+        "$oid": "6592bfbc08d5c3c271014bee"
+      }
+    },
+    {
+      "student_id": "20127525",
+      "full_name": "Dinh Nguyen Duy Khang",
+      "email": "khangdinh@gmail.com",
+      "_id": {
+        "$oid": "6592bfbc08d5c3c271014bef"
+      }
+    }
+  ],
+  "gradeList": [
+    {
+      "student_id": "20127043",
+      "grade_name": [
+        "HW1",
+        "HW2"
+      ],
+      "grade": [
+        {
+          "col": "HW1",
+          "value": 10,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d2e"
+          }
+        },
+        {
+          "col": "HW2",
+          "value": 9,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d2f"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6592c17508d5c3c271014d2d"
+      }
+    },
+    {
+      "student_id": "20127050",
+      "grade_name": [
+        "HW1",
+        "HW2"
+      ],
+      "grade": [
+        {
+          "col": "HW1",
+          "value": 8,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d31"
+          }
+        },
+        {
+          "col": "HW2",
+          "value": 8,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d32"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6592c17508d5c3c271014d30"
+      }
+    },
+    {
+      "student_id": "20127525",
+      "grade_name": [
+        "HW1",
+        "HW2"
+      ],
+      "grade": [
+        {
+          "col": "HW1",
+          "value": 7,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d34"
+          }
+        },
+        {
+          "col": "HW2",
+          "value": 7,
+          "_id": {
+            "$oid": "6592c17508d5c3c271014d35"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6592c17508d5c3c271014d33"
+      }
+    }
+  ],
+  "__v": 12,
+  "studentListUrl": "https://res.cloudinary.com/daa7j5ohx/raw/upload/v1704116154/studentlist/oargxpemvdwszkrrorji",
+  "gradeListUrl": "https://res.cloudinary.com/daa7j5ohx/raw/upload/v1704116540/gradelist/icxcmdlt2qbcyktyx0rl"
+},
+{
+  "_id": {
+    "$oid": "6593eaa9d4b5fe3ea3615ce6"
+  },
+  "cid": "20KTPM2",
+  "name": "Phát triển ứng dụng web",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2024-01-02T09:35:44.942Z"
+  },
+  "students": [
+    {
+      "$oid": "6552167a9648eca1a2e0162a"
+    }
+  ],
+  "lecturers": [],
+  "owner": {
+    "$oid": "6560e15a6cfebb659ba08033"
+  },
+  "inviteCode": "EXBUIQP",
+  "slug": "CAUQuTmYLKqZoba",
+  "active": true,
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [],
+  "studentList": [],
+  "gradeList": [],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6593eae5d4b5fe3ea3615cf2"
+  },
+  "cid": "20KTPM1",
+  "name": "Thiết kế phần mềm",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2024-01-02T09:35:44.942Z"
+  },
+  "students": [
+    {
+      "$oid": "65606b76f3579d3314480dd5"
+    }
+  ],
+  "lecturers": [],
+  "owner": {
+    "$oid": "6560e15a6cfebb659ba08033"
+  },
+  "inviteCode": "UTEFGYJ",
+  "slug": "GHNuAwjgYCFMBhy",
+  "active": true,
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [],
+  "studentList": [],
+  "gradeList": [],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6593ec09d4b5fe3ea3615d86"
+  },
+  "cid": "20MMT",
+  "name": "Mạng máy tính",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2024-01-02T09:35:44.942Z"
+  },
+  "students": [
+    {
+      "$oid": "65606b76f3579d3314480dd5"
+    }
+  ],
+  "lecturers": [],
+  "owner": {
+    "$oid": "656f56c6b64ebbe2bee32e16"
+  },
+  "inviteCode": "LITFUPU",
+  "slug": "fUBRXEslFbvptUl",
+  "active": true,
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [],
+  "studentList": [],
+  "gradeList": [],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6593ec2ad4b5fe3ea3615d92"
+  },
+  "cid": "20CNTThuc",
+  "name": "Blockchain",
+  "banner": "https://www.gstatic.com/classroom/themes/Honors.jpg",
+  "createAt": {
+    "$date": "2024-01-02T09:35:44.942Z"
+  },
+  "students": [
+    {
+      "$oid": "6552167a9648eca1a2e0162a"
+    },
+    {
+      "$oid": "65606b76f3579d3314480dd5"
+    }
+  ],
+  "lecturers": [],
+  "owner": {
+    "$oid": "656f56c6b64ebbe2bee32e16"
+  },
+  "inviteCode": "KHILFSP",
+  "slug": "SZCFuBCaInBBgiw",
+  "active": true,
+  "studentPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "lecturerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "ownerPermission": {
+    "annoucement": "class_permission_write",
+    "assignment": "class_permission_write",
+    "review": "class_permission_write",
+    "comment": "class_permission_write"
+  },
+  "gradeColumns": [],
+  "studentList": [],
+  "gradeList": [],
+  "__v": 2
+}]
