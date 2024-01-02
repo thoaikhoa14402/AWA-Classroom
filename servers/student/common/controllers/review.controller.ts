@@ -103,10 +103,22 @@ class ReviewController implements IController {
             return next(new AppError('Review not found', 404));
         }
 
+        const joinedInfo = await JoinedClassInfoModel.findById(review.joinedInfo._id).populate('user').lean();
+
+        if (!joinedInfo) {
+            return next(new AppError('Review not found', 404));
+        }
+
         res.status(200).json({
             status: 'success',
             data: {
-                review,
+                review: {
+                    ...review,
+                    joinedInfo: {
+                        ...review.joinedInfo,
+                        user: joinedInfo?.user,
+                    }
+                },
             },
         });
     }

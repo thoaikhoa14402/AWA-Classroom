@@ -141,13 +141,13 @@ const ReviewDetails: React.FC = () => {
             <div className='p-3 flex gap-12 items-start justify-center'>
                 <div className='flex flex-col gap-8'>
                     <div className='flex gap-6'>
-                        <div className='flex flex-col items-end gap-2'>
+                        <div className='flex flex-col items-end gap-2 max-w-[180px]'>
                             <div className='rounded-full overflow-hidden border'>
-                                <img width='50px' src={userInfo?.avatar} alt='avatar' />
+                                <img width='50px' src={reviewDetails.joinedInfo.user?.avatar} alt='avatar' />
                             </div>
                             <div className='flex flex-col items-end'>
-                                <div className='font-medium'>{userInfo?.username}</div>
-                                <small className='capitalize'>{userInfo?.role}</small>
+                                <div className='font-medium'>{reviewDetails.joinedInfo.user?.username}</div>
+                                <small className='capitalize'>{reviewDetails.joinedInfo.studentID}</small>
                             </div>
                         </div>  
                         <div className='flex flex-col border-primary rounded-md border flex-1 overflow-hidden'>
@@ -163,13 +163,13 @@ const ReviewDetails: React.FC = () => {
                     {
                         reviewDetails.comments.map((el: ICommentType, index: number) => (
                             <div key={el._id} className='flex gap-6 flex-1 flex-row'>
-                                <div className='flex flex-col items-end gap-2'>
+                                <div className='flex flex-col items-end gap-2 max-w-[180px]'>
                                     <div className='rounded-full overflow-hidden border'>
                                         <img width='50px' src={userInfo?.avatar} alt='avatar' />
                                     </div>
                                     <div className='flex flex-col items-end'>
                                         <div className='font-medium'>{el.sender.username}</div>
-                                        <small className='capitalize'>{el.sender.role}</small>
+                                        <small className='capitalize'>{el.sender._id === userInfo?._id ? el.sender.role : reviewDetails.joinedInfo.studentID}</small>
                                     </div>
                                 </div>  
                                 <div className={`flex flex-col rounded-md border flex-1 overflow-hidden ${ el.sender._id === userInfo?._id ? 'border-primary' : 'border-blue-600' }`}>
