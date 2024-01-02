@@ -10,7 +10,7 @@ interface DataType {
   id: string;
   username: string;
   fullname: string;
-  phonenumber: string;
+  phoneNumber: string;
   active: boolean;
   email: string;
 }
@@ -239,10 +239,10 @@ const StudentTable: React.FC = () => {
     },
     {
         title: 'Phone',
-        dataIndex: 'phonenumber',
-        key: 'phonenumber',
+        dataIndex: 'phoneNumber',
+        key: 'phoneNumber',
         width: "14%",
-        ...getColumnSearchProps('phonenumber'),
+        ...getColumnSearchProps('phoneNumber'),
         className: "!text-md",
       },
     {

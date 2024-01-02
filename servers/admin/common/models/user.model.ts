@@ -65,6 +65,10 @@ UserSchema.virtual('id').get(function() {
     return this._id.toHexString();
 });
 
+UserSchema.virtual('fullname').get(function() {
+    return `${this.firstname ?? ''} ${this.lastname ?? ''} `;
+})
+
 UserSchema.pre('save', async function (next): Promise<void> {
     if (!this.isModified('password') || !this.password) return next();
 	const salt = await bcrypt.genSalt((process.env.SALT_ROUNDS as unknown as number) || 12);

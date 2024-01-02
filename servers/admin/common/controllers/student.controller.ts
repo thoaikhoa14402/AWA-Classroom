@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { AuthController } from ".";
 import IController from "../interfaces/controller";
 import catchAsync from "../utils/catch.error";
-import UserModel from "../models/user.model";
+import UserModel, { IUser } from "../models/user.model";
 import mongoose from "mongoose";
 
 class StudentController implements IController {
@@ -16,7 +16,7 @@ class StudentController implements IController {
     }
 
     private getAll = async (req: Request, res: Response, next: NextFunction) => { 
-        const students = await UserModel.find({role: 'student'});
+        let students = await UserModel.find({role: 'student'});
         return res.status(200).json({
             message: 'success',
             students: students
