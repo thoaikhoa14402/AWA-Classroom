@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response, Router } from "express";
+import { AuthController } from ".";
 import IController from "../interfaces/controller";
 import { IClass } from "../models/class.model"
 import catchAsync from "../utils/catch.error";
+import UserModel from "../models/user.model";
 import ClassModel from "../models/class.model";
 import JoinedClassInfoModel from "../models/joinedClassInfo.model"
+import mongoose from "mongoose";
+import { resolveSoa } from "dns";
 import AppError from "../services/errors/app.error";
 
 class ClassroomController implements IController {
