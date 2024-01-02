@@ -34,6 +34,9 @@ root.render(
           components: {
             Button: {
               colorPrimary: '#00A551',
+            },
+            Table: {
+              rowHoverBg: '#ebfbee',
             }
           }
         }}>

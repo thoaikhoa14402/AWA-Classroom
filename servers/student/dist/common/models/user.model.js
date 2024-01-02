@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const UserSchema = new mongoose_1.default.Schema({
-    avatar: { type: String },
+    avatar: { type: String, default: 'https://lh3.googleusercontent.com/a/default-user=s120-p' },
     phoneNumber: { type: String },
     username: { type: String },
     googleID: { type: String },
@@ -23,7 +23,7 @@ const UserSchema = new mongoose_1.default.Schema({
     githubID: { type: String },
     firstname: { type: String },
     lastname: { type: String },
-    role: { type: String, default: 'Học viên' },
+    role: { type: String, default: 'student' },
     address: { type: String },
     password: {
         type: String,
@@ -33,6 +33,10 @@ const UserSchema = new mongoose_1.default.Schema({
     active: {
         type: Boolean,
         default: true
+    },
+    verify: {
+        type: Boolean,
+        default: false
     },
     passwordChangedAt: { type: Number },
 }, {
@@ -52,8 +56,8 @@ UserSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!this.isModified('password') || !this.password)
             return next();
-        const salt = yield bcrypt_1.default.genSalt(process.env.SALT_ROUNDS || 12);
-        this.password = yield bcrypt_1.default.hash(this.password, salt);
+        const salt = yield bcryptjs_1.default.genSalt(process.env.SALT_ROUNDS || 12);
+        this.password = yield bcryptjs_1.default.hash(this.password, salt);
         next();
     });
 });
@@ -65,7 +69,7 @@ UserSchema.pre('save', function (next) {
 });
 UserSchema.methods.correctPassword = function (candidatePassword, userPassword) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield bcrypt_1.default.compare(candidatePassword, userPassword);
+        return yield bcryptjs_1.default.compare(candidatePassword, userPassword);
     });
 };
 const UserModel = mongoose_1.default.model('User', UserSchema);

@@ -43,7 +43,6 @@ const validation_middleware_1 = __importDefault(require("../middlewares/validati
 const user_example_dto_1 = __importDefault(require("../dtos/user.example.dto"));
 const jwt_1 = __importStar(require("../utils/jwt"));
 const mailer_builder_1 = __importDefault(require("../services/mailer.builder"));
-const cache_middleware_1 = __importDefault(require("../middlewares/cache.middleware"));
 const redis_1 = __importDefault(require("../redis"));
 const multer_1 = __importDefault(require("../multer"));
 class UserController {
@@ -58,7 +57,7 @@ class UserController {
         // extract 1 param example
         this.router.param('id', validation_middleware_1.default.extractParams(['id']));
         // cache example
-        this.router.get('/:id', (0, cache_middleware_1.default)(UserController.profileCacheKey), (0, catch_error_1.default)(this.getUser));
+        // this.router.get('/:id', cacheMiddleware(UserController.profileCacheKey), catchAsync(this.getUser));
         // extract params example
         this.router.get('/details/:id/:idx', validation_middleware_1.default.extractParams(['id', 'idx']), (0, catch_error_1.default)(this.getUser));
         // upload file example

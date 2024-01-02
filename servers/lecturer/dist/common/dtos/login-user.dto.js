@@ -18,14 +18,14 @@ class LoginUserDTO {
 }
 exports.LoginUserDTO = LoginUserDTO;
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Tài khoản không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Tài khoản không hợp lệ" }),
+    (0, class_validator_1.IsString)({ message: "Username is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Username is not valid." }),
     __metadata("design:type", String)
 ], LoginUserDTO.prototype, "username", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(8, { message: 'Mật khẩu phải tối thiểu 8 kí tự' }),
-    (0, class_validator_1.IsString)({ message: "Mật khẩu không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Mật khẩu không hợp lệ" }),
+    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters.' }),
+    (0, class_validator_1.IsString)({ message: "Password is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Password is not valid." }),
     __metadata("design:type", String)
 ], LoginUserDTO.prototype, "password", void 0);
 exports.default = LoginUserDTO;

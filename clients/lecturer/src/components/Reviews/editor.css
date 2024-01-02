@@ -1,0 +1,48 @@
+.tox-editor-header, .tox-toolbar__primary {
+    box-shadow: none !important;
+}
+
+.tox-toolbar__primary {
+    border-bottom: 1px solid rgb(245, 245, 245) !important;
+}
+
+.tox .tox-collection--list .tox-collection__item--active {
+    background-color: #9ef1c6 !important;
+}
+
+.tox .tox-tbtn {
+    color: rgb(104, 104, 104) !important;
+}
+
+.tox .tox-tbtn:hover, .tox .tox-tbtn:focus,
+.tox .tox-tbtn--enabled, .tox .tox-tbtn--enabled:hover {
+    background-color: #ceffe6 !important;
+}
+
+.tox-tinymce {
+    border: 1px solid #0fb65f !important;
+    border-radius: 14px !important;
+    font-weight: 500 !important;
+}
+
+.tox-statusbar__branding, .tox-statusbar__path-item {
+    display: none !important;
+}
+
+.tox-statusbar__resize-handle {
+    padding-bottom: 0px !important;
+    padding-top: 6px !important;
+}
+.tox-statusbar__resize-handle svg {
+    fill: white !important;
+}
+
+.tox-statusbar {
+    padding: 1.2rem 1rem !important;
+    border-top: 1px solid rgb(231, 231, 231) !important;
+    background-color: #00A551 !important;
+}
+
+.tox-statusbar__wordcount {
+    color: white !important;
+}

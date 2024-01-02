@@ -17,27 +17,27 @@ class RegisterUserDTO {
     }
 }
 __decorate([
-    (0, class_validator_1.IsString)({ message: "Tên đăng nhập không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Tên đăng nhập không được bỏ trống" }),
+    (0, class_validator_1.IsString)({ message: "Username is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Username must not be empty." }),
     __metadata("design:type", String)
 ], RegisterUserDTO.prototype, "username", void 0);
 __decorate([
-    (0, class_validator_1.IsEmail)({}, { message: "Email không hợp lệ" }),
-    (0, class_validator_1.IsString)({ message: "Email không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Email không được bỏ trống" }),
+    (0, class_validator_1.IsEmail)({}, { message: "Email is not valid." }),
+    (0, class_validator_1.IsString)({ message: "Email is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Email must not be empty." }),
     __metadata("design:type", String)
 ], RegisterUserDTO.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(8, { message: 'Mật khẩu phải ít nhất 8 kí tự' }),
-    (0, class_validator_1.IsString)({ message: "Mật khẩu không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Mật khẩu không được bỏ trống" }),
+    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters.' }),
+    (0, class_validator_1.IsString)({ message: "Password is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Password is not valid." }),
     __metadata("design:type", String)
 ], RegisterUserDTO.prototype, "password", void 0);
 __decorate([
     (0, match_decorator_1.Match)('password'),
-    (0, class_validator_1.MinLength)(8, { message: 'Xác nhận mật khẩu ít nhất 8 kí tự' }),
-    (0, class_validator_1.IsString)({ message: "Xác nhận mật khẩu không hợp lệ" }),
-    (0, class_validator_1.IsNotEmpty)({ message: "Xác nhận mật khẩu không được bỏ trống" }),
+    (0, class_validator_1.MinLength)(8, { message: 'Password confirm must be at least 8 characters.' }),
+    (0, class_validator_1.IsString)({ message: "Password confirm is not valid." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Password confirm must not be empty." }),
     __metadata("design:type", String)
 ], RegisterUserDTO.prototype, "passwordConfirm", void 0);
 exports.default = RegisterUserDTO;

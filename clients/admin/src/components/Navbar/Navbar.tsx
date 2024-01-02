@@ -46,16 +46,17 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     const items: MenuProps['items'] = useMemo(() => [
         {
             key: 'profile',
-            label: 'Cá nhân',
+            label: 'Profile',
             icon: <UserOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => { navigate('/user/profile'); props.toggleSidebar(false); }
         },
         {
             key: 'reset-password',
-            label: 'Đổi mật khẩu',
+            label: 'Reset password',
             icon: <KeyOutlined className="!text-lg" />,
-            className: '!px-4 !py-3 !text-md !gap-1.5'
+            className: '!px-4 !py-3 !text-md !gap-1.5',
+            onClick: () => { navigate('/user/reset-password'); props.toggleSidebar(false); }
         },
         {
             key: 'divider',
@@ -65,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         },
         {
             key: 'logout',
-            label: 'Đăng xuất',
+            label: 'Logout',
             icon: <LogoutOutlined className="!text-lg" />,
             className: '!px-4 !py-3 !text-md !gap-1.5',
             onClick: () => {
@@ -93,8 +94,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     </NavLink>
                 </div>
                 <form onSubmit={handleSearch} autoComplete="off" className="w-1/2 bg-transparent flex justify-center items-center px-0.5 shadow-sm shadow-slate-200 overflow-hidden rounded-full" action='/' method='GET'>
-                    <input ref={searchRef} required type="search" name="q" className="w-full px-3.5 py-2.5 text-sm outline-none" placeholder="Tìm kiếm lớp học, bài tập, ..." />
-                    <button type="submit" className={`${classes['submit-btn']} bg-primary flex items-center p-3 border-none outline-none rounded-full font-bold`} title="Tìm kiếm">
+                    <input ref={searchRef} required type="search" name="q" className="w-full px-3.5 py-2.5 text-sm outline-none" placeholder="Find related keywords, ..." />
+                    <button type="submit" className={`${classes['submit-btn']} bg-primary flex items-center p-3 border-none outline-none rounded-full font-bold`} title="Search">
                         <FontAwesomeIcon icon={faSearch} color="white" size="sm" />
                     </button>
                 </form>
@@ -105,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                         <button type="button" className="flex justify-center items-center gap-3.5 hover:bg-gray-100 px-5 py-2 rounded-md">
                             <span className="flex flex-col items-end lg:flex md:hidden sm:hidden">
                                 <span className="font-medium text-right">{profile?.username}</span>
-                                <small>{profile?.role}</small>
+                                <small className="capitalize">{profile?.role}</small>
                             </span>
                             <span className="flex justify-center items-center w-10 h-10 rounded-full font-semibold text-white overflow-hidden" style={{
                                 backgroundColor: color,
@@ -116,9 +117,9 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     </Dropdown>
                     : 
                     <div className="flex gap-2 whitespace-nowrap">
-                        <NavLink to='/auth/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Đăng Ký</NavLink>
+                        <NavLink to='/auth/register' className="px-5 py-2.5 font-medium text-sm hover:text-hover-dark transition-all duration-75">Register</NavLink>
                         <NavLink to='/auth/login' className="flex items-center gap-1.5 px-5 py-2.5 outline-none border-2 font-semibold border-primary rounded-full text-white text-sm bg-primary hover:shadow-lg hover:border-transparent disabled:bg-gray-400/80 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-300 hover:bg-hover">
-                            Đăng Nhập <FontAwesomeIcon icon={faArrowRight} /> 
+                            Login <FontAwesomeIcon icon={faArrowRight} /> 
                         </NavLink>
                     </div> 
                 }

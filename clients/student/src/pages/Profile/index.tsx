@@ -17,6 +17,7 @@ import useAppSelector from "~/hooks/useAppSelector";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import { setUserProfile } from "~/store/reducers/userSlice";
 import authStorage from "~/utils/auth.storage";
+import { NavLink } from "react-router-dom";
 
 const getBase64 = (file: RcFile): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -82,7 +83,7 @@ const Profile: React.FC = () => {
             onUploadProgress: (event: any) => onProgress({ percent: (event.loaded / event.total) * 100 })
         })
         .then((response: any) => {
-            messageApi.success(`Upload ảnh đại diện thành công`);
+            messageApi.success(`Avatar upload successfully`);
             
             dispatch(setUserProfile({
                 user: {
@@ -95,7 +96,7 @@ const Profile: React.FC = () => {
             onSuccess(userProfile.avatar);
         })
         .catch((error) => { 
-            messageApi.error(`Xử lý không thành công`);
+            messageApi.error(`Update failed`);
             onError({ error });
         });
     };
@@ -115,7 +116,7 @@ const Profile: React.FC = () => {
                 access_token: authStorage.getAccessToken() || '',
             }));
 
-            messageApi.success('Cập nhật thông tin thành công');
+            messageApi.success('Update profile successfully');
             
             setChange(false);
         })
@@ -144,6 +145,10 @@ const Profile: React.FC = () => {
 
     return (
         <>
+            <div className="!mx-auto !w-full lg:!w-profile !border text-center flex justify-around mb-2 rounded-lg overflow-hidden">
+                <NavLink to='/user/profile' className={({ isActive }) => (isActive) ? 'bg-primary text-white font-semibold w-full p-3' : `w-full p-3 hover:text-primary transition-all duration-150`}>User Profile</NavLink>
+                <NavLink to='/user/reset-password' className={({ isActive }) => (isActive) ? 'bg-primary text-white font-semibold w-full p-3' : `w-full p-3 hover:text-primary transition-all duration-150`}>Reset Password</NavLink>
+            </div>
             {contextHolder}
             <Form
                 form={form}
@@ -185,7 +190,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="lastname"
-                        label="Họ và tên đệm"
+                        label="Lastname"
                         rules={[
                             {
                                 required: true,
@@ -199,7 +204,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="firstname"
-                        label="Tên"
+                        label="Firstname"
                         rules={[
                             {
                                 required: true,
@@ -214,7 +219,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="email"
-                        label="Địa chỉ email"
+                        label="Email"
                         rules={[
                             { type: "email", message: "Email không hợp lệ" },
                             {
@@ -229,7 +234,7 @@ const Profile: React.FC = () => {
                     <Form.Item
                         className="!w-full !text-left"
                         name="phoneNumber"
-                        label="Số điện thoại"
+                        label="Phone number"
                         rules={[
                             {
                                 pattern:
@@ -250,7 +255,7 @@ const Profile: React.FC = () => {
                         className="mr-2 !text-sm !font-semibold !py-2 !px-4 !h-auto"
                         disabled={!change}
                     >
-                        Hủy
+                        Cancel
                     </Button>
                     <Button
                         type="primary"
@@ -258,7 +263,7 @@ const Profile: React.FC = () => {
                         className="!text-sm !font-semibold !py-2 !px-4 !h-auto"
                         disabled={!change}
                     >
-                        Cập nhật
+                        Update
                     </Button>
                 </Form.Item>
             </Form>

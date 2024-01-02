@@ -13,10 +13,10 @@ const validate = (image: RcFile, options: ValidateOptions = {
     const { whitelist, size } = options;
 
     if (!whitelist.includes(image.type))
-        return 'Ảnh không hợp lệ. Chỉ chấp nhận định dạng "jpeg" hoặc "png".';
+        return 'Invalid image. Only accept the formats "jpeg" or "png".';
 
     if (image.size > size) 
-        return `Ảnh phải nhỏ hơn ${size / 1024 / 1024}MB`;
+        return `Image must be smaller than ${size / 1024 / 1024}MB`;
 
     return false;
 };

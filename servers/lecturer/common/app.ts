@@ -84,6 +84,8 @@ class Application {
     }
 
     private setup() {
+        this.app.enable('trust proxy');
+
         console.log(chalk.yellow('Setting up server...'));
         this.app.use(credentials);
         this.app.use(cors(CorsCustomOptions));
@@ -92,6 +94,7 @@ class Application {
         this.app.use(express.json({ limit: '50mb' }));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
+
         this.app.use(passport.initialize());
 
         this.app.use(

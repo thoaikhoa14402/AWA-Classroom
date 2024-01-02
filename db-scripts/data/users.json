@@ -1,0 +1,771 @@
+[{
+  "_id": {
+    "$oid": "65511519349bceb2b3bf8ca0"
+  },
+  "avatar": "https://graph.facebook.com/3577952569128133/picture?width=200&height=200",
+  "phoneNumber": "0915337378",
+  "username": "Thoại Khoa",
+  "facebookID": "3577952569128133",
+  "firstname": "Khoa",
+  "lastname": "Thoại",
+  "role": "student",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655116a09b4b54d165e72324"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIXIeeSxmbTn_dtA7PAdlTH1dqtNF-ho-mfzGjlTUKF=s96-c",
+  "phoneNumber": "0916337378",
+  "username": "Khoa Nguyen",
+  "googleID": "104732869754946821601",
+  "firstname": "Khoa",
+  "lastname": "Nguyen",
+  "role": "student",
+  "password": "",
+  "email": "thoaikhoa14402@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65508b509ed10e214b3c0c74"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLwwZ19Z6mjmqg1d8DGknJ25YXjlM3Joyn9nVe4AWeH1Fo=s96-c",
+  "phoneNumber": "0917337378",
+  "username": "Nguyễn Khoa",
+  "googleID": "116110045275404248753",
+  "firstname": "Nguyễn",
+  "lastname": "Khoa",
+  "role": "student",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "654bc71d06ffd7b8a2e198f3"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIBagvIwwja4V3QgY0w8mFluKtSTNCd0Dt0HnkXF26hQw=s96-c",
+  "phoneNumber": "0918337378",
+  "username": "Khoa Nguyễn",
+  "googleID": "110100497839821162958",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "",
+  "email": "nguyenthoaidangkhoa14402@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6550fd47566f9575e5e27c7f"
+  },
+  "username": "20127043",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "admin",
+  "password": "$2a$12$4yWgYhlibUz1b8D/9.fYaOOn0AXh2ClnfY5hrBwuTiIFLXwxYrY5O",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6552167a9648eca1a2e0162a"
+  },
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1699878585/avatars/hkngontmctj3czgush10.png",
+  "phoneNumber": "0919337378",
+  "username": "NG-MinG",
+  "githubID": "90041846",
+  "firstname": "Sukiro",
+  "lastname": "Nguyen",
+  "role": "student",
+  "password": "",
+  "email": "wgmin.it@outlook.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655a43af29a4bfcfa9b4266b"
+  },
+  "phoneNumber": "0920337378",
+  "username": "test10",
+  "firstname": "Huy",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$woAD7HYSCxtrcegrKkyrE.38lmvFs4xeYut0gTQlTQVZhbo/AjcA6",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655a440329a4bfcfa9b42673"
+  },
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1700414586/avatars/tov3jshcbxhaw6lm3qom.png",
+  "phoneNumber": "0921337378",
+  "username": "test11",
+  "firstname": "Nguyễn",
+  "lastname": "Minh",
+  "role": "student",
+  "password": "$2a$12$oKuKQOPyh6E1S4TWwHj/BeM4pqZVtdNebU4BqdvQOikB.gaBxzgiq",
+  "email": "t3pmal@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655a46fc39bee3bb3d22f0e2"
+  },
+  "phoneNumber": "0922337378",
+  "username": "test14",
+  "firstname": "Khang",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$HXz5yKAWIlVjMFIPuw3jF.pWCUNSNXV97d6ooIbMOPEq10rWQPSkK",
+  "email": "t3pmal@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655b11e280ed254c303d34b7"
+  },
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1700637669/avatars/brqhuwsg20ehrswaxawh.png",
+  "phoneNumber": "0910337378",
+  "username": "20127050",
+  "firstname": "Minh",
+  "lastname": "Nguyễn Đức",
+  "role": "lecturer",
+  "password": "$2a$12$6vI7LFns.q8Rny/GCDTfCejv581b8Os4zVQhedmFYpCv7j5Nq4JV6",
+  "email": "nducminh.it@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b65f3579d3314480dcf"
+  },
+  "phoneNumber": "0923337378",
+  "username": "ntdkhoa10",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$wvjpiOH64O.FLRuuS26rL.AQkUtl1OLJoxyMGWl.kuJtpvdjRZouS",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b70f3579d3314480dd2"
+  },
+  "phoneNumber": "0924337378",
+  "username": "ntdkhoa11",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$pJwur6gVm92nZFP7Lg47RO/0e.vQ6YlvoEp.n5lgDS0z/8IdKwiEu",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b76f3579d3314480dd5"
+  },
+  "phoneNumber": "0925337378",
+  "username": "ntdkhoa12",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$nwk7DD0jSvI0A9.LhKNZm.s1xJ46EBuB3lGj6Po4DVg0Zxz/LrQg6",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": true,
+  "__v": 0,
+  "avatar": "https://res.cloudinary.com/daa7j5ohx/image/upload/v1704193992/avatars/uh2d5nnwyyv8pyxdwggv.jpg"
+},
+{
+  "_id": {
+    "$oid": "65606b86f3579d3314480dd8"
+  },
+  "phoneNumber": "0926337378",
+  "username": "ntdkhoa13",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$04aKfYcNBMvHwrBFA85hW.4oia/trhQIcwJ8Cmgl5UgFZIFEuQise",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b8ff3579d3314480ddb"
+  },
+  "phoneNumber": "0927337378",
+  "username": "ntdkhoa14",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$E2WBL445gKi7UUC7ichtveaoIOIEIA7hkuXIxr2ioLq3I6GU8DIN.",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b98f3579d3314480dde"
+  },
+  "phoneNumber": "0928337378",
+  "username": "ntdkhoa15",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$sYFZxdRbwy8nobdE5R/lUunW6lgrJzjfIUH9xhwbHkXiCgxP1CrtO",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606b9ff3579d3314480de1"
+  },
+  "phoneNumber": "0929337378",
+  "username": "ntdkhoa16",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$z7WMdppkl9p5bqucNnTCAOvRLA7R486NRMXyTGFiKYE5h.Vb2frgu",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606ba8f3579d3314480de4"
+  },
+  "phoneNumber": "0930337378",
+  "username": "ntdkhoa17",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$Tve1Xr29FNUIjupr5WPtOuzzaRvhLoQzgKduB9WGfTKeClf2lKn6u",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606baef3579d3314480de7"
+  },
+  "phoneNumber": "0931337378",
+  "username": "ntdkhoa18",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$/4d.X78rUyLli1CTGH3fU.z.S.5NJsMzI3b5gltRSzLEM271sj5.q",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bb5f3579d3314480dea"
+  },
+  "phoneNumber": "0932337378",
+  "username": "ntdkhoa19",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$0OvQAdcn4HXq/U.Itv.Q9uOsCgV8g3R0tn7wpt4976.NmHHtWAV76",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bbcf3579d3314480ded"
+  },
+  "phoneNumber": "0933337378",
+  "username": "ntdkhoa20",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$u.VooFtyHyieW.MUDB36g.YlPK2b.Vxo98jKT9bBsfkptMHIRfQym",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bc4f3579d3314480df0"
+  },
+  "phoneNumber": "0934337378",
+  "username": "ntdkhoa21",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$yxxIbnTcYZ9fbdxTrGQp/ObJ/fPazjO1cF/NALPNDFwO3G3mZdEZG",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bcbf3579d3314480df3"
+  },
+  "phoneNumber": "0935337378",
+  "username": "ntdkhoa22",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$RMFk9GIzA5dcYjQbXKekuuRK.s4jZEYFaAfiFBId.GaJh5QnZnaQe",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bd9f3579d3314480df6"
+  },
+  "phoneNumber": "0936337378",
+  "username": "ntdkhoa23",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$9RQBqLLCjmG0.mlrh87pFusv/5h40o9UA8uYAVPc.fHKEhGt98BZ.",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65606bdff3579d3314480df9"
+  },
+  "phoneNumber": "0937337378",
+  "username": "ntdkhoa24",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$9nV0KOMnH90y05A1hX6ed.cKcZy3Ik5bAFGoqKsrfGfhaJBfgnzHq",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6560ad2cc8b17dd70de1693c"
+  },
+  "phoneNumber": "0938337378",
+  "username": "nguyenkhoa1",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$7jt11bA.3UJpT/FkkhqsR.qQ66.hkZtk4xg3dXaE.Pi8g9zE4TjP6",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6560ad32c8b17dd70de1693f"
+  },
+  "phoneNumber": "0939337378",
+  "username": "nguyenkhoa2",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$P.wG1HJ3q6j4EOktMSbCc.abPesUZWKY/3RbmWfAWubTNQZwvKMPK",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6560ad64c8b17dd70de16942"
+  },
+  "phoneNumber": "0940337378",
+  "username": "nguyenkhoa4",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$2mNKWeXdO7EQ6PSNbdx00OCNJzCzpLX1Cszfrw0qvUKHYqarwWP6e",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6560e15a6cfebb659ba08033"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s50-p",
+  "phoneNumber": "0911337378",
+  "username": "giahuy02",
+  "firstname": "Gia",
+  "lastname": "Huy",
+  "role": "lecturer",
+  "password": "$2a$12$mKfFP6P2JEiOegElByw2pOi.7qzzgv/97p3leqiQM4eJjj4HfOx1G",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6561fe59823ea90ca1c09dac"
+  },
+  "phoneNumber": "0941337378",
+  "username": "TestAuth",
+  "firstname": "Minh",
+  "lastname": "Huy",
+  "role": "student",
+  "password": "$2a$12$RFGRcUE1LPgl/DsjcQLIo.ScB9fNab9mGC5QRGhOPKZceATmYYZOa",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65663114aa93fd3aeb91e53b"
+  },
+  "phoneNumber": "0942337378",
+  "username": "newStudent",
+  "firstname": "Louis",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$SZaYaCStzchIj2fTZNkSwuIKYdhlVnHoSFxUWnfl.aRP88vDq4bQS",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6569e169dbaa22625f135d36"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0943337378",
+  "username": "ntdkhoa14402",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$j2YiheKjtTNNBY2iguN2mO1W5vwJ2OVsd2eHYJBqSk8hm6vtjcOxu",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656b5f6b6cbb524e137d92f1"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0944337378",
+  "username": "khoabin02",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$XB3xvu.xNRmf49EcL2HfkesZvxnry4F0Qq8G2p2Y28MzxK7CWBF1q",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656b61d66cbb524e137d92f7"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0945337378",
+  "username": "khoabin03",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$8i7X6dkQALmqgtfCag6SQOjFb3e1TM804LQVfjcylcV6AeWISPB1O",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656bf85f65076823cbb7748b"
+  },
+  "avatar": "https://avatars.githubusercontent.com/u/81000230?v=4",
+  "phoneNumber": "0946337378",
+  "username": "thoaikhoa14402",
+  "githubID": "81000230",
+  "firstname": "Khoa",
+  "lastname": "Nguyen",
+  "role": "student",
+  "password": "",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656bf8bf65076823cbb77496"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0947337378",
+  "username": "khoabin14",
+  "firstname": "Khoa",
+  "lastname": "Nguyễn",
+  "role": "student",
+  "password": "$2a$12$80vEMRdYKncTcXoaxOxEj.hpvAy6QciMG6ZUKDVdInqoegwTARWa2",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656cc3f7e308efc8adfb2f2b"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0948337378",
+  "username": "thoaikhoa14403",
+  "firstname": "Khoa",
+  "lastname": "Thoại",
+  "role": "student",
+  "password": "$2a$12$dTJJ3RYQntj.ORf0GKtzfeNWCGX1IAeKGgd6rA9uxbz4mSKPdh3YS",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656cc66c7a8edbc23105a694"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0949337378",
+  "username": "thoaikhoa14404",
+  "firstname": "Khoa",
+  "lastname": "Thoại",
+  "role": "student",
+  "password": "$2a$12$Vr0d6A7cTbpu/6cJzaaIbu/LwdCfpF4ubuDgZCLlgyJ5U8r40IbcS",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656d8d5cfffb4a9e61fdd24d"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0950337378",
+  "username": "MinhNguyen",
+  "firstname": "Khoa",
+  "lastname": "Thoại",
+  "role": "student",
+  "password": "$2a$12$ohCfzf/yRafPEtPBY9WIyu.dD3PQrfJTOtBRLYUkCWPJhG7tr5PEi",
+  "email": "nducminh.it@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656d9220a61a798e122d8cd7"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0951337378",
+  "username": "khoabin15",
+  "firstname": "Khoa",
+  "lastname": "Bin",
+  "role": "student",
+  "password": "$2a$12$upTuIKHyUsFHDf0ENmL6G.tNoB2Sndmk2RjWfjI.CCapgvNtqsT/S",
+  "email": "nguyenthoaidangkhoa@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656f56c6b64ebbe2bee32e16"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0912337378",
+  "username": "khangdinh02",
+  "firstname": "Khang",
+  "lastname": "Nguyễn",
+  "role": "lecturer",
+  "password": "$2a$12$deGQ7guPA9iIUioNUO2nkuLFSdWhVxahqy44z0BQjdPJ3ZWrEOFZG",
+  "email": "ducminh68kg.mn@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656f59cd0f1ff589879c02df"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0952337378",
+  "username": "lecturers002",
+  "firstname": "Johnny",
+  "lastname": "Phan",
+  "role": "student",
+  "password": "$2a$12$fBEawSa9ICnxplY.3RfLIu5hfzGDzXXFSWFx/5V3xtUftOaPH9jdC",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656f5b0ec56f549728204441"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0778568685",
+  "username": "testuser",
+  "firstname": "Nguyen",
+  "lastname": "Minh",
+  "role": "student",
+  "password": "$2a$12$VHcLsZjYYorLvtZxZ468vOTtUr..WRvdb8iFwscsvjIJhBfI1bQQ2",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656f6ece5bed5caee0cb1446"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0953337378",
+  "username": "testacc",
+  "firstname": "Tam",
+  "lastname": "Nguyen",
+  "role": "student",
+  "password": "$2a$12$JCv3EXMblSONV86G5fWO/OnRjFxvCiD.qRWfhBMt1RBNDUryHp71G",
+  "email": "t3pmal@gmail.com",
+  "active": true,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "657169d8f17204c4374abc1c"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJxokoOYwuMsYJNfQERGaquuGGffX6hjNIXOrv2sNMx=s96-c",
+  "phoneNumber": "0913337378",
+  "username": "Đức Minh Nguyễn",
+  "googleID": "116122794118034760849",
+  "firstname": "Đức Minh",
+  "lastname": "Nguyễn",
+  "role": "lecturer",
+  "password": "",
+  "email": "ducminh68kg.mn@gmail.com",
+  "active": false,
+  "verify": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65719b0eaf8cd59dda9f967e"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLMFADNZT4800qLAjkdoZWbL6w7sPqNs4E274ppOk9Y=s96-c",
+  "phoneNumber": "0954337378",
+  "username": "Minh Nguyen",
+  "googleID": "106848111255756821178",
+  "firstname": "Minh",
+  "lastname": "Nguyen",
+  "role": "student",
+  "password": "",
+  "email": "nducminh.it@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "657ad1fb68b7da219fa9eeea"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJqC1JjZoyafkiP3fd199dfeHK-bSRw1ELb6ekZLRJ_=s96-c",
+  "phoneNumber": "0955337378",
+  "username": "Dinh Khang",
+  "googleID": "110535097945795747103",
+  "firstname": "Dinh",
+  "lastname": "Khang",
+  "role": "student",
+  "password": "",
+  "email": "khangkn2211@gmail.com",
+  "active": false,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "657eba7788e761b104b4c378"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/default-user=s120-p",
+  "phoneNumber": "0956337378",
+  "username": "khangduy017",
+  "firstname": "Dinh",
+  "lastname": "Khang",
+  "role": "student",
+  "password": "$2a$12$9eg9cHoJwphTKds5MMrkQ.XbSPYepGny23t2q7UHdfLAjw8.tPVq.",
+  "email": "khangduy017@gmail.com",
+  "active": true,
+  "verify": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6593e332750cbbe0964af2eb"
+  },
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocI6tluy_RPHo24BCscPPY1omOmDZsZBhgA9pyI6VzL6=s96-c",
+  "username": "Minh Nguyễn Đức",
+  "googleID": "110216614190693993792",
+  "firstname": "Minh",
+  "lastname": "Nguyễn Đức",
+  "role": "student",
+  "password": "",
+  "email": "ndminh202@clc.fitus.edu.vn",
+  "active": true,
+  "verify": false,
+  "__v": 0,
+  "phoneNumber": "0957337378"
+}]

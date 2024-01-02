@@ -13,9 +13,13 @@ class Cloudinary {
         return await cloud.uploader.upload(file, options);
     };
 
-    public delete = async (publicId: string) => {
+    public destroy = async (publicId: string) => {
         return await cloud.uploader.destroy(publicId);
     };
+
+    public delete = async (publicIds: string[]) => {
+        return await cloud.api.delete_resources(publicIds, { type: 'upload', resource_type: 'raw' });
+    }
 
     public crop = (id: string, h: number, w: number) => {
         return cloud.url(id, {

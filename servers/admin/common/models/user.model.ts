@@ -18,6 +18,7 @@ export interface IUser {
     phoneNumber?: string;
     address?: string;
     active?: boolean;
+    verify?: boolean;
     role?: string;
 }
 export interface IUserMethods {
@@ -36,7 +37,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         githubID: {type: String},
         firstname: { type: String },
         lastname: { type: String},
-        role: {type: String, default: 'Học viên'},
+        role: {type: String},
         address: {type: String},
         password: { 
             type: String,
@@ -46,6 +47,10 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
         active: {
             type: Boolean,
             default: true
+        },
+        verify: {
+            type: Boolean,
+            default: false
         },
         passwordChangedAt: { type: Number },
     },
@@ -64,6 +69,10 @@ const UserSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
 UserSchema.virtual('id').get(function() {
     return this._id.toHexString();
 });
+
+UserSchema.virtual('fullname').get(function() {
+    return `${this.firstname ?? ''} ${this.lastname ?? ''} `;
+})
 
 UserSchema.pre('save', async function (next): Promise<void> {
     if (!this.isModified('password') || !this.password) return next();

@@ -1,10 +1,6 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import {ReactComponent as GoogleIcon} from "~/assets/svg/google-ico.svg";
-import {ReactComponent as FacebookIcon} from "~/assets/svg/facebook-ico.svg";
-import {ReactComponent as GithubIcon} from "~/assets/svg/github-ico.svg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import { Button, Checkbox, Form, Input,Typography, Flex, message } from 'antd';
+import { setUserProfile } from "~/store/reducers/userSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./LoginForm.module.css"
 import axios from "axios";
@@ -14,7 +10,6 @@ const {Title} = Typography;
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -25,7 +20,7 @@ const LoginForm: React.FC = () => {
     if (authStorage.isLogin() && !isFetching && !isAuthenticated)
       messageApi.open({
         type: 'error',
-        content: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!'
+        content: 'Login session has expired. Please log in again!'
       });
     authStorage.logout();
   } 
@@ -39,7 +34,7 @@ const LoginForm: React.FC = () => {
         messageApi.open({
           key,
           type: 'loading',
-          content: 'Đang xử lý!',
+          content: 'Processing!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/login`, values, {
           headers: {
@@ -55,7 +50,7 @@ const LoginForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng nhập thành công!',
+              content: 'Login successfully!',
             });
           }, 1500)
 
@@ -65,7 +60,7 @@ const LoginForm: React.FC = () => {
           }));
 
           setTimeout(() => {
-            window.location.replace('/home');
+            window.location.replace('/classroom-management');
           }, 2000)
         }
       } catch (err: any) {
@@ -73,7 +68,7 @@ const LoginForm: React.FC = () => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng nhập thất bại!',
+            content: 'Login failed!',
           });
           form.setFields([
             {
@@ -100,33 +95,33 @@ const LoginForm: React.FC = () => {
       className = {styles["login-form"]}
       form = {form}
     >
-      <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Đăng nhập</Title>
+      <Title level={1} className = "text-center" style = {{color: "#00A551"}}>Log in to your account</Title>
      
       <Form.Item
-        label="Tài khoản"
+        label="Username"
         name="username"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
+        rules={[{ required: true, message: 'Username must not be empty!' }]}
       >
-        <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
+        <Input className = {`mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your username"/>
       </Form.Item>
      
       <Form.Item
-        label="Mật khẩu"
+        label="Password"
         name="password"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         rules={[
         { 
-          required: true, message: 'Mật khẩu không được bỏ trống!'
+          required: true, message: 'Password must not be empty!'
         },
         {
           min: 8,
-          message: 'Mật khẩu phải tối thiểu 8 kí tự',
+          message: 'Password must be at least 8 characters!',
         }]}
       >
-        <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
+        <Input.Password className = {`mb-1 ${styles["input-style"]}`} placeholder = "Enter your password"/>
       </Form.Item>
      
       <Form.Item
@@ -134,45 +129,15 @@ const LoginForm: React.FC = () => {
         valuePropName="checked"
       >
       <Flex className = "mt-3" justify = "space-between">
-      <Checkbox >Ghi nhớ đăng nhập</Checkbox>
-      <span style = {{color: '#00A551', fontWeight: "500", cursor: 'pointer'}}>
-        Quên mật khẩu ?
-      </span>
+      <Checkbox >Remember me</Checkbox>
       </Flex>
       </Form.Item>
      
       <Form.Item>
         <Button type="primary" htmlType="submit" className = {`${styles["btn-style"]} justify-center"`} block>
-            Đăng nhập
+            Log in to your account
         </Button>
       </Form.Item>
-      
-      <Divider style = {{borderColor: "black"}}>
-        Phương thức khác
-      </Divider>
-
-      <Flex gap = "3rem" align = "center" justify="center">
-        <NavLink to = {`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/google`}>
-          <GoogleIcon/>
-        </NavLink>
-
-        <NavLink to = {`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/facebook`}>
-          <FacebookIcon/>
-        </NavLink>
-
-        <NavLink to ={`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/github`}>
-          <GithubIcon/>
-        </NavLink>
-      </Flex>
-
-      <Flex className = "!mt-6" justify = "center" gap = "small">
-        <span className={styles[""]}>
-          Chưa đăng ký?
-        </span>
-        <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/register')}>
-          Đăng kí tài khoản
-        </span>
-      </Flex>
 
     </Form>
   </React.Fragment>

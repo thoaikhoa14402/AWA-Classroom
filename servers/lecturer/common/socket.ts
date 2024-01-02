@@ -17,6 +17,8 @@ class SocketIO {
     public init(httpServer: http.Server, options?: ServerOptions): Server {
         return this.io ?? (this.io = new Server(httpServer, {
             cors: CorsCustomOptions,
+            transports: ['polling','websocket'],
+            allowEIO3: true,
             ...options,
         }));
     }

@@ -32,8 +32,8 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUserProfile: (state, action: PayloadAction<UserProfile>) => {
-            state.profile = action.payload.user;
             authStorage.login(action.payload.user, action.payload.access_token);
+            state.profile = action.payload.user;
         },
         clearUserProfile: (state) => {
             state.profile = null;

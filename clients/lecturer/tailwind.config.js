@@ -25,13 +25,26 @@ module.exports = {
       },
       inset: {
         'mbsize': '11.95rem auto auto auto',
-        'desksize': '4.3rem auto auto auto'
+        'desksize': '4.25rem auto auto auto'
       },
       outlineColor: {
         'primary': '#00A551'
       },
       width: {
         'profile': '45rem'
+      },
+      zIndex: { 
+        '0': '0',
+        '1': '1',
+        '2': '2',
+        '3': '3',
+        '4': '4',
+        '5': '5',
+        '6': '6',
+        '7': '7',
+        '8': '8',
+        '9': '9',
+        '999': '999',
       }
     },
   },

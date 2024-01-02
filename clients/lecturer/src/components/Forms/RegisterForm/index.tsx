@@ -1,7 +1,7 @@
 import React from "react";
-import { Button, Checkbox, Form, Input,Typography, Divider, Flex, message } from 'antd';
-import { NavLink, useNavigate } from "react-router-dom";
-import { UserProfile, setUserProfile } from "~/store/reducers/userSlice";
+import { Button, Form, Input,Typography, Flex, message } from 'antd';
+import { useNavigate } from "react-router-dom";
+import { UserRegisterProfile, setUserRegisterProfile } from "~/store/reducers/userRegisterSlice";
 import useAppDispatch from "~/hooks/useAppDispatch";
 import styles from "./RegisterForm.module.css"
 import axios from "axios";
@@ -25,7 +25,7 @@ const RegisterForm: React.FC = () => {
         messageApi.open({
           key,
           type: 'loading',
-          content: 'Đang xử lý!',
+          content: 'Processing!',
         });
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/v1/auth/register`, values, {
           headers: {
@@ -41,25 +41,29 @@ const RegisterForm: React.FC = () => {
             messageApi.open({
               key,
               type: 'success',
-              content: 'Đăng ký thành công!',
+              content: response.data.message,
             });
           }, 1500)
 
-          dispatch(setUserProfile({
-            user: response.data.user,
-            access_token: response.data.accessToken
-          }));
+          dispatch(setUserRegisterProfile({
+            user: {
+              username: values.username,
+              email: values.email,
+            },
+            verification_token: response.data.verificationToken
+          } as UserRegisterProfile));
 
           setTimeout(() => {
-            window.location.replace('/home');
-          }, 2000)
+            // window.location.replace('/home');
+            navigate('/auth/otp-verification/register')
+          }, 2500)
         }
       } catch (err: any) {
         setTimeout(() => {
           messageApi.open({
             key,
             type: 'error',
-            content: 'Đăng ký thất bại!',
+            content: 'Register failed!',
           });
           form.setFields([
             {
@@ -82,16 +86,16 @@ const RegisterForm: React.FC = () => {
       className = {styles["register-form"]}
       form = {form}
     >
-      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Đăng ký</Title>
+      <Title level={1} className = "!text-center" style = {{color: "#00A551"}}>Create an account</Title>
 
       <Form.Item
-        label="Tài khoản"
+        label="Username"
         name="username"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        rules={[{ required: true, message: 'Tài khoản không được bỏ trống!' }]}
+        rules={[{ required: true, message: 'Username must not be empty!' }]}
       >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập tài khoản"/>
+        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your username"/>
       </Form.Item>
 
       <Form.Item
@@ -102,74 +106,74 @@ const RegisterForm: React.FC = () => {
         rules={[
         { 
           required: true,
-          message: 'Email không được bỏ trống!'
+          message: 'Email must not be empty!'
         },
         {
           type: 'email',
-          message: 'Email không hợp lệ!'
+          message: 'Email format is not valid!'
         }
       ]}
       >
-        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập email"/>
+        <Input className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your email"/>
       </Form.Item>
 
       <Form.Item
-        label="Mật khẩu"
+        label="Password"
         name="password"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         rules={[
         { 
-          required: true, message: 'Mật khẩu không được bỏ trống!'
+          required: true, message: 'Password must not be empty!'
         },
         {
           min: 8,
-          message: 'Mật khẩu phải tối thiểu 8 kí tự',
+          message: 'Password must be at least 8 characters!',
         }]}
       >
-        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập mật khẩu"/>
+        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your password"/>
       
       </Form.Item>
       
       <Form.Item
-        label="Mật khẩu xác nhận"
+        label="Confirm Password"
         name="password-confirm"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         dependencies={['password']}
         rules={[
         { 
-          required: true, message: 'Mật khẩu xác nhận không được bỏ trống!'
+          required: true, message: 'Password confirm must not be empty!'
         },
         {
           min: 8,
-          message: 'Mật khẩu phải tối thiểu 8 kí tự',
+          message: 'Password must be at least 8 characters!',
         },
         ({getFieldValue}) => ({
           validator(_, value) {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve();
             }
-            return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+            return Promise.reject(new Error('Password does not match!'));
           },
         })
         ]}
       >
-        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Nhập lại mật khẩu"/>
+        <Input.Password className = {`!mb-1.5 ${styles["input-style"]}`} placeholder = "Enter your password"/>
       </Form.Item>
       
       <Form.Item>
         <Button type="primary" htmlType="submit" className = "!mt-6 !h-11" block>
-            Đăng ký
+            Create your account
         </Button>
       </Form.Item>
       
       <Flex justify = "center" gap = "small">
         <span>
-          Đã có tài khoản?
+          Already have an account?
         </span>
         <span style = {{color: '#00A551', fontWeight: "600", cursor: 'pointer'}} onClick = {() => navigate('/auth/login', {replace: true})}>
-          Đăng nhập
+          Log in
         </span>
       </Flex>
 

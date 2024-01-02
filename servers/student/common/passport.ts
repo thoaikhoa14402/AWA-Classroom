@@ -26,7 +26,11 @@ const jwtStrategy = new JwtStrategy(jwtOptions, (req: Request, jwt_payload: any,
             req.user = user;
             return done(null, user)
         } else {
-            return done(null, false)
+            if (jwt_payload.verification_code) { // if user create new account, and request verify their otp code
+                req.verification_code = jwt_payload.verification_code;
+                return done(null, jwt_payload.verification_code);
+            }
+            else return done(null, false)
         }
     }).catch(err => {
         done(err, false);
@@ -38,6 +42,7 @@ const googleStrategy = new GoogleStrategy({
      clientID: process.env.CLIENT_ID_GOOGLE as string,
      clientSecret: process.env.CLIENT_SECRET_GOOGLE as string,
      callbackURL: "/v1/auth/google/cb",
+     proxy: true
     }, async (accessToken: string, refreshToken: string, profile: any, done) => {    // Check if user already exists in our database
     let user = await UserModel.findOne({googleID: profile.id})
     if (!user) {
@@ -58,7 +63,8 @@ const facebookStrategy = new FacebookStrategy({
     clientID: process.env.CLIENT_ID_FACEBOOK as string,
     clientSecret: process.env.CLIENT_SECRET_FACEBOOK as string,
     callbackURL: "/v1/auth/facebook/cb",
-    profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos']
+    profileFields: ['id', 'name', 'emails', 'displayName', 'about', 'gender', 'photos'],
+    proxy: true
 }, async (accessToken: string, refreshToken: string, profile: any, done) => {
     let user = await UserModel.findOne({facebookID: profile.id})
     if (!user) {
