@@ -6,10 +6,6 @@ import JoinedClassInfoModel from './models/joinedClassInfo.model';
 
 const MONGO_URI = 'mongodb+srv://thoaikhoa1442002:khoa1442002@awa-2023.mxpzkjz.mongodb.net/AWA_2023?retryWrites=true&w=majority'
 
-mongoose
-  .connect(MONGO_URI as string)
-  .then(() => console.log('Connected to database successfully'));
-
 // READ JSON FILE
 
 const users = JSON.parse(
@@ -63,22 +59,20 @@ const importUserData = async () => {
     for (const user of modifiedUsers) {
       await UserModel.create(user);
     }
-    console.log('Loaded data successfully!');
+    console.log('Loaded user data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 // DELETE USER DATA FROM DB
 const deleteUserData = async () => {
   try {
     await UserModel.deleteMany();
-    console.log('Deleted data successfully!');
+    console.log('Deleted user data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 // IMPORT CLASS DATA INTO DB
@@ -87,22 +81,20 @@ const importClassData = async () => {
     for (const s_class of modifiedClasses) {
       await ClassModel.create(s_class);
     }
-    console.log('Loaded data successfully!');
+    console.log('Loaded class data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 // DELETE CLASS DATA FROM DB
 const deleteClassData = async () => {
   try {
     await ClassModel.deleteMany();
-    console.log('Deleted data successfully!');
+    console.log('Deleted class data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 // IMPORT JOINED CLASS INFO DATA INTO DB
@@ -111,37 +103,46 @@ const importJoinedClassInfoData = async () => {
     for (const joined_class_info of modifiedJoinedClassInfos) {
       await JoinedClassInfoModel.create(joined_class_info);
     }
-    console.log('Loaded data successfully!');
+    console.log('Loaded joined class info data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 // DELETE JOINED CLASS INFO DATA FROM DB
 const deleteJoinedClassInfoData = async () => {
   try {
     await JoinedClassInfoModel.deleteMany();
-    console.log('Deleted data successfully!');
+    console.log('Deleted joined class info data successfully!');
   } catch (err) {
     console.log(err);
   }
-  process.exit();
 };
 
 
-if (process.argv[2] === '--import-users') {
-  importUserData();
-} else if (process.argv[2] === '--delete-users') {
-  deleteUserData();
-} else if (process.argv[2] === '--import-classes') {
-  importClassData();
-} 
-else if (process.argv[2] === '--delete-classes') {
-  deleteClassData();
-} else if (process.argv[2] === '--import-joined-class-infos') {
-  importJoinedClassInfoData();
-} 
-else if (process.argv[2] === '--delete-joined-class-infos') {
-  deleteJoinedClassInfoData();
+async function execute(command: string) {
+  await mongoose
+  .connect(MONGO_URI as string);
+
+  console.log('Connected to database successfully');
+
+  if (command === '--import-data') {
+    await importUserData();
+    await importClassData();
+    await importJoinedClassInfoData();
+    
+    process.exit();
+  }
+  else if (command === '--delete-data') {
+    await deleteUserData();
+    await deleteClassData();
+    await deleteJoinedClassInfoData();
+
+    process.exit();
+  }
+  else {
+    console.log('Invalid command');
+  }
 }
+
+execute(process.argv[2] as string);
