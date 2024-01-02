@@ -2,8 +2,7 @@ import * as fs from 'fs'
 import mongoose from 'mongoose';
 import UserModel from './models/user.model';
 import ClassModel from './models/class.model';
-
-
+import JoinedClassInfoModel from './models/joinedClassInfo.model';
 
 const MONGO_URI = 'mongodb+srv://thoaikhoa1442002:khoa1442002@awa-2023.mxpzkjz.mongodb.net/AWA_2023?retryWrites=true&w=majority'
 
@@ -14,11 +13,15 @@ mongoose
 // READ JSON FILE
 
 const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/users.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/data/users.json`, 'utf-8')
 );
 
 const classes = JSON.parse(
-  fs.readFileSync(`${__dirname}/classes.json`, 'utf8')
+  fs.readFileSync(`${__dirname}/data/classes.json`, 'utf8')
+);
+
+const joinedClassInfos = JSON.parse(
+  fs.readFileSync(`${__dirname}/data/joined_class_infos.json`, 'utf8')
 );
 
 // convert object_id ("$oid") in sample-data (users.json) to mongoose.Types.ObjectId
@@ -43,6 +46,15 @@ const modifiedClasses = classes.map((s_class: any) => ({
       grade: item.grade.map((grade_item: any) => ({...grade_item, _id: new mongoose.Types.ObjectId(grade_item._id.$oid)})),
     }
   }),
+}));
+
+const modifiedJoinedClassInfos = joinedClassInfos.map((joined_class_info: any) => 
+({
+  ...joined_class_info,
+  _id: new mongoose.Types.ObjectId(joined_class_info._id.$oid),
+  user: new mongoose.Types.ObjectId(joined_class_info.user.$oid),
+  class: new mongoose.Types.ObjectId(joined_class_info.class.$oid),
+  joinedAt: new Date(joined_class_info.joinedAt.$date),
 }));
 
 // IMPORT USER DATA INTO DB
@@ -93,6 +105,30 @@ const deleteClassData = async () => {
   process.exit();
 };
 
+// IMPORT JOINED CLASS INFO DATA INTO DB
+const importJoinedClassInfoData = async () => {
+  try {
+    for (const joined_class_info of modifiedJoinedClassInfos) {
+      await JoinedClassInfoModel.create(joined_class_info);
+    }
+    console.log('Loaded data successfully!');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+
+// DELETE JOINED CLASS INFO DATA FROM DB
+const deleteJoinedClassInfoData = async () => {
+  try {
+    await JoinedClassInfoModel.deleteMany();
+    console.log('Deleted data successfully!');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+
 
 if (process.argv[2] === '--import-users') {
   importUserData();
@@ -103,4 +139,9 @@ if (process.argv[2] === '--import-users') {
 } 
 else if (process.argv[2] === '--delete-classes') {
   deleteClassData();
+} else if (process.argv[2] === '--import-joined-class-infos') {
+  importJoinedClassInfoData();
+} 
+else if (process.argv[2] === '--delete-joined-class-infos') {
+  deleteJoinedClassInfoData();
 }
