@@ -70,8 +70,6 @@ services:
       - nw-redis
     ports:
       - "3002:3002"
-    volumes:
-      - ../clients/admin:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"
@@ -90,8 +88,6 @@ services:
       - nw-redis
     ports:
       - "5002:5002"
-    volumes:
-      - ../servers/admin:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"
@@ -110,8 +106,6 @@ services:
       - nw-redis
     ports:
       - "3001:3001"
-    volumes:
-      - ../clients/lecturer:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"
@@ -130,8 +124,6 @@ services:
       - nw-redis
     ports:
       - "5001:5001"
-    volumes:
-      - ../servers/lecturer:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"
@@ -150,8 +142,6 @@ services:
       - nw-redis
     ports:
       - "3000:3000"
-    volumes:
-      - ../clients/student:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"
@@ -170,8 +160,6 @@ services:
       - nw-redis
     ports:
       - "5000:5000"
-    volumes:
-      - ../servers/student:/usr/src/app
     environment:
       FORCE_COLOR: 1
       DEBUG_COLORS: "true"

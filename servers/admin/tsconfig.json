@@ -14,7 +14,7 @@
 		"emitDecoratorMetadata": true,
 		"esModuleInterop": true,
 	},
-	"include": ["**/*.ts", "**/*.d.ts"],
+	"include": ["**/*.ts", "**/*.d.ts", "**/*.html"],
 	"exclude": ["node_modules"],
 	"files": ["./types/index.d.ts"]
 }
