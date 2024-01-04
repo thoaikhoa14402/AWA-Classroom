@@ -160,7 +160,7 @@ class AuthController implements IController {
         if (userRegistrationInfo.verification_code === req.verification_code) {
             const updatedUser = await UserModel.findOneAndUpdate(
                 { username: req.body.username}, // Tìm người dùng dựa trên username
-                { verify: true }, // Update trường active thành true
+                { verify: true }, // Update trường verify thành true
                 { new: true } // Tùy chọn này trả về đối tượng đã được cập nhật
             );
             const accessToken = await JsonWebToken.createToken({_id: updatedUser?.id}, {expiresIn: process.env.JWT_ACCESS_EXPIRES})
@@ -222,7 +222,6 @@ class AuthController implements IController {
     public protect = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('jwt', {session: false}, (err: Error, user: IUser, info: any) => {
             if (!req.verification_code && user.role !== 'lecturer') next(new AppError('The username or password is incorrect', 401)); // restrict user when activating account if conditions are not valid
-            if (!user.active) next(new AppError('The username or password is incorrect', 401)); // restrict user when account was banned by admin
             if (info instanceof Error) return next(info);
             next();
         })(req, res, next);
