@@ -94,7 +94,7 @@ sudo docker-compose up
 
 > - Student: [http://localhost:3000](http://localhost:3000).
 > - Lecturer: [http://localhost:3001/auth/login](http://localhost:3001/auth/login).
-> - Admin: [http://localhost:3002/classroom-management](http://localhost:3002/classroom-management).
+> - Admin: [http://localhost:3002/auth/login](http://localhost:3002/auth/login).
 
 ### Clean Up Project (If you dont use anymore).
 > Make sure that you have already in root folder
