@@ -69,10 +69,10 @@ const LandingPage: React.FC = () => {
     return <>
         <div className='2xl:max-w-screen-2xl 2xl:w-screen 2xl:m-auto flex justify-between shadow-sm w-full items-center px-9 sticky top-0 bg-white'>
             <div className='gap-7 text-sm hidden lg:flex'>
-                <NavLink to={'#gioithieu'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Giới thiệu</NavLink>
-                <NavLink to={'#tinhnang'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Tính năng</NavLink>
-                <NavLink to={'#lydo'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Lý do</NavLink>
-                <NavLink to={'#lienhe'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Liên hệ</NavLink>
+                <NavLink to={'#gioithieu'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Introduction</NavLink>
+                <NavLink to={'#tinhnang'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Feature</NavLink>
+                <NavLink to={'#lydo'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Reason</NavLink>
+                <NavLink to={'#lienhe'} className={'hover:text-hover-dark transition-all duration-150 py-6'}>Contact</NavLink>
             </div>
             <h1 className='text-primary font-semibold text-xl py-5'>AWA Classroom</h1>
             { 
