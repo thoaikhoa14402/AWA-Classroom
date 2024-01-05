@@ -18,7 +18,7 @@ const ProtectedRoute: React.FC<ProtectProps> = ({ auth = false }: ProtectProps) 
 
     if (!auth && !searchParams.get('u_id')) { // Trường hợp từ Home -> Login page (đăng nhập = tài khoản thường không phải Social OAuth)
         if (!isFetching && isAuthenticated)
-            return <Navigate to="/home" replace />
+            return <Navigate to="/classroom-management" replace />
         
         if (isFetching)
             return null;
