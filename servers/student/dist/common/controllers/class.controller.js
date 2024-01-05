@@ -129,6 +129,7 @@ class ClassController {
                     {
                         $match: {
                             slug: req.body.id,
+                            active: true,
                             'students._id': new mongoose_1.default.Types.ObjectId((_c = req.user) === null || _c === void 0 ? void 0 : _c.id),
                         },
                     },
@@ -317,7 +318,8 @@ class ClassController {
                 { $unwind: '$owner' },
                 {
                     $match: {
-                        'students._id': new mongoose_1.default.Types.ObjectId((_f = req.user) === null || _f === void 0 ? void 0 : _f.id)
+                        'students._id': new mongoose_1.default.Types.ObjectId((_f = req.user) === null || _f === void 0 ? void 0 : _f.id),
+                        active: true,
                     },
                 },
             ]);

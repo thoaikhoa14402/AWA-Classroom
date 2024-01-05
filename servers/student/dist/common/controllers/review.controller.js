@@ -95,10 +95,14 @@ class ReviewController {
             if (!review) {
                 return next(new app_error_1.default('Review not found', 404));
             }
+            const joinedInfo = yield joinedClassInfo_model_1.default.findById(review.joinedInfo._id).populate('user').lean();
+            if (!joinedInfo) {
+                return next(new app_error_1.default('Review not found', 404));
+            }
             res.status(200).json({
                 status: 'success',
                 data: {
-                    review,
+                    review: Object.assign(Object.assign({}, review), { joinedInfo: Object.assign(Object.assign({}, review.joinedInfo), { user: joinedInfo === null || joinedInfo === void 0 ? void 0 : joinedInfo.user }) }),
                 },
             });
         });

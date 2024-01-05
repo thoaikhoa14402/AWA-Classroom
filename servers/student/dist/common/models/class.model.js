@@ -59,6 +59,10 @@ const ClassSchema = new mongoose_1.default.Schema({
             digits: false,
         }, 15).generate()
     },
+    active: {
+        type: Boolean,
+        default: true
+    },
     studentPermission: {
         annoucement: {
             type: String,

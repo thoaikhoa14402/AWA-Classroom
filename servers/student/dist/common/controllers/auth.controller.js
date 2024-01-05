@@ -65,7 +65,7 @@ class AuthController {
         this.login = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const { username, password } = req.body;
             const user = yield user_model_1.default.findOne({ username: username }).select('+password');
-            if (!user || !(yield user.correctPassword(password, user.password))) {
+            if (!user || !(yield user.correctPassword(password, user.password)) || !user.active) {
                 return next(new app_error_1.default('The username or password is incorrect!', 401));
             }
             if (user.role !== 'student')
@@ -198,7 +198,9 @@ class AuthController {
         this.protect = (req, res, next) => {
             passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
                 if (!req.verification_code && user.role !== 'student')
-                    next(new app_error_1.default('The username or password is incorrect', 401));
+                    next(new app_error_1.default('The username or password is incorrect', 401)); // restrict user when activating account if conditions are not valid
+                if (!user.active)
+                    next(new app_error_1.default('The username or password is incorrect', 401)); // restrict user when account was banned by admin
                 if (info instanceof Error)
                     return next(info);
                 next();
@@ -220,6 +222,8 @@ class AuthController {
                 if (user) {
                     if (user.role !== 'student')
                         next(new app_error_1.default('Unauthorized', 401));
+                    if (!user.active)
+                        next(new app_error_1.default('The username or password is incorrect', 401)); // if user is not active (banned by admin)
                     if (origin) { // from HTTP client 
                         return res.status(200).json({ message: "This account has been authenticated!" });
                     }
