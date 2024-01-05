@@ -96,6 +96,11 @@ sudo docker-compose up
 > - Lecturer: [http://localhost:3001/auth/login](http://localhost:3001/auth/login).
 > - Admin: [http://localhost:3002/auth/login](http://localhost:3002/auth/login).
 
+## Deployment Links
+> - Student: [https://awa-classroom-student.onrender.com](https://awa-classroom-student.onrender.com).
+> - Lecturer: [https://awa-classroom-lecturer.onrender.com/auth/login](https://awa-classroom-lecturer.onrender.com/auth/login).
+> - Admin: [https://awa-classroom-admin.onrender.com/auth/login](https://awa-classroom-admin.onrender.com/auth/login).
+
 ### Clean Up Project (If you dont use anymore).
 > Make sure that you have already in root folder
 
