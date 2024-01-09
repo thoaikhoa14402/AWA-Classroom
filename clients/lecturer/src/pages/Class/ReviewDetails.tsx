@@ -165,7 +165,7 @@ const ReviewDetails: React.FC = () => {
                             <div key={el._id} className='flex gap-6 flex-1 flex-row'>
                                 <div className='flex flex-col items-end gap-2 max-w-[180px]'>
                                     <div className='rounded-full overflow-hidden border'>
-                                        <img width='50px' src={userInfo?.avatar} alt='avatar' />
+                                        <img width='50px' src={el.sender?.avatar} alt='avatar' />
                                     </div>
                                     <div className='flex flex-col items-end'>
                                         <div className='font-medium'>{el.sender.username}</div>
