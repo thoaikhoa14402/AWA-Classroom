@@ -1,3 +1,6 @@
+# VIDEO DEMO
+**Link: https://youtu.be/cRqsu3O3Etk**
+
 # INSTRUCTIONS
 > First, to build a project you need to install **nodejs v20** with **docker** and **docker compose** first.
 
